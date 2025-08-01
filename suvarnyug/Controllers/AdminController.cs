@@ -338,6 +338,7 @@ namespace suvarnyug.Controllers
             ModelState.Remove("ConfirmPassword");
             ModelState.Remove("ProfilePhoto");
             ModelState.Remove("Country");
+            ModelState.Remove("UserLogin");
             if (ModelState.IsValid)
             {
                 await _context.SaveChangesAsync();
