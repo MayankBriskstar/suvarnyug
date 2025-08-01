@@ -1,0 +1,548 @@
+﻿@model Suvarnyug.Models.Biodata
+
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}'s Profile";
+    // Layout = "~/Views/Shared/_Adminlayout.cshtml";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+
+    var age = DateTime.Now.Year - Model.DOB.Year;
+    if (Model.DOB.Date > DateTime.Now.AddYears(-age)) age--;
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">View Matrimonial Profile</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Matrimonial Profile</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">View Matrimonial Profile</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <h4 class="card-title col-md-6">View Matrimonial Profile</h4>
+                            <div class="col-md-6 text-end">
+                                <a href="@Url.Action("MatrimonialManagement", "Admin")" class="btn text-end backtouser">
+                                    <i class="fas fa-angle-left"></i> Back
+                                </a>
+                                <span class="rightborder1"></span>
+                                @if (Model.IsDeleted)
+                                {
+                                    <a class="btn text-end deleteuser" disabled style="cursor: not-allowed; opacity: 0.6;">
+                                        <i class="fas fa-trash"></i>  Delete
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0)" class="text-end deleteuser delete-metor-btn" id="delete-metor-btn" data-biodata-id="@Model.BiodataId">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="profileAccordion">
+                            <div class="card">
+                                <div class="card-header accord" id="personalInfoHeading">
+                                    <h2 class="row matrimonialh2">
+                                        <button class="col-lg-6 btn btn-link text-left d-flex align-items-center matrimonialbtnon" type="button" data-toggle="collapse" data-target="#personalInfo" aria-expanded="true" aria-controls="personalInfo">
+                                            <i class="icon-user me-2 matrimonialicon"></i> Personal Information
+                                        </button>
+                                        <span class="col-lg-6 toggle-icon matrimonialiconspan">+</span>
+                                    </h2>
+                                </div>
+                                <div id="personalInfo" class="collapse show" aria-labelledby="personalInfoHeading" data-parent="#profileAccordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="profile-image">
+                                                    @if (Model.Images != null && Model.Images.Any())
+                                                    {
+                                                        <img class="img-thumbnail" src="@Url.Content("~/" + Model.Images.First().ImageUrl)" alt="Profile Picture" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/images/default-profile.jpg" alt="Default Profile" />
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 profile-info">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Name -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p class="text-capitalize">@Model.FirstName @Model.LastName</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Date of Birth -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.DOB.ToString("dd/MM/yyyy")</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Age -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@age years</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Time of Birth -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@(new DateTime(1, 1, 1, Model.TimeOfBirth.Value.Hours, Model.TimeOfBirth.Value.Minutes, 0).ToString("h:mm tt"))</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Place of Birth -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.PlaceOfBirth</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Gender -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Gender</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Height -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Height</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Weight -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Weight Kg</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Mother Tongue -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.MotherTongue</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Education -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Education</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Caste -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Cast</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Sub Caste -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Subcaste</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Income -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Income</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>Marital Status -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.MaritalStatus</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Family Details -->
+                            <div class="card">
+                                <div class="card-header accord" id="familyDetailsHeading">
+                                    <h2 class="row matrimonialh2">
+                                        <button class="col-lg-6 btn btn-link text-left d-flex align-items-center matrimonialbtnon" type="button" data-toggle="collapse" data-target="#familyDetails" aria-expanded="false" aria-controls="familyDetails">
+                                            <i class="icon-people me-2 matrimonialicon"></i>Family Details
+                                        </button>
+                                        <span class="col-lg-6 toggle-icon matrimonialiconspan">+</span>
+                                    </h2>
+                                </div>
+
+                                <div id="familyDetails" class="collapse" aria-labelledby="familyDetailsHeading" data-parent="#profileAccordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Father's Name -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.FatherName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Father's Status -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.FathersStatus</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Mother's Name -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.MotherName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Mother's Status -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.MothersStatus</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Number of Brothers -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.NumberOfBrothers</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Number of Sisters -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.NumberOfSisters</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="card">
+                                <div class="card-header accord" id="contactInfoHeading">
+                                    <h2 class="row matrimonialh2">
+                                        <button class="col-lg-6 btn btn-link text-left d-flex align-items-center matrimonialbtnon" type="button" data-toggle="collapse" data-target="#contactInfo" aria-expanded="false" aria-controls="contactInfo">
+                                            <i class="icon-phone me-2 matrimonialicon"></i>Contact Information
+                                        </button>
+                                        <span class="col-lg-6 toggle-icon matrimonialiconspan">+</span>
+                                    </h2>
+                                </div>
+
+                                <div id="contactInfo" class="collapse" aria-labelledby="contactInfoHeading" data-parent="#profileAccordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Mobile Number -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.MobileNumber</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Email -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.Email</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Country -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.Country.CountryName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>State -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.State.StateName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>City -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.City.CityName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Address -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.Address</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>House Type -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.HouseType</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Image Gallery -->
+                            <div class="card">
+                                <div class="card-header accord" id="imageGalleryHeading">
+                                    <h2 class="row matrimonialh2">
+                                        <button class="col-lg-6 btn btn-link text-left d-flex align-items-center matrimonialbtnon" type="button" data-toggle="collapse" data-target="#imageGallery" aria-expanded="false" aria-controls="imageGallery">
+                                            <i class="icon-picture me-2 matrimonialicon"></i>Image Gallery
+                                        </button>
+                                        <span class="col-lg-6 toggle-icon matrimonialiconspan">+</span>
+                                    </h2>
+                                </div>
+
+                                <div id="imageGallery" class="collapse" aria-labelledby="imageGalleryHeading" data-parent="#profileAccordion">
+                                    <div class="card-body">
+                                        <div class="demo-gallery">
+                                            <ul id="lightgallery" class="lightgallery">
+                                                @if (Model.Images != null && Model.Images.Any())
+                                                {
+                                                    @foreach (var image in Model.Images)
+                                                    {
+                                                        <li data-src="@Url.Content("~/" + image.ImageUrl)">
+                                                            <a href="">
+                                                                <img src="@Url.Content("~/" + image.ImageUrl)" alt="Image" class="gallery-image" />
+                                                                <div class="demo-gallery-poster">
+                                                                    <img src="~/images/img-box.svg">
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p>No images uploaded.</p>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-0">
+                                <div class="card-header accord" id="patnerDetailsHeading">
+                                    <h2 class="row matrimonialh2">
+                                        <button class="col-lg-6 btn btn-link text-left d-flex align-items-center matrimonialbtnon" type="button" data-toggle="collapse" data-target="#patnerdetail" aria-expanded="false" aria-controls="patnerdetail">
+                                            <i class="icon-heart me-2 matrimonialicon"></i>Partner's Preferences
+                                        </button>
+                                        <span class="col-lg-6 toggle-icon matrimonialiconspan">+</span>
+                                    </h2>
+                                </div>
+
+                                <div id="patnerdetail" class="collapse" aria-labelledby="patnerDetailsHeading" data-parent="#profileAccordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Partner's Marital Status: -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerMaritalStatus</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Partner's Education -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerEducation</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Partner's Cast -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerCast</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>Partner's Country -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerCountry</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p><strong>About My Partner -</strong></p>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.AboutMyPartner</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#delete-metor-btn", function () {
+                debugger;
+                var BiodataId = $(this).data("biodata-id");
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you really want to delete this Matrimonial Profile? This process cannot be undo.",
+                    icon: "error",
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            visible: true,
+                            className: "btn btn-secondary",
+                        },
+                        confirm: {
+                            text: "Yes, delete!",
+                            className: "btn btn-danger",
+                        }
+                    },
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("deletebiodata", "admin")' + '?id=' + BiodataId,
+                            type: 'POST',
+                            success: function (response) {
+                                if (response.success)
+                                {
+                                    swal({
+                                        title: "Deleted!",
+                                        text: "User deleted successfully.",
+                                        icon: "success",
+                                        buttons: {
+                                            confirm: {
+                                                text: "OK",
+                                                className: "btn btn-success"
+                                            }
+                                        },
+                                        timer: 3000,
+                                    });
+                                    setTimeout(function () {
+                                        window.location.href = "/admin/matrimonialmanagement";
+                                    }, 3000);
+                                }
+                                else {
+                                    swal("Error!", response.message || "Matrimonial Profile could not be deleted.", {
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger"
+                                            }
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                swal("Error!", "An error occurred while deleting the Matrimonial Profile.", {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger"
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            $('.card-header').on('click', function (e) {
+                if ($(e.target).closest('.delete-metor-btn, a, button').length > 0) return;
+                var header = $(this);
+                var button = header.find('button');
+                var accordionItem = header.next('.collapse');
+
+                // If the clicked element is already expanded, collapse it
+                if (accordionItem.hasClass('show')) {
+                    accordionItem.collapse('hide');
+                    header.find('.toggle-icon').text('+');
+                } else {
+                    // Otherwise, expand it
+                    accordionItem.collapse('show');
+                    header.find('.toggle-icon').text('-');
+                }
+
+                // Prevent triggering the click event for nested elements like buttons
+                e.stopPropagation();
+            });
+            $('.accordion').on('hide.bs.collapse', function (e) {
+                $(e.target).prev('.card-header').find('.toggle-icon').text('+');
+            }).on('show.bs.collapse', function (e) {
+                $(e.target).prev('.card-header').find('.toggle-icon').text('-');
+            });
+        });
+    </script>
+}
+<!-- Include Lightbox2 CSS and JS -->
+<link href="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/css/lightgallery.css" rel="stylesheet" />
+<script src="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/js/lightgallery.js"></script>
+<script src="https://cdn.rawgit.com/sachinchoolur/lg-zoom.js/master/dist/lg-zoom.js"></script>
+<script>
+    lightGallery(document.getElementById('lightgallery'))
+</script>

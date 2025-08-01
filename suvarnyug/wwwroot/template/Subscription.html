@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Confirmation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #63ab45);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+            .header img {
+                width: 45%;
+                margin-bottom: 10px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                margin: 10px 0 5px;
+            }
+
+        .body {
+            padding: 30px;
+            color: #444444;
+        }
+
+            .body h2 {
+                font-size: 22px;
+                color: #333333;
+            }
+
+            .body p {
+                font-size: 16px;
+                line-height: 1.6;
+                margin: 10px 0;
+            }
+
+        .details-box {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+            .details-box p {
+                font-size: 16px;
+                color: #333333;
+                margin: 5px 0;
+            }
+
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 14px;
+            color: #777777;
+        }
+
+            .footer a {
+                color: #4CAF50;
+                text-decoration: none;
+            }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #63ab45;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .body h2 {
+                font-size: 18px;
+            }
+
+            .details-box p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <!-- Header Section -->
+        <div class="header">
+            <img src="https://i.imghippo.com/files/qaku4536qdk.png" alt="logo">
+            <h1>Subscription Confirmation</h1>
+        </div>
+
+        <!-- Body Section -->
+        <div class="body">
+            <h2>Hello, [FirstName] [LastName]!</h2>
+            <p>Thank you for subscribing to our service. Below are your subscription details:</p>
+
+            <div class="details-box">
+                <p><strong>Plan Type:</strong> [PlanType]</p>
+                <p><strong>Start Date:</strong> [StartDate]</p>
+                <p><strong>End Date:</strong> [EndDate]</p>
+                <p><strong>Payment Status:</strong> [PaymentStatus]</p>
+            </div>
+
+            <p>If any of the above information is incorrect, please contact our support team.</p>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>Need help? Contact our <a href="http://192.168.1.79/home/contact">Support Team</a>.</p>
+            <p>Thank you for choosing Suvarnyug!</p>
+        </div>
+    </div>
+</body>
+
+</html>

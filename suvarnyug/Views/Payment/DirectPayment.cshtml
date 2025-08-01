@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Direct Payment";
+}
+<section class="find-partner-area pt-20 rel z-1">
+    <div class="container">
+        <div class="row justify-space-between">
+            <div class="col-lg-5">
+                <div class="section-title counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                    <h2>Direct <span>Payment</span></h2>
+                    <p class="ptextsuccessfully">
+                        If your payment was not successfully processed through our subscription plan,
+                        you can complete your payment using <strong>UPI, a QR code, or an alternative payment method</strong>. Once the payment is made,
+                        please submit the form with the required details. After verification, Suvarnyug team will review and approve your payment,
+                        enjoy uninterrupted access to all membership benefits.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="card directpayment">
+                    <h5><span class="upiid">UPI ID:</span> sanghanimayank143-1@okhdfcbank</h5>
+                    <div class="row">
+                        <div class="col-lg-4 qrcodeimagedirect m-auto p-0">
+                            <img src="~/images/avatar/qrcoded.jpg" alt="qrcode" />
+                        </div>
+                        <div class="col-lg-8">
+                            <h5>Subscription plan Price</h5>
+                            <div class="subscription-plan blog-details-content">
+                                <ul class="blog-meta bg-white">
+                                    <li class="directpaymentli"><span class="plan-name">Gold:</span> <span class="plan-price"><i class="far fa-rupee-sign"></i> 1499/ per year</span></li>
+                                    <li class="directpaymentli"><span class="plan-name">Platinum:</span> <span class="plan-price"><i class="far fa-rupee-sign"></i> 1999/ per year</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container directpayform">
+                <h4 class="text-center directvaerify">Submit Payment Details for Subscription Verification</h4>
+                <form id="paymentForm" asp-action="SubmitDirectPayment" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <div class="form-group">
+                        <label for="UserName">Register User Name <span class="star-validation-ddl">*</span></label>
+                        <input type="text" name="UserName" id="UserName" class="form-control" />
+                        <span class="text-danger" id="errorUserName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Registered Email <span class="star-validation-ddl">*</span></label>
+                        <input type="email" name="Email" id="Email" class="form-control" />
+                        <span class="text-danger" id="errorEmail"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="MobileNo">Registered Mobile No <span class="star-validation-ddl">*</span></label>
+                        <input type="text" name="MobileNo" id="MobileNo" class="form-control" />
+                        <span class="text-danger" id="errorMobileNo"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Description">Payment Description <span class="star-validation-ddl">*</span></label>
+                        <textarea name="Description" id="Description" class="form-control"></textarea>
+                        <span class="text-danger" id="errorDescription"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="PaymentScreenshot">Upload Payment Screenshot <span class="star-validation-ddl">*</span></label>
+                        <input type="file" name="PaymentScreenshot" id="PaymentScreenshot" class="form-control" accept="image/png, image/jpeg, image/jpg" onchange="previewImage()" />
+                        <span class="text-danger" id="errorPaymentScreenshot"></span>
+                        <div id="imagePreviewContainer" class="mt-2" style="display: none;">
+                            <img id="imagePreview" src="" alt="Preview" style="max-width: 200px; border: 1px solid #ccc; padding: 5px;">
+                        </div>
+                    </div>
+                    <div class="justify-content-center d-flex">
+                        <button type="submit" class="theme-btn style-two mb-15">
+                            <span data-hover="Direct Payment">Direct Payment</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function validateForm() {
+        let isValid = true;
+
+        // Reset previous error messages
+        let errorFields = ["errorUserName", "errorEmail", "errorMobileNo", "errorDescription", "errorPaymentScreenshot"];
+        errorFields.forEach(id => document.getElementById(id).innerText = "");
+
+        let userName = document.getElementById("UserName").value.trim();
+        let email = document.getElementById("Email").value.trim();
+        let mobileNo = document.getElementById("MobileNo").value.trim();
+        let description = document.getElementById("Description").value.trim();
+        let paymentScreenshot = document.getElementById("PaymentScreenshot").files[0];
+
+        if (userName === "") {
+            document.getElementById("errorUserName").innerText = "User Name is required.";
+            isValid = false;
+        }
+
+        if (email === "") {
+            document.getElementById("errorEmail").innerText = "Email is required.";
+            isValid = false;
+        } else if (!/^\S+\.\S+$/.test(email)) {
+            document.getElementById("errorEmail").innerText = "Enter a valid email.";
+            isValid = false;
+        }
+
+        if (mobileNo === "") {
+            document.getElementById("errorMobileNo").innerText = "Mobile Number is required.";
+            isValid = false;
+        } else if (!/^\d{10}$/.test(mobileNo)) {
+            document.getElementById("errorMobileNo").innerText = "Enter a valid 10-digit mobile number.";
+            isValid = false;
+        }
+
+        if (description === "") {
+            document.getElementById("errorDescription").innerText = "Payment Description is required.";
+            isValid = false;
+        }
+
+        if (!paymentScreenshot) {
+            document.getElementById("errorPaymentScreenshot").innerText = "Please upload a valid payment screenshot.";
+            isValid = false;
+        } else {
+            let allowedExtensions = ["image/png", "image/jpeg", "image/jpg"];
+            let fileExtension = paymentScreenshot.name.split('.').pop().toLowerCase();
+            let fileType = paymentScreenshot.type;
+
+            if (!allowedExtensions.includes(fileType) && !["png", "jpeg", "jpg"].includes(fileExtension)) {
+                document.getElementById("errorPaymentScreenshot").innerText = "Only JPG, JPEG, and PNG formats are allowed.";
+                document.getElementById("PaymentScreenshot").value = ""; // Clear the input
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
+        function previewImage() {
+        let file = document.getElementById("PaymentScreenshot").files[0];
+        let errorElement = document.getElementById("errorPaymentScreenshot");
+        let imagePreviewContainer = document.getElementById("imagePreviewContainer");
+        let imagePreview = document.getElementById("imagePreview");
+
+        if (file) {
+            let allowedExtensions = ["image/png", "image/jpeg", "image/jpg"];
+            let fileExtension = file.name.split('.').pop().toLowerCase();
+            let fileType = file.type;
+
+            if (!allowedExtensions.includes(fileType) && !["png", "jpeg", "jpg"].includes(fileExtension)) {
+                errorElement.innerText = "Only JPG, JPEG, and PNG formats are allowed.";
+                document.getElementById("PaymentScreenshot").value = ""; // Clear the input
+                imagePreviewContainer.style.display = "none"; // Hide preview
+                return;
+            }
+
+            // Clear error message when a valid image is uploaded
+            errorElement.innerText = "";
+
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreviewContainer.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+</script>

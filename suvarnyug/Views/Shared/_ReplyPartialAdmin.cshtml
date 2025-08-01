@@ -1,0 +1,68 @@
+﻿@model IEnumerable<suvarnyug.Models.Reply>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var reply in Model)
+    {
+        <div class="comment-group" style="margin-left: @(reply.ParentReplyId != null ? "20px" : "0")">
+            <div class="post">
+                <div class="post__avatar comment__avatar">
+                    <img src="@(!string.IsNullOrEmpty(reply.User?.ProfilePhotoPath) ? reply.User.ProfilePhotoPath : Url.Content("~/images/default-profile.jpg"))" alt="">
+                </div>
+                <div class="post__header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 class="post__author">@reply.User?.FirstName @reply.User?.LastName</h3>
+                    <h5 class="post__status @((reply.IsDeleted) ? "InActive" : "Active")" style="color: @(reply.IsDeleted ? "red" : "green");">@((reply.IsDeleted) ? "InActive" : "Active")</h5>
+                </div>
+                <h4 class="post__timestamp">@reply.CreatedDate.ToString("dd/MM/yyyy")</h4>
+                <div class="replydec">
+                    <span class="replydecspan">Description: </span><p class="post__body">@reply.Content</p>
+                </div>
+                
+
+                <div class="comment-actions">
+                    <input type="hidden" name="replyId" value="@reply.ReplyId" />
+                    <a class="like-button" style="background-color:white;">
+                        <i class="fa fa-thumbs-up"> </i><span> @reply.Likes?.Count()</span>
+                    </a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-action="softdeletereply" asp-controller="admin" method="post" id="deleteReplyForm-@reply.ReplyId">
+                            <input type="hidden" name="replyId" value="@reply.ReplyId" />
+                            @if (reply.IsDeleted)
+                            {
+                                <button type="button" disabled style="cursor: not-allowed; opacity: 0.6;" class="button button--approve-delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="button button--approve-delete" data-toggle="modal" data-target="#deleteModal" data-form-id="deleteReplyForm-@reply.ReplyId">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                               
+                            }
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+        @if (reply.Replies != null && reply.Replies.Any())
+        {
+            <div class="replies">
+                @Html.Partial("_ReplyPartialAdmin", reply.Replies)
+            </div>
+        }
+    }
+}
+else
+{
+    <p>No replies yet.</p>
+}
+<script>
+    function toggleReplyForm(replyId) {
+        const form = document.getElementById(`reply-form-${replyId}`);
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+</script>

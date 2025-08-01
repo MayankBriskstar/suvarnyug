@@ -1,0 +1,185 @@
+﻿@model Suvarnyug.Models.User
+@inject IConfiguration configuration
+@{
+    ViewData["Title"] = "Register";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 mb-3 mt-3">
+            <div class="section-title"><h2 class="text-center"><span>Register Your Account</span></h2></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 register-form mb-40">
+            <form id="registerForm" asp-action="Register" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="FirstName"></label> <span class="star-validation-ddl">*</span>
+                            <input asp-for="FirstName" class="form-control" placeholder="Enter First Name" maxlength="50" required />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LastName"></label> <span class="star-validation-ddl">*</span>
+                            <input asp-for="LastName" class="form-control" maxlength="50" placeholder="Enter Last Name" required />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email"></label> <span class="star-validation-ddl">*</span>
+                            <input asp-for="Email" class="form-control" maxlength="100" placeholder="Enter Email" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MobileNo"></label> <span class="star-validation-ddl">*</span>
+                            <input asp-for="MobileNo" class="form-control" maxlength="14" required pattern="^[0-9]{10,14}$"
+                                   title="Please enter a valid mobile number (10 to 14 digits only)." onkeypress="return isNumberKey(event)"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Enter Mobile No" />
+                            <span asp-validation-for="MobileNo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CountryId" class="form-label">Country <span class="star-validation-ddl">*</span></label>
+                            <select asp-for="CountryId" class="form-control" id="CountryId" required>
+                                <option value="">Select Country</option>
+                                @foreach (var country in ViewBag.Countries)
+                                {
+                                    <option value="@country.CountryId">@country.CountryName</option>
+                                }
+                            </select>
+                            <span id="countryValidationMessage" class="text-danger" style="display:none;">Please select a country.</span>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label asp-for="PasswordHash">Password <span class="star-validation-ddl">*</span></label>
+                                <input asp-for="PasswordHash" type="password" class="form-control" maxlength="100" placeholder="Enter Password" required />
+                                <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label> <span class="star-validation-ddl">*</span>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" maxlength="100" placeholder="Enter Confirm Password" required />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ProfilePhoto">Upload Profile Photo</label>
+                            <input type="file" class="form-control" name="ProfilePhoto" id="ProfilePhoto" />
+                            <span class="text-danger" id="fileValidationMessage" style="display:none;"></span>
+                        </div>
+                        <div class="form-group">
+                            <hr />
+                            <div class="g-recaptcha" data-sitekey="@configuration["ReCaptcha:SiteKey"]"></div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" id="registerBtn" class="theme-btn style-two">
+                            <span data-hover="Register">Register</span>
+                        </button>
+                        <p id="otpSentMessage" class="text-success mt-2" style="display:none;">OTP has been sent to your email address.</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="otpModal" class="modal fade" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.43) !important;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Verify OTP</h5>
+            </div>
+            <div class="modal-body">
+                <p>Enter the OTP sent to your email:</p>
+                <input type="text" id="otpInput" class="form-control" maxlength="6" placeholder="Enter OTP" required onkeypress="return isNumberKey(event)"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                <span id="otpError" class="text-danger" style="display:none;"></span>
+                <span id="otpSuccess" class="text-success" style="display:none;">OTP verified successfully!</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="theme-btn style-two" id="verifyOtpBtn"><span data-hover="Verify">Verify</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        document.getElementById("ProfilePhoto").addEventListener("change", function () {
+            const file = this.files[0];
+            const fileValidationMessage = document.getElementById("fileValidationMessage");
+
+            fileValidationMessage.style.display = "none";
+            fileValidationMessage.textContent = "";
+
+            const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
+            if (file) {
+                if (!allowedTypes.includes(file.type)) {
+                    fileValidationMessage.textContent = "Unsupported file type. Please upload a JPG, JPEG, PNG, or GIF.";
+                    fileValidationMessage.style.display = "block";
+                    this.value = "";
+                }
+            }
+        });
+        $("#registerForm").submit(function (e) {
+            e.preventDefault();
+            var country = $("#CountryId").val();
+            var countryError = $("#countryValidationMessage");
+
+            if (country === "") {
+                countryError.show();
+                return;
+            } else {
+                countryError.hide();
+            }
+            var formData = new FormData(this);
+            $("#otpSentMessage").show();
+            $.ajax({
+                type: "POST",
+                url: "/Account/Register",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $(".text-danger").html("");
+                    console.log(response);
+                    if (response.success) {
+                        $("#otpSentMessage").show();
+                        $("#otpModal").modal("show");
+                    } else {
+                        $.each(response.errors, function (key, messages) {
+                            if (messages.length > 0) {
+                                $("[data-valmsg-for='" + key + "']").html(messages[0]);
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    $("#otpError").text("An unexpected error occurred. Please try again.").show();
+                }
+            });
+        });
+        $(document).ready(function () {
+            $("#otpModal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
+        $("#verifyOtpBtn").click(function () {
+            var otp = $("#otpInput").val();
+            $("#otpError, #otpSuccess").hide().text("");
+
+            $.post("/Account/VerifyOTP", { enteredOTP: otp }, function (response) {
+                if (response.success) {
+                    $("#otpSuccess").text("OTP verified successfully!").show();
+                    setTimeout(() => window.location.href = "/", 2000);
+                } else {
+                    $("#otpError").text(response.message).show();
+                    $("#otpInput").val("").focus();
+                }
+            }).fail(function () {
+                $("#otpError").text("An error occurred. Please try again.").show();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,103 @@
+﻿@model IEnumerable<suvarnyug.Models.Subscription>
+
+@{
+    ViewData["Title"] = "Subscribed Users";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Subscribed Users List</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Subscribed Users</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Subscribed Users List</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Subscribed Users List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables"
+                                   class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Plan Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Payment Status</th>
+                                        <th>Status</th>
+                                        <th data-orderable="false">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var subscription in Model)
+                                    {
+                                        <tr>
+                                            <td>@subscription.User.FirstName @subscription.User.LastName</td>
+                                            <td style="word-break: break-word;white-space: normal;">@subscription.User.Email</td>
+                                            <td>@subscription.PlanType</td>
+                                            <td>@subscription.StartDate.ToShortDateString()</td>
+                                            <td>@subscription.EndDate.ToShortDateString()</td>
+                                            <td>
+                                                @if (subscription.PaymentStatus == "Completed")
+                                                {
+                                                    <span class="text-success">Completed</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Pending</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (subscription.IsActive)
+                                                {
+                                                    <span class="text-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Inactive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a asp-action="subscribeddetails" asp-controller="admin" asp-route-id="@subscription.SubscriptionId" type="button" class="btn btn-link btn-primary">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (!Model.Any())
+                                    {
+                                        <tr>
+                                            <td class="text-center">No subscribed users found.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

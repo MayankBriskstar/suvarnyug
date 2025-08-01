@@ -1,0 +1,172 @@
+﻿@model IEnumerable<suvarnyug.Models.Forum>
+@{
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+    // Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Forums";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Forums</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Forums</a>
+                </li>
+            </ul>
+        </div>
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header viewuserforum">
+                            <strong class="">
+                                <i class="ti-pulse" style="color:#63ab45 !important;"></i> Forums
+                            </strong>
+                        </div>
+                        <div class="container" style="margin-bottom: 30px;">
+                            @foreach (var forum in Model)
+                            {
+                                <div class="post-group">
+                                    <div class="post">
+                                        <div class="post__avatar">
+                                            <a href="#"><img class="rounded-circle" src="@(!string.IsNullOrEmpty(forum.User?.ProfilePhotoPath) ? forum.User.ProfilePhotoPath : Url.Content("~/images/default-profile.jpg"))" alt="User Avatar"></a>
+                                        </div>
+                                        <div class="post__header" style="display: flex; justify-content: space-between; align-items: center;">
+                                            <h3 class="post__author">@forum.User?.FirstName @forum.User?.LastName</h3>
+                                            <h5 class="post__status @((forum.IsDeleted) ? "InActive" : "Active")" style="color: @(forum.IsDeleted ? "red" : "green");">@((forum.IsDeleted) ? "InActive" : "Active")</h5>
+                                        </div>
+                                        <p class="post__timestamp">@forum.CreatedDate.ToString("dd/MM/yyyy")</p>
+                                        <div class="forumrtitle">
+                                            <span class="forumrtitlespan">Title: </span><h4 class="post__body">@forum.Title</h4>
+                                        </div>
+                                        <div class="forumrdescri">
+                                            <span class="forumrdescrispan">Reply:</span><h5 class="post__body">@forum.Description</h5>
+                                        </div>
+
+                                        <!-- Like count -->
+                                        <div class="post__actions">
+                                            <button class="button button--approve">
+                                                <i class="fa fa-thumbs-up"></i>
+                                                <span class="like-count">@forum.ForumLikes.Count()</span>
+                                            </button>
+                                            <!-- Replies count -->
+                                            <div class="button button--flag">
+                                                <i class="fa fa-comment-o"></i>
+                                                <i class="fa fa-comment solid"></i>
+                                                <span>@forum.Replies.Count()</span>
+                                            </div>
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <form asp-action="softdeleteforum" asp-controller="admin" method="post" style="margin: auto; display: flex; justify-content: end;" id="deleteForumForm-@forum.ForumId">
+                                                    <input type="hidden" name="forumId" value="@forum.ForumId" />
+                                                    @if (forum.IsDeleted)
+                                                    {
+                                                        <button type="button" disabled style="cursor: not-allowed; opacity: 0.6;" class="button button--approve trashbutton">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="button button--approve trashbutton" data-toggle="modal" data-target="#deleteModal" data-form-id="deleteForumForm-@forum.ForumId">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    }
+                                                </form>
+                                            }
+                                        </div>
+
+                                        <!-- Replies section -->
+                                        <div class="post__comments">
+                                            <h3 class="mt-2 mb-0 text-center">Replies</h3>
+                                            @if (forum.Replies != null && forum.Replies.Any())
+                                            {
+                                                var topLevelReplies = forum.Replies.Where(r => r.ParentReplyId == null);
+                                                @Html.Partial("_ReplyPartialAdmin", topLevelReplies)
+                                            }
+                                            else
+                                            {
+                                                <p class="text-center">No replies yet.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+    <script>
+        $(document).on("click", "button[data-target='#deleteModal']", function () {
+            var formId = $(this).data("form-id");
+
+            swal({
+                title: "Are you sure?",
+                text: "Do you really want to delete this Forum/Reply?",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        visible: true,
+                        className: "btn btn-secondary",
+                    },
+                    confirm: {
+                        text: "Yes, delete!",
+                        className: "btn btn-danger",
+                    }
+                },
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $("#" + formId).submit();
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Like/Dislike buttons
+            // $(".button--approve").click(function () {
+            //     $(this).toggleClass("active");
+            //     $(this).siblings('.button--deny').removeClass("active");
+            // });
+
+            // $(".button--deny").click(function () {
+            //     $(this).toggleClass("active");
+            //     $(this).siblings('.button--approve').removeClass("active");
+            // });
+
+            // Toggle replies section
+            $(".button--flag").click(function () {
+                // Find the closest post and toggle the replies section
+                $(this).closest('.post').find('.post__comments').toggle(); // Toggle visibility
+            });
+
+            // Comment trigger
+            $(".comment-trigger").click(function () {
+                $(this).parent().parent().toggleClass("post--commenting");
+            });
+
+            // Comment submission and cancellation
+            $(".button--confirm").click(function () {
+                $(this).closest('.post').toggleClass("post--commenting");
+            });
+
+            $(".button.cancel").click(function () {
+                $(this).closest('.post').toggleClass("post--commenting");
+            });
+        });
+    </script>
+}

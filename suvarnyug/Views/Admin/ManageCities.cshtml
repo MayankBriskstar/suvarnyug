@@ -1,0 +1,234 @@
+﻿@model List<Country>
+
+@{
+    // Layout = "~/Views/Shared/_Adminlayout.cshtml";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+    ViewData["Title"] = "Manage Cities";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Add City</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">City</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Add City</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Add City</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label>Select Country</label>
+                                <select id="countrySelect" class="form-control">
+                                    <option value="">Select Country</option>
+                                    @foreach (var country in Model)
+                                    {
+                                        <option value="@country.CountryId">@country.CountryName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div id="stateSection" class="form-group col-lg-6" style="display: none;">
+                                <label>Select State</label>
+                                <select id="stateSelect" class="form-control">
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="citySection" style="display: none;">
+                            <div class="row" id="cityContainer"></div>
+                            <div class="card-footer d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-primary text-end backtouser1" id="addCity">+ Add City</button>
+                                <button type="button" class="btn btn-success saverole" id="confirmSaveCities">
+                                    Save City
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+              $("#countrySelect").change(function () {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.getJSON(`/Admin/GetStatesByCountry/${countryId}`, function (data) {
+                        $("#stateSelect").empty().append('<option value="">Select State</option>');
+                        $.each(data, function (index, state) {
+                            $("#stateSelect").append(`<option value="${state.stateId}">${state.stateName}</option>`);
+                        });
+                        $("#stateSection").show();
+                        $("#citySection").hide();
+                        $("#cityContainer").empty();
+                    });
+                } else {
+                    $("#stateSection").hide();
+                    $("#citySection").hide();
+                }
+            });
+
+            // Load Cities when State changes
+            $("#stateSelect").change(function () {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.getJSON(`/Admin/GetCitiesByState?stateId=${stateId}`, function (data) {
+                        $("#cityContainer").empty();
+                        $.each(data, function (index, city) {
+                            $("#cityContainer").append(`
+                                <div class="col-lg-6 city-item">
+                                    <div class="input-group mb-3">
+                                        <input type="hidden" class="city-id" value="${city.cityId}" />
+                                        <input type="text" class="form-control city-name" value="${city.cityName}" placeholder="Enter City Name" />
+                                        <button type="button" class="btn deleteuser1 deleteCity"><span class="fas fa-trash text-danger"></span></button>
+                                    </div>
+                                    <span class="text-danger city-error" style="display:none;">Enter a city name</span>
+                                </div>
+                            `);
+                        });
+                        $("#citySection").show();
+                    });
+                } else {
+                    $("#citySection").hide();
+                    $("#cityContainer").empty();
+                }
+            });
+
+            // Add new city input field
+            $("#addCity").click(function () {
+                $("#cityContainer").append(`
+                    <div class="col-lg-6 city-item">
+                        <div class="input-group mb-3">
+                            <input type="hidden" class="city-id" value="0" />
+                            <input type="text" class="form-control city-name" placeholder="Enter City Name" />
+                            <button type="button" class="btn deleteuser1 deleteCity"><span class="fas fa-trash text-danger"></span></button>
+                        </div>
+                        <span class="text-danger city-error" style="display:none;">Enter a city name</span>
+                    </div>
+                `);
+                $("#citySection").show();
+            });
+
+
+            $(document).on("click", ".deleteCity", function () {
+                $(this).closest(".city-item").remove();
+            });
+
+            $("#confirmSaveCities").click(function () {
+                debugger;
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you want to save changes to the cities list?",
+                    icon: "info",
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            visible: true,
+                            className: "btn btn-secondary"
+                        },
+                        confirm: {
+                            text: "Yes, Save",
+                            className: "btn btn-success"
+                        }
+                    },
+                    dangerMode: false,
+                }).then((willSave) => {
+                    if (willSave) {
+                        debugger;
+                        var cities = [];
+                        var stateId = $("#stateSelect").val();
+                        var isValid = true;
+
+                        $("#cityContainer .city-item").each(function () {
+                            debugger;
+                            var cityId = $(this).find(".city-id").val();
+                            var cityName = $(this).find(".city-name").val();
+                            var errorElement = $(this).find(".city-error");
+
+                            if (cityName === "") {
+                                errorElement.show();
+                                isValid = false;
+                            } else {
+                                errorElement.hide();
+                                cities.push({
+                                    CityId: parseInt(cityId),
+                                    CityName: cityName,
+                                    StateId: parseInt(stateId)
+                                });
+                            }
+                        });
+
+                        if (!isValid) {
+                            return;
+                        }
+
+                        $.ajax({
+                            url: "/Admin/SaveCities",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({ Cities: cities }),
+                            success: function (response) {
+                                swal({
+                                    title: "Saved!",
+                                    text: response.message || "Cities have been successfully saved.",
+                                    icon: "success",
+                                    timer: 3000,
+                                    buttons: {
+                                        confirm: {
+                                            text: "OK",
+                                            className: "btn btn-success"
+                                        }
+                                    }
+                                })
+                            },
+                            error: function (xhr) {
+                                if (xhr.responseText.includes("Cannot delete")) {
+                                    swal({
+                                        title: "Error!",
+                                        content: {
+                                            element: "div",
+                                            attributes: {
+                                                innerHTML: xhr.responseText
+                                            }
+                                        },
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger"
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    swal("Error!", "An error occurred while saving cities.", "error");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

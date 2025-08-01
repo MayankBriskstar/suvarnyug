@@ -1,0 +1,435 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SuvarnYug - @ViewData["Title"]</title>
+    <link rel="shortcut icon" href="~/assetsuser/images/logos/logo2.svg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/assetsuser/css/flaticon.min.css">
+    <link rel="stylesheet" href="~/assetsuser/css/fontawesome-5.14.0.min.css">
+    <link rel="stylesheet" href="~/assetsuser/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assetsuser/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="~/assetsuser/css/nice-select.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assetsuser/css/aos.css">
+    <link rel="stylesheet" href="~/assetsuser/css/slick.min.css">
+    <link rel="stylesheet" href="~/assetsuser/css/style.css">
+
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="preloader">
+            <div class="custom-loader"></div>
+        </div>
+        <header class="main-header header-one">
+            <div class="header-upper bg-white py-15 rpy-0">
+                <div class="container-fluid clearfix">
+                    <div class="header-inner rel d-flex align-items-center">
+                        <div class="logo-outer">
+                            <div class="logo">
+                                <a asp-action="index" asp-controller="home">
+                                    <img src="~/assetsuser/images/logos/logo.svg" width="200"
+                                         alt="Logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="nav-outer mx-lg-auto ps-xxl-5 clearfix py-3 py-md-0">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <div class="mobile-logo">
+                                        <a asp-action="index" asp-controller="home">
+                                            <img src="~/assetsuser/images/logos/logo.svg" width="200" alt="Logo">
+                                        </a>
+                                    </div>
+                                    <button type="button" class="navbar-toggle" data-bs-toggle="collapse"
+                                            data-bs-target=".navbar-collapse">
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        var profilePhotoUrl = User.Claims.FirstOrDefault(c => c.Type == "ProfilePhotoPath")?.Value;
+                                        if (string.IsNullOrEmpty(profilePhotoUrl))
+                                        {
+                                            profilePhotoUrl = Url.Content("~/images/default-profile.jpg");
+                                        }
+                                        else
+                                        {
+                                            profilePhotoUrl = Url.Content(profilePhotoUrl);
+                                        }
+                                        <div class="user-image d-flex align-items-center">
+                                            <img class="user-avatar rounded-circle" src="@profilePhotoUrl" alt="User Avatar" id="user-avatar">
+                                            <div class="user-menu" style="display:none;">
+                                                <p id="username" style="text-transform:capitalize;">@User.Identity.Name</p>
+                                                <a asp-controller="account" asp-action="editprofile"><i class="fa fa-pencil"></i>Edit Profile</a>
+                                                <a asp-controller="account" asp-action="changepassword"><i class="fa fa-unlock"></i>Change Password</a>
+                                                <a asp-controller="payment" asp-action="subscriptiondetails">Subscription Details</a>
+                                                <a asp-controller="chat" asp-action="index"><i class="fa fa-comments"></i>Chat</a>
+                                                @if (User.IsInRole("Admin"))
+                                                {
+                                                    <a asp-action="index" asp-controller="admin" class="btn-admin">Admin Dashboard</a>
+                                                }
+                                                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm1">
+                                                    <button type="submit"><i class="fa fa-power-off"></i>Logout</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="menu-sidebar d-inline-block">
+                                            <button class="bg-transparent" id="login-btn">
+                                                Login
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="navbar-collapse collapse clearfix">
+                                    <ul class="navigation clearfix">
+                                        <li class="current"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                                        <li><a asp-action="forums" asp-controller="forum">Forums</a></li>
+                                        <li><a asp-action="findpartner" asp-controller="matrimonial">Matrimonial</a></li>
+                                        <li><a asp-action="index" asp-controller="chat">Chats</a></li>
+                                        <li><a asp-action="contact" asp-controller="home">Contact Us</a></li>
+                                        <li class=" d-md-none d-bolck"><a asp-controller="home" asp-action="dashboard">Dashboard</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="menu-btns py-10">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-action="dashboard" asp-controller="home" data-target="#profile"
+                                   class="theme-btn style-two bgc-secondary">
+                                    <span data-hover="Dashboard">Dashboard</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="createprofile" asp-controller="matrimonial" data-target="#profile"
+                                   class="theme-btn style-two bgc-secondary">
+                                    <span data-hover="Create Profile">Create Profile</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            }
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var profilePhotoUrl = User.Claims.FirstOrDefault(c => c.Type == "ProfilePhotoPath")?.Value;
+                                if (string.IsNullOrEmpty(profilePhotoUrl))
+                                {
+                                    profilePhotoUrl = Url.Content("~/images/default-profile.jpg");
+                                }
+                                else
+                                {
+                                    profilePhotoUrl = Url.Content(profilePhotoUrl);
+                                }
+
+                                <div class="user-image d-flex align-items-center">
+                                    <img class="user-avatar rounded-circle d-none d-md-block" src="@profilePhotoUrl" alt="User Avatar" id="user-avatar">
+                                    <div class="user-menu" style="display:none;">
+                                        <p class="tect" id="username" style="text-transform: capitalize;">@User.Identity.Name</p>
+                                        <a asp-controller="account" asp-action="editprofile"><i class="fa fa-edit"></i>Edit Profile</a>
+                                        <a asp-controller="account" asp-action="changepassword"><i class="fa fa-key"></i>Change Password</a>
+                                        <a asp-controller="payment" asp-action="subscriptiondetails"><i class="fa fa-dollar-sign"></i>Subscription</a>
+                                        <a asp-controller="chat" asp-action="index"><i class="fa fa-comments"></i>Chat</a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a asp-action="index" asp-controller="admin" class="btn-admin"><i class="fa fa-wrench"></i>Admin Dashboard</a>
+                                        }
+                                        <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                            <button type="submit"><i class="fa fa-sign-out"></i>Logout</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="menu-sidebar d-inline-block d-none d-md-block">
+                                    <button class="bg-transparent" id="login-btn">
+                                        Login
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--Form Back Drop-->
+        <div class="form-back-drop"></div>
+        <section class="hidden-bar">
+            <div class="inner-box text-center">
+                <div class="cross-icon"><span class="fa fa-times"></span></div>
+                <div class="title">
+                    <h4>User Login</h4>
+                </div>
+                <div class="appointment-form">
+                    <div id="error-message" class="text-danger"></div>
+                    <div class="form-group">
+                        <input type="email" name="email" value="" id="email" placeholder="Enter Email ID" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="text" value="" id="password" placeholder="Enter Password" required>
+                    </div>
+                    <div class="form-group text-end">
+                        <label><a href="@Url.Action("forgotPassword", "account")" class="text-white">Forgot Password?</a></label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="theme-btn style-two" onclick="submitLogin()">
+                            <span data-hover="Login">Login</span>
+                            <i class="fal fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="form-group text-white">
+                        <label>
+                            If you don't have an account,<br /> click here to
+                        </label>
+                        <a asp-controller="account" asp-action="register" class="theme-btn style-two mt-10 col-lg-12">
+                            <span data-hover="Register">Register</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="social-style-one">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+            </div>
+        </section>
+        <div class="content">
+            <main role="main" class="">
+                @RenderBody()
+            </main>
+        </div>
+        <footer class="main-footer footer-two bgp-bottom bgc-black rel z-15 pt-20 pb-20" style="background-image: url(/assetsuser/images/backgrounds/footer-two.png);">
+            <div class="widget-area">
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-md-3 col-small">
+                            <div class="footer-widget footer-text mb-0">
+                                <div class="footer-logo mb-3">
+                                    <a asp-action="index" asp-controller="home">
+                                        <img src="~/assetsuser/images/logos/logo1.svg" width="150" alt="Logo" title="Logo">
+                                    </a>
+                                </div>
+                                <p>SuvarnYug connects hearts and builds lifelong relationships. Find your perfect partner on our trusted platform, where love, trust, and commitment create lasting happiness.</p>
+                            </div>
+                            <div class="social-style-one mb-20">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-small">
+                            <div class="footer-widget footer-links ms-sm-5">
+                                <div class="footer-title">
+                                    <h5>Company</h5>
+                                </div>
+                                <ul class="list-style-three">
+                                    <li><a asp-controller="home" asp-action="about">About Company</a></li>
+                                    <li><a asp-controller="forum" asp-action="forums">Forums</a></li>
+                                    <li><a asp-controller="matrimonial" asp-action="findpartner">Matrimonial</a></li>
+                                    <li><a asp-action="index" asp-controller="chat">Chats</a></li>
+                                    <li><a asp-controller="home" asp-action="contact">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-small">
+                            <div class="footer-widget footer-links ms-sm-5">
+                                <div class="footer-title">
+                                    <h5>Policy</h5>
+                                </div>
+                                <ul class="list-style-three">
+                                    <li><a asp-controller="home" asp-action="privacypolicy">Privacy Policy</a></li>
+                                    <li><a asp-controller="home" asp-action="termsandconditions">Terms and Conditions</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-small">
+                            <div class="footer-widget footer-contact">
+                                <div class="footer-title">
+                                    <h5>Get In Touch</h5>
+                                </div>
+                                <ul class="list-style-one">
+                                    <li><i class="fal fa-map-marked-alt"></i> Address place holder</li>
+                                    <li>
+                                        <i class="fal fa-envelope"></i> <a href="mailto:info@suvarnyug.com">info@suvarnyug</a>
+                                    </li>
+                                    <li>
+                                        <i class="fal fa-phone-volume"></i> <a href="callto:+91 123 456 7894">
+                                            +91 123 456
+                                            7894
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom bg-transparent pt-20 pb-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="copyright-text text-center text-lg-start">
+                                <p>&copy;Copyright 2024 <a asp-controller="home" asp-action="index">Suvarnyug</a>, All rights reserved</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <button id="scrollToTop"><img src="~/assetsuser/images/icons/scroll-up.png" alt="Scroll  Up"></button>
+    <script src="~/assetsuser/js/jquery-3.6.0.min.js"></script>
+    <script src="~/assetsuser/js/bootstrap.min.js"></script>
+    <script src="~/assetsuser/js/appear.min.js"></script>
+    <script src="~/assetsuser/js/slick.min.js"></script>
+    <script src="~/assetsuser/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/assetsuser/js/jquery.nice-select.min.js"></script>
+    <script src="~/assetsuser/js/imagesloaded.pkgd.min.js"></script>
+    <script src="~/assetsuser/js/skill.bars.jquery.min.js"></script>
+    <script src="~/assetsuser/js/isotope.pkgd.min.js"></script>
+    <script src="~/assetsuser/js/aos.js"></script>
+    <script src="~/assetsuser/js/script.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> *@
+
+    <script>
+        const scrollToTopBtn = document.getElementById("scrollToTop");
+        window.onscroll = function () {
+            if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        };
+        scrollToTopBtn.onclick = function () {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        };
+    </script>
+    <script>
+        $(".header-dropdown-trigger").click(function () {
+            $(this).toggleClass("active");
+            $(".header-dropdown").toggleClass("expand");
+        });
+        $(".header-dropdown li").click(function () {
+            $(".header-dropdown-trigger").removeClass("active");
+            $(".header-dropdown").removeClass("expand");
+        });
+        $(".button--approve").click(function () {
+            $(this).toggleClass("active");
+            $(this).siblings('.button--deny').removeClass("active");
+        });
+        $(".button--deny").click(function () {
+            $(this).toggleClass("active");
+            $(this).siblings('.button--approve').removeClass("active");
+        });
+        $(".comment-trigger").click(function () {
+            $(this).parent().parent().toggleClass("post--commenting");
+        });
+        $(".button--flag").click(function () {
+            $(this).parent().parent().toggleClass("post--commenting");
+        });
+        $(".button--confirm").click(function () {
+            $(this).parent().parent().parent().parent().parent().toggleClass("post--commenting");
+        });
+        $(".button.cancel").click(function () {
+            $(this).parent().parent().parent().parent().parent().toggleClass("post--commenting");
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#login-btn').click(function () {
+                $('.hidden-bar').addClass('active');
+            });
+            $('.user-avatar').click(function (event) {
+                event.stopPropagation();
+                $('.user-menu').toggle();
+            });
+            $(document).click(function () {
+                $('.user-menu').hide();
+            });
+            $('.cross-icon').click(function () {
+                $('.hidden-bar').removeClass('active');
+            });
+        });
+    </script>
+    <script>
+        async function submitLogin() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+            if (!email) {
+                errorMessage.textContent = 'Email is required.';
+                return;
+            }
+            if (!password) {
+                errorMessage.textContent = 'Password is required.';
+                return;
+            }
+            errorMessage.textContent = '';
+            try {
+                const response = await fetch('@Url.Action("Login", "Account")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ Email: email, Password: password })
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    window.location.href = result.redirectUrl;
+                } else {
+                    const error = await response.json();
+                    errorMessage.textContent = error.message || 'Invalid Email or Password.';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'An unexpected error occurred. Please try again later.';
+            }
+        }
+
+          // ## Gallery Popup
+        // $('.gallery a').magnificPopup({
+        //     type: 'image',
+        //     gallery: {
+        //         enabled: true,
+        //         navigateByImgClick: true,
+        //     },
+        // });
+
+
+        // // ## Instagram Gallery
+        // $('.instagram-item').magnificPopup({
+        //     type: 'image',
+        //     gallery: {
+        //         enabled: true,
+        //         navigateByImgClick: true,
+        //     },
+        // });
+
+        //   // ## Video Popup
+        // if ($('.video-play').length) {
+        //     $('.video-play').magnificPopup({
+        //         type: 'video',
+        //     });
+        // }
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

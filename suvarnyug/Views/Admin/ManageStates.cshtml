@@ -1,0 +1,201 @@
+﻿@model List<Country>
+
+@{
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+    ViewData["Title"] = "Add State";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Add State</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">State</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Add State</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Add State</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Select Country</label>
+                            <select id="countrySelect" class="form-control">
+                                <option value="">Select Country</option>
+                                @foreach (var country in Model)
+                                {
+                                    <option value="@country.CountryId">@country.CountryName</option>
+                                }
+                            </select>
+                        </div>
+                        <div id="stateSection" style="display: none;">
+                            <div class="row" id="stateContainer"></div>
+                            <div class="card-footer d-flex justify-content-between m-0">
+                                <button type="button" class="btn btn-primary text-end backtouser1" id="addState">+ Add State</button>
+                                <button type="button" class="btn btn-success saverole" id="confirmSaveStates">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#countrySelect").change(function () {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.getJSON(`/Admin/GetStatesByCountry/${countryId}`, function (data) {
+                        $("#stateContainer").empty();
+                        $.each(data, function (index, state) {
+                            $("#stateContainer").append(`
+                                <div class="col-md-6 col-lg-6 state-item">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="hidden" class="state-id" value="${state.stateId}" />
+                                            <input type="text" class="form-control state-name" value="${state.stateName}" />
+                                            <button type="button" class="btn deleteuser1 deleteState"><i class="fas fa-trash text-danger"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                        $("#stateSection").show();
+                    });
+                } else {
+                    $("#stateSection").hide();
+                }
+            });
+
+            $("#addState").click(function () {
+                $("#stateContainer").append(`
+                    <div class="col-md-6 col-lg-6 state-item">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="hidden" class="state-id" value="0" />
+                                <input type="text" class="form-control state-name" value="" placeholder="Enter State"/>
+                                <button type="button" class="btn deleteuser1 deleteState"><i class="fas fa-trash text-danger"></i></button>
+                            </div>
+                            <span class="text-danger state-error" style="display:none;">Enter a state name</span>
+                        </div>
+                    </div>
+                `);
+            });
+
+            $(document).on("click", ".deleteState", function () {
+                $(this).closest(".state-item").remove();
+            });
+
+            $("#confirmSaveStates").click(function () {
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you want to save changes to the states list?",
+                    icon: "info",
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            visible: true,
+                            className: "btn btn-secondary"
+                        },
+                        confirm: {
+                            text: "Yes, Save",
+                            className: "btn btn-success"
+                        }
+                    },
+                    dangerMode: false,
+                }).then((willSave) => {
+                    if (willSave) {
+                        var states = [];
+                        var countryId = $("#countrySelect").val();
+                        var isValid = true;
+
+                        $("#stateContainer .state-item").each(function () {
+                            var stateId = $(this).find(".state-id").val();
+                            var stateName = $(this).find(".state-name").val();
+                            var errorElement = $(this).find(".state-error");
+
+                            if (stateName === "") {
+                                errorElement.show();
+                                isValid = false;
+                            } else {
+                                errorElement.hide();
+                                states.push({
+                                    StateId: parseInt(stateId),
+                                    StateName: stateName,
+                                    CountryId: parseInt(countryId)
+                                });
+                            }
+                        });
+
+                        if (!isValid) {
+                            return;
+                        }
+
+                        $.ajax({
+                            url: "/Admin/SaveStates",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({ States: states }),
+                            success: function (response) {
+                                swal({
+                                    title: "Saved!",
+                                    text: response.message || "States have been successfully saved.",
+                                    icon: "success",
+                                    timer: 3000,
+                                    buttons: {
+                                        confirm: {
+                                            text: "OK",
+                                            className: "btn btn-success"
+                                        }
+                                    }
+                                })
+                            },
+                            error: function (xhr) {
+                                if (xhr.responseText.includes("Cannot delete")) {
+                                    swal({
+                                        title: "Error!",
+                                        content: {
+                                            element: "div",
+                                            attributes: {
+                                                innerHTML: xhr.responseText
+                                            }
+                                        },
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger"
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    swal("Error!", "An error occurred while saving State.", "error");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

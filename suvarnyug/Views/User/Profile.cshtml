@@ -1,0 +1,592 @@
+﻿@model Suvarnyug.Models.Biodata
+
+@{
+    ViewData["Title"] = "Profile";
+    var biodataList = ViewData["OnBehalfOfBiodata"] as List<Suvarnyug.Models.Biodata>;
+    var age = DateTime.Now.Year - Model.DOB.Year;
+    if (Model.DOB.Date > DateTime.Now.AddYears(-age)) age--;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="features-team-box-viewprofile">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="profile-image mb-10">
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
+                        <img src="@Url.Content("~/" + Model.Images.First().ImageUrl)" alt="Profile Picture" class="profileimageall"/>
+                    }
+                    else
+                    {
+                        <img src="~/images/default-profile.jpg" alt="Default Profile" />
+                    }
+                </div>
+            </div>
+            <div class="col-lg-9 profile-info">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12 text-end">
+                                <a href="@Url.Action("Chat", "Chat", new { userId = Model.UserId })" class="theme-btn style-two bgc-primary userprofileviewid">
+                                    <i class="fal fa-comments m-0" style="transform: rotate(0deg);"></i> <span data-hover="Chat" class="m-0">Chat</span>
+                                </a>
+                                <button id="interestedButton" class="theme-btn style-two userprofileviewid" data-biodata-id="@Model.BiodataId" >
+                                    <span data-hover="Show Interest" class="m-0">Show Interest</span>
+                                </button>
+                                <a href="@Url.Action("findPartner", "matrimonial")" class="theme-btn style-two bgc-secondary userprofileviewid">
+                                    <i class="fal fa-arrow-left m-0" style="transform: rotate(0deg); width: 25px;"></i><span data-hover="Back" class="m-0">Back</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p class="user-name  text-capitalize">@Model.FirstName @Model.LastName</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-user"></i><span>@age yrs, @Model.Height</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-map-marker-alt"></i><span>@Model.Country.CountryName</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-calendar-alt"></i><span>@Model.DOB.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-language"></i><span>@Model.MotherTongue</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-money"></i><span>@Model.Income</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-ring"></i><span>@Model.MaritalStatus</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <i class="fal fa-hand-holding-heart"></i><span>@Model.AboutMyPartner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="faq-page-area pt-40 pb-40 rel z-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10">
+                <div class="accordion-one" id="faq-accordion">
+                    <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                <i class="fal fa-id-card"></i>Personal Information
+                            </button>
+                        </h5>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-9 profile-info">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Name:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p class="text-capitalize">@Model.FirstName @Model.LastName</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Date of Birth:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.DOB.ToString("dd/MM/yyyy")</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Age:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@age years</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Time of Birth:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@(new DateTime(1, 1, 1, Model.TimeOfBirth.Value.Hours, Model.TimeOfBirth.Value.Minutes, 0).ToString("h:mm tt"))</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Place of Birth:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.PlaceOfBirth</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Gender:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Gender</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Height:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Height</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Weight:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Weight Kg</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Mother Tongue:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.MotherTongue</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Education:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Education</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Caste:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Cast</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Sub Caste:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Subcaste</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Income:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.Income</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <strong>Marital Status:</strong>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p>@Model.MaritalStatus</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                <i class="fal fa-users"></i>Family Details
+                            </button>
+                        </h5>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-12 profile-info">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Father's Name:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p class="text-capitalize">@Model.FatherName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Father's Status:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.FathersStatus</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Mother's Name:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p class="text-capitalize">@Model.MotherName</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Mother's Status:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.MothersStatus</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Number of Brothers:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.NumberOfBrothers</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Number of Sisters:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.NumberOfSisters</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                <i class="fal fa-phone-alt"></i> Contact Information
+                            </button>
+                        </h5>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-12 profile-info">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Mobile Number:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    <p>@Model.MobileNumber</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Email:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    <p>@Model.Email</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Country:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    @if (Model.Country != null)
+                                                    {
+                                                        <p>@Model.Country.CountryName</p>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>State:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    @if (Model.State != null)
+                                                    {
+                                                        <p>@Model.State.StateName</p>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>City:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    @if (Model.City != null)
+                                                    {
+                                                        <p>@Model.City.CityName</p>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Address:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    <p>@Model.Address</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>House Type:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                @if ((bool)ViewData["IsSubscribed"])
+                                                {
+                                                    <p>@Model.HouseType</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                <i class="fal fa-picture-o"></i>Image Gallary
+                            </button>
+                        </h5>
+                        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-12 profile-info">
+                                        <div class="demo-gallery">
+                                            <ul id="lightgallery">
+                                                @if (Model.Images != null && Model.Images.Any())
+                                                {
+
+                                                    @foreach (var image in Model.Images)
+                                                    {
+                                                        <li data-src="@Url.Content("~/" + image.ImageUrl)">
+                                                            <a href="">
+                                                                <img src="@Url.Content("~/" + image.ImageUrl)" alt="Image" class="gallery-image" />
+                                                                <div class="demo-gallery-poster">
+                                                                    <img src="~/images/img-box.svg">
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    <p>No images uploaded.</p>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                                <i class="fal fa-hand-holding-heart"></i>Partner's Preferences
+                            </button>
+                        </h5>
+                        <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-lg-12 profile-info">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Partner's Marital Status:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerMaritalStatus</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Partner's Education:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerEducation</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Partner's Cast:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerCast</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>Partner's Country:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.PartnerCountry</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>About My Partner:</strong>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <p>@Model.AboutMyPartner</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="showInterestModal" tabindex="-1" aria-labelledby="showInterestModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.43) !important;">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 5px 15px;">
+                <h5 class="modal-title" id="showInterestModalLabel"><i class="fal fa-dove"></i> Intrested For</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="$('#showInterestModal').modal('hide');"></button>
+            </div>
+            <div class="modal-body" id="profilesList">
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <p id="validationMessage" class="text-danger mb-0"></p>
+                    <input type="hidden" id="selectedBiodataId" name="selectedBiodataId" />
+                </div>
+                <div>
+                    <button type="button" id="confirmInterestButton" class="theme-btn style-two "><span data-hover="Show Interest">Show Interest</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/css/lightgallery.css" rel="stylesheet" />
+<script src="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/js/lightgallery.js"></script>
+<script src="https://cdn.rawgit.com/sachinchoolur/lg-zoom.js/master/dist/lg-zoom.js"></script>
+<script>lightGallery(document.getElementById('lightgallery'))</script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#interestedButton").click(function () {
+                var biodataId = @Model.BiodataId;
+                $.ajax({
+                    url: '@Url.Action("GetUploadedProfiles", "User")',
+                    type: 'POST',
+                    data: { biodataId: biodataId },
+                    success: function (response) {
+                        $("#profilesList").html(response);
+                        $('#validationMessage').text('');
+                        $('#showInterestModal').modal('show');
+                    },
+                    error: function () {
+                        $("#validationMessage").text("Error fetching profiles. Please try again.");
+                        $('#showInterestModal').modal('show');
+                    }
+                });
+            });
+
+            $("#confirmInterestButton").click(function () {
+                var selectedBiodataId = $("#selectedBiodataId").val();
+                var viewedBiodataId = @Model.BiodataId;
+                if (!selectedBiodataId) {
+                    $("#validationMessage").text("Please select a profile to show interest.");
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("ShowInterest", "matrimonial")',
+                    type: 'POST',
+                    data: { biodataId: selectedBiodataId,  viewedBiodataId: viewedBiodataId },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#validationMessage").removeClass('text-danger').addClass('text-success').text(response.message);
+                            setTimeout(function () {
+                                $("#showInterestModal").modal("hide");
+                            }, 2000);
+                        }else if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            $("#validationMessage").removeClass('text-success').addClass('text-danger').text(response.message);
+                        }
+                    },
+                    error: function () {
+                        $("#validationMessage").removeClass('text-success').addClass('text-danger').text("Error showing interest. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+}

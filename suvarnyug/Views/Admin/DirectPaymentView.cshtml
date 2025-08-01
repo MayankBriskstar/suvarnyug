@@ -1,0 +1,104 @@
+﻿@model suvarnyug.Models.DirectPayment
+
+@{
+    ViewData["Title"] = "View Payment";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">View Payment</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Subscribed Users</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Direct Payment Users</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header ">
+                        <div class="row align-items-center">
+                            <h4 class="card-title col-md-6">View Payment</h4>
+                            <div class="col-md-6 text-end">
+                                <a href="@Url.Action("directpaymentusers", "admin")" class="btn text-end backtouser ">
+                                    <i class="fas fa-angle-left"></i> Back
+                                </a>
+                                @if (Model.PaymentStatus == "Pending")
+                                {
+                                    <span class="rightborder1"></span>
+                                    <a asp-action="directpaymentedit" asp-controller="admin" asp-route-id="@Model.PaymentId" class="btn text-end deleteuser">
+                                        <i class="fas fa-edit"></i> Edit Payment
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables " class="display table table-striped table-hover table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>User ID -</td>
+                                        <td><p>@Model.UserId</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email -</td>
+                                        <td><p>@Model.Email</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mobile No -</td>
+                                        <td><p>@Model.MobileNo</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Description -</td>
+                                        <td><p>@Model.Description</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payment Status -</td>
+                                        <td>
+                                            @if (Model.PaymentStatus == "Approved")
+                                            {
+                                                <p>
+                                                    <span class="text-success">Approved</span>
+                                                </p>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">Pending</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payment Screenshot -</td>
+                                        <td>
+                                            <a href="@Model.PaymentScreenshot" target="_blank">
+                                                <img src="@Model.PaymentScreenshot" class="img-thumbnail" style="width: auto; height: 100px; max-width: 100%;" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

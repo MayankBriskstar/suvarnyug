@@ -1,0 +1,187 @@
+﻿@model Suvarnyug.Models.User
+@{
+    ViewData["Title"] = "View User";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">User Detail</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Users</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Users List</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header ">
+                        <div class="row align-items-center">
+                            <h4 class="card-title col-md-6">User Detail</h4>
+                            <div class="col-md-6 text-end">
+                                <a href="@Url.Action("users", "admin")" class="btn text-end backtouser ">
+                                    <i class="fas fa-angle-left"></i> Back
+                                </a>
+                                <span class="rightborder1"></span>
+                                @if (Model.Role == "Admin" || (Model.IsActive && Model.Role != "Admin"))
+                                {
+                                    <a href="javascript:void(0)" class="btn text-end deleteuser" disabled style="cursor: not-allowed; opacity: 0.6;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0)" class="btn text-end deleteuser delete-user-btn" data-user-id="@Model.UserId">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables " class="display table table-striped table-hover table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            User ID -
+                                        </td>
+                                        <td>
+                                            <p>@Model.UserId</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Name -
+                                        </td>
+                                        <td>
+                                            <p>@Model.FirstName @Model.LastName</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Email -
+                                        </td>
+                                        <td>
+                                            <p>@Model.Email</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Mobile No -
+                                        </td>
+                                        <td>
+                                            <p>@Model.MobileNo</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Country -
+                                        </td>
+                                        <td>
+                                            <p>@Model.Country.CountryName</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Profile Image -
+                                        </td>
+                                        <td>
+                                            <img src="@Model.ProfilePhotoPath" alt="Profile Image" class="avatar-img rounded" style="width: 150px; height: 150px;" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).on("click", ".delete-user-btn", function () {
+               var userId = $(this).data("user-id");
+               swal({
+                   title: "Are you sure?",
+                   text: "Do you really want to delete this user?",
+                   icon: "error",
+                   buttons: {
+                       cancel: {
+                           text: "Cancel",
+                           visible: true,
+                           className: "btn btn-secondary",
+                       },
+                       confirm: {
+                           text: "Yes, delete!",
+                           className: "btn btn-danger",
+                       }
+                   },
+                   dangerMode: true,
+               }).then((willDelete) => {
+                   if (willDelete) {
+                       $.ajax({
+                           url: '@Url.Action("DeleteUser", "Account")' + '?id=' + userId,
+                           type: 'GET',
+                           success: function (response) {
+                               if (response.success)
+                               {
+                                   swal({
+                                       title: "Deleted!",
+                                       text: "User deleted successfully.",
+                                       icon: "success",
+                                       buttons: {
+                                           confirm: {
+                                               text: "OK",
+                                               className: "btn btn-success"
+                                           }
+                                       },
+                                       timer: 3000,
+                                   });
+                                   setTimeout(function () {
+                                       window.location.href = "/admin/users";
+                                   }, 3000);
+                               }
+                               else {
+                                   swal("Error!", response.message || "User could not be deleted.", {
+                                       icon: "error",
+                                       buttons: {
+                                           confirm: {
+                                               className: "btn btn-danger"
+                                           }
+                                       }
+                                   });
+                               }
+                           },
+                           error: function (xhr, status, error) {
+                               swal("Error!", "An error occurred while deleting the user.", {
+                                   icon: "error",
+                                   buttons: {
+                                       confirm: {
+                                           className: "btn btn-danger"
+                                       }
+                                   }
+                               });
+                           }
+                       });
+                   }
+               });
+           });
+    </script>
+}

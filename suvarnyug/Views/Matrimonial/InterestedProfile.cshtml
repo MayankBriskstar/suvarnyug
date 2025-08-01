@@ -1,0 +1,106 @@
+﻿@model ViewBiodataViewModel
+@{
+    ViewData["Title"] = "Instrested Profie's";
+}
+<section class="your-biodata-area pt-35 rel z-1" style="background-image: url('/assetsuser/images/newsletter/bg3.png'); background-size: contain;">
+    <div class="container">
+        <div class="row justify-space-between mb-2">
+            <div class="col-lg-9">
+                <div class="section-title text-left counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                    <h2>Interested <span> Profiles</span></h2>
+                    <p>These profiles have shown interest in you. Feel free to review, engage, and take the next steps towards connecting with them. Keep your profile updated to reflect your current journey and preferences.</p>
+                </div>
+            </div>
+        </div>
+        <div class="behlafofother row">
+            <div>
+                <div class="section-title text-center counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                    <h2><span>This profile's has expressed interest in yours.</span></h2>
+                </div>
+            </div>
+            @if (Model?.InterestedProfilesWithYourProfile != null && Model.InterestedProfilesWithYourProfile.Any())
+            {
+                <div class="behlafofother row align-items-center justify-content-center ViewInterestedProfilematrimonialmain">
+                    @foreach (var interest in Model.InterestedProfilesWithYourProfile)
+                    {
+                        <div class="row align-items-center ViewInterestedProfilematrimonial">
+                            <div class="col-md-4 col-lg-4 mb-4 mt-4">
+                                <a href="@Url.Action("ViewInterestedProfile", "matrimonial", new { interestedBiodataId = interest.InterestedByBiodata.BiodataId })">
+                                    <div class="card destination-item">
+                                        <div class="image">
+                                            @if (interest.InterestedByBiodata?.Images?.Any() == true)
+                                            {
+                                                <img src="@Url.Content("~/" + interest.InterestedByBiodata.Images.First().ImageUrl)" alt="Interested Profile Picture" class="card-img-top" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/images/default-profile.jpg" alt="Default Profile" class="card-img-top" />
+                                            }
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title dashboardonother">
+                                                @($"{interest.InterestedByBiodata?.FirstName ?? "N/A"} {interest.InterestedByBiodata?.LastName ?? "N/A"}")
+                                            </h5>
+                                            <p class="card-text row instrprofiledetail">
+                                                <span class="dob instprodet1 col-6"><i class="fal fa-calendar-alt"></i> @(interest.InterestedByBiodata?.DOB.ToString("dd/MM/yyyy") ?? "N/A")</span><br />
+                                                <span class="gender instprodet1 col-6"><i class="fal fa-venus-mars"></i> @(interest.InterestedByBiodata?.Gender ?? "N/A")</span><br />
+                                            </p>
+                                            <p class="card-text row instrprofiledetail">
+                                                <span class="education instprodet1 col-6"><i class="fal fa-language"></i> @(interest.InterestedByBiodata?.MotherTongue ?? "N/A")</span><br />
+                                                <span class="education instprodet1 col-6"><i class="fal fa-ring"></i> @(interest.InterestedByBiodata?.MaritalStatus ?? "N/A")</span><br />
+                                            </p>
+                                            <p class="card-text row instrprofiledetail">
+                                                <span class="education instprodet1 col-12"><i class="fal fa-map-marker-alt"></i> @(interest.InterestedByBiodata?.Country?.CountryName ?? "N/A")</span><br />
+                                            </p>
+                                            <div class="theme-btn style-two d-flex p-5">
+                                                <span data-hover="View Profile">View Profile</span>
+                                                <i class="fal fa-arrow-right"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 d-flex justify-content-center align-items-center intrestimageseparatorimg">
+                                <img src="~/assetsuser/images/shapes/2.svg" alt="Custom Separator" />
+                            </div>
+                            <div class="col-md-4 col-lg-4 mb-4 mt-4">
+                                <div class="card destination-item">
+                                    <div class="image">
+                                        @if (interest.YourProfile?.Images?.Any() == true)
+                                        {
+                                            <img src="@Url.Content("~/" + interest.YourProfile.Images.First().ImageUrl)" alt="Your Profile Picture" class="card-img-top" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/default-profile.jpg" alt="Default Profile" class="card-img-top" />
+                                        }
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title dashboardonother">
+                                            @($"{interest.YourProfile?.FirstName ?? "N/A"} {interest.YourProfile?.LastName ?? "N/A"}")
+                                        </h5>
+                                        <p class="card-text row instrprofiledetail">
+                                            <span class="dob instprodet1 col-6"><i class="fal fa-calendar-alt"></i> @(interest.YourProfile?.DOB.ToString("dd/MM/yyyy") ?? "N/A")</span><br />
+                                            <span class="gender instprodet1 col-6"><i class="fal fa-venus-mars"></i> @(interest.YourProfile?.Gender ?? "N/A")</span><br />
+                                        </p>
+                                        <p class="card-text row instrprofiledetail">
+                                            <span class="education instprodet1 col-6"><i class="fal fa-language"></i> @(interest.YourProfile?.MotherTongue ?? "N/A")</span><br />
+                                            <span class="education instprodet1 col-6"><i class="fal fa-ring"></i> @(interest.YourProfile?.MaritalStatus ?? "N/A")</span><br />
+                                        </p>
+                                        <p class="card-text row instrprofiledetail">
+                                            <span class="education col-12"><i class="fal fa-map-marker-alt"></i> @(interest.YourProfile?.Country?.CountryName ?? "N/A")</span><br />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No one has shown interest in your profiles yet.</p>
+            }
+        </div>
+    </div>
+</section>

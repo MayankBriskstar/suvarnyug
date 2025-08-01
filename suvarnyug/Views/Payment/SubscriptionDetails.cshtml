@@ -1,0 +1,229 @@
+﻿@model suvarnyug.Models.Subscription
+
+@{
+    ViewData["Title"] = "Subscription Details";
+}
+
+@if (ViewData["IsSubscribed"] != null && (bool)ViewData["IsSubscribed"])
+{
+    var currentPlan = ViewBag.CurrentPlan.ToString();
+    <section class="your-biodata-area pt-35 mb-35 rel z-1" style="background-image: url('/assetsuser/images/newsletter/bg3.png'); background-size: contain;">
+        <div class="container">
+            <div class="row justify-space-between mb-2">
+                <div class="col-lg-8">
+                    <div class="section-title text-left counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                        <h2>Your <span>Subscription</span> Details</h2>
+                        <p>Thank you for subscribing! You are currently on the <span style="font-size: 22px; font-weight: bold;">@ViewBag.CurrentPlan</span> plan.</p>
+                    </div>
+                    <div class="row justify-space-between mb-2">
+                        <div class="col-lg-12">
+                            <div class="blog-details-content" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                                <ul class="blog-meta mb-30 bg-white">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        var profilePhotoUrl = User.Claims.FirstOrDefault(c => c.Type == "ProfilePhotoPath")?.Value;
+                                        if (string.IsNullOrEmpty(profilePhotoUrl))
+                                        {
+                                            profilePhotoUrl = Url.Content("~/images/default-profile.jpg");
+                                        }
+                                        else
+                                        {
+                                            profilePhotoUrl = Url.Content(profilePhotoUrl);
+                                        }
+                                        <li><img src="@profilePhotoUrl" alt="Admin"> @User.Identity.Name</li>
+                                        <li>
+                                            <i class="far fa-rupee-sign"></i>
+                                            @(Model.PlanType.ToString() == "Gold" ? "1499" : Model.PlanType.ToString() == "Platinum" ? "1999" : "N/A") /Per year
+                                        </li>
+                                        <li><i class="far fa-crown"></i>@Model.PlanType Member</li>
+                                    }
+                                </ul>
+                                <ul class="blog-meta mb-30 bg-white">
+                                    <li>start Date: @Model.StartDate.ToString("yyyy-MM-dd")</li>
+                                    <li>End Date: @Model.EndDate.ToString("yyyy-MM-dd")</li>
+                                    <li>Payment: @Model.PaymentStatus</li>
+                                </ul>
+                                <p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        @if (Model.PlanType.ToString() == "Gold")
+                        {
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <p>
+                                        As a valued Gold Member, you’re just one step away from unlocking more features.
+                                        Upgrade to Platinum to enjoy premium benefits, exclusive access, and top-tier perks. Elevate your membership today!
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 image-container">
+                                    <img src="~/assetsuser/images/widgets/11.png" alt="Platinum Plan" class="desktop-imageplan" style="transform: rotate(20deg);" />
+                                    <img src="~/assetsuser/images/shapes/3.png" alt="Platinum Plan" class="mobile-imageplan" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @if (Model.PlanType.ToString() == "Gold")
+                {
+                    <div class="col-md-4 col-lg-4 mb-4" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                        <div class="card destination-item freeplans">
+                            <div class="image">
+                                <img src="~/images/avatar/Premium13.jpg" alt="Platinum Plan" class="card-img-top" />
+                            </div>
+                            <h3 class="pplans plat">Platinum</h3>
+                            <div class="card-body">
+                                <div class="row m-0" style="justify-content: flex-start;">
+                                    <h4 class="card-title col-lg-9 p-0" style="margin: 0;width: 95px;font-size: 35px;">₹1999 </h4>
+                                    <p class="col-lg-3 p-0" style="line-height: 1;margin-top: 10px; width:auto;"> per /<br>year</p>
+                                </div>
+                                <p class="card-text">
+                                    <span class="education13"><i class="fal fa-check"></i>Unlock exclusive features</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Access to premium content</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Access all features</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Access to Forums Interaction</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Matrimonial Profile Intrested</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Matrimonial Profile Download</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Find Matrimonial Profile Using AI</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Matrimonial Profile chat</span><br />
+                                    <span class="education13"><i class="fal fa-check"></i>Access 24/7 support</span><br />
+                                </p>
+                                <div class="view-profile">
+                                    <a asp-action="Subscribe" asp-controller="Payment" asp-route-planType="Platinum" class="theme-btn style-two">
+                                        <span data-hover="Upgrade to Platinum">Upgrade to Platinum</span>
+                                        <i class="fal fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </section>
+}
+else
+{
+    <section class="your-biodata-area pt-35 rel z-1" style="background-image: url('/assetsuser/images/newsletter/bg3.png'); background-size: contain;">
+        <div class="container">
+            <div class="row justify-space-between mb-2">
+                <div class="col-lg-10">
+                    <div class="section-title text-left counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                        <h2>Unlock More <span>Exclusive Features</span></h2>
+                        <p>
+                            Unlock premium features, exclusive matches, and personalized support.
+                            Upgrade today to enhance your experience and enjoy a seamless journey with unlimited access to the best content!
+                        </p>
+                    </div>
+                    <div>
+                        <p class="fw-bold">
+                            Having trouble with your subscription payment? Easily complete your transaction via Direct Payment to avoid interruptions. 
+                            Suvarnyug team will verify and grant you access.
+                        </p>
+                        <a asp-action="directpayment" asp-controller="Payment" class="theme-btn style-two bgc-secondary mb-15">
+                            <span data-hover="Direct Payment">Direct Payment</span>
+                            <i class="fal fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="behlafofother justify-content-center row mb-20">
+                <div class="col-md-6 col-lg-3 mb-4" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                    <div class="card destination-item freeplans">
+                        <div class="image">
+                            <img src="~/images/avatar/Free.jpg" alt="Default Profile" class="card-img-top" />
+                        </div>
+                        <h3 class="pplans frees">Free</h3>
+                        <div class="card-body">
+                            <div class="row m-0" style="justify-content: flex-start;">
+                                <h4 class="card-title col-lg-3 p-0" style="margin: 0;width: 45px;font-size: 35px;">₹0 </h4>
+                                <p class="col-lg-9 p-0" style="line-height: 1;margin-top: 10px; width:auto;"> per /<br>year</p>
+                            </div>
+                            <p class="card-text">
+                                <span class="education1"><i class="fal fa-check"></i>Free access to basic features</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Limited access to content</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Limited features</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Access to Forums Interaction</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Matrimonial Profile Intrested</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Matrimonial Profile Download</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Find Matrimonial Profile Using AI</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Matrimonial Profile chat</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Access 24/7 support</span><br />
+                            </p>
+                            <div class="view-profile">
+                                <a class="theme-btn style-two" disable style="cursor: not-allowed">
+                                    <span data-hover="Your Current Plan">Your Current Plan</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                    <div class="card destination-item freeplans">
+                        <div class="image">
+                            <img src="~/images/avatar/stand1.jpg" alt="Gold Plan" class="card-img-top" />
+                        </div>
+                        <h3 class="pplans gold">Gold</h3>
+                        <div class="card-body">
+                            <div class="row m-0" style="justify-content: flex-start;">
+                                <h4 class="card-title col-lg-9 p-0" style="margin: 0;width: 95px;font-size: 35px;">₹1499 </h4>
+                                <p class="col-lg-3 p-0" style="line-height: 1;margin-top: 10px; width:auto;"> per /<br>year</p>
+                            </div>
+                            <p class="card-text">
+                                <span class="education1"><i class="fal fa-check"></i>Access to Gold features</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Limited access to content</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Limited features</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Access to Forums Interaction</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Matrimonial Profile Intrested</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Matrimonial Profile Download</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Find Matrimonial Profile Using AI</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Matrimonial Profile chat</span><br />
+                                <span class="education12"><i class="fal fa-times"></i>Access 24/7 support</span><br />
+                            </p>
+                            <div class="view-profile">
+                                <a asp-action="Subscribe" asp-controller="Payment" asp-route-planType="Gold" class="theme-btn style-two">
+                                    <span data-hover="Subscribe Now">Subscribe Now</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                    <div class="card destination-item freeplans">
+                        <div class="image">
+                            <img src="~/images/avatar/Premium1.jpg" alt="Platinum Plan" class="card-img-top" />
+                        </div>
+                        <h3 class="pplans plat">Platinum</h3>
+                        <div class="card-body">
+                            <div class="row m-0" style="justify-content: flex-start;">
+                                <h4 class="card-title col-lg-9 p-0" style="margin: 0;width: 95px;font-size: 35px;">₹1999 </h4>
+                                <p class="col-lg-3 p-0" style="line-height: 1;margin-top: 10px; width:auto;"> per /<br>year</p>
+                            </div>
+                            <p class="card-text">
+                                <span class="education1"><i class="fal fa-check"></i>Unlock exclusive features</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Access to premium content</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Access all features</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Access to Forums Interaction</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Matrimonial Profile Intrested</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Matrimonial Profile Download</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Find Matrimonial Profile Using AI</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Matrimonial Profile chat</span><br />
+                                <span class="education1"><i class="fal fa-check"></i>Access 24/7 support</span><br />
+                            </p>
+                            <div class="view-profile">
+                                <a asp-action="Subscribe" asp-controller="Payment" asp-route-planType="Platinum" class="theme-btn style-two">
+                                    <span data-hover="Subscribe Now">Subscribe Now</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

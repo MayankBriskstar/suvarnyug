@@ -1,0 +1,39 @@
+﻿@model suvarnyug.Models.Forum
+@{
+    ViewData["Title"] = "Create Forum";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 mb-3 mt-3">
+            <div class="section-title"><h2 class="text-center"><span>Create Forum</span></h2></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 mb-3">
+            <form class="add-forum" asp-action="AddForum" method="post">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="Title">Title <span class="star-validation-ddl">*</span></label>
+                            <input asp-for ="Title" type="text" class="form-control" name="Title" maxlength="100" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Description">Description <span class="star-validation-ddl">*</span></label>
+                            <textarea asp-for="Description" class="form-control" name="Description" maxlength="300"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="theme-btn style-two"><span data-hover="Add Forum">Add Forum</span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

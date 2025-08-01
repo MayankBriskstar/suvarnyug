@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Payment Submission</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #63ab45);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+            .header img {
+                width: 45%;
+                margin-bottom: 10px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                margin: 10px 0 5px;
+            }
+
+        .body {
+            padding: 30px;
+            color: #444444;
+        }
+
+            .body h2 {
+                font-size: 22px;
+                color: #333333;
+            }
+
+            .body p {
+                font-size: 16px;
+                line-height: 1.6;
+                margin: 10px 0;
+            }
+
+        .details-box {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+            .details-box p {
+                font-size: 16px;
+                color: #333333;
+                margin: 5px 0;
+            }
+
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 14px;
+            color: #777777;
+        }
+
+            .footer a {
+                color: #4CAF50;
+                text-decoration: none;
+            }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #63ab45;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <!-- Header Section -->
+        <div class="header">
+            <img src="https://i.imghippo.com/files/qaku4536qdk.png" alt="logo">
+            <h1>New Direct Payment Submission</h1>
+        </div>
+
+        <!-- Body Section -->
+        <div class="body">
+            <h2>Hello Admin,</h2>
+            <p>A new Direct Payment has been submitted. Here are the details:</p>
+
+            <div class="details-box">
+                <p><strong>User Name:</strong> [UserName]</p>
+                <p><strong>Email:</strong> [Email]</p>
+                <p><strong>Mobile No:</strong> [MobileNo]</p>
+                <p><strong>Description:</strong> [Description]</p>
+                <p><strong>Payment Screenshot:</strong> <a href="[PaymentScreenshot]" target="_blank">View Screenshot</a></p>
+            </div>
+
+            <p>Please review the payment and update the status accordingly.</p>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>Need help? Contact our <a href="http://192.168.1.79/home/contact">Support Team</a>.</p>
+            <p>Thank you for managing Suvarnyug!</p>
+        </div>
+    </div>
+</body>
+
+</html>

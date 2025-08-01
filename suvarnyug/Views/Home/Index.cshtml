@@ -1,0 +1,641 @@
+﻿@model Suvarnyug.Models.User
+@using System.Linq
+@inject IConfiguration configuration
+@{
+    ViewData["Title"] = "Home";
+}
+<section class="hero-area-three bgs-cover overflow-hidden pt-50 pb-50 br-15 rel z-2"
+         style="background-image: url(/assetsuser/images/banner/banner6.jpg);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-7 col-lg-7">
+                <div class="hero-content-three counter-text-wrap text-white text-left mb-125 rmb-65"
+                     data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                    <span class="subtitle mb-15">SuvarnYug</span>
+                    <h1>Explore and Start your Journey With SuvarnYug</h1>
+                    <p>
+                        <span class="count-text plus" data-speed="3000" data-stop="@ViewData["TotalUsers"]">0</span> Happy users!
+                        You’ll be remembered. Register Now.
+                    </p>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-5">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="hero-content-three counter-text-wrap text-white mb-20 text-center" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                        <span class="subtitle text-center">Registration Free</span>
+                    </div>
+                    <div class="search-filter-inner mt-0 row aos-init aos-animate" data-aos="zoom-out-down" data-aos-duration="1500" data-aos-offset="50">
+                        <form id="registerForm" asp-action="Register" method="post" enctype="multipart/form-data" class="row p-0">
+                            <div class="col-md-6 mb-4">
+                                <input asp-for="FirstName" class="form-control" placeholder="Enter First Name" maxlength="50" required />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <input asp-for="LastName" class="form-control" maxlength="50" placeholder="Enter Last Name" required />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <input asp-for="Email" class="form-control" maxlength="100" placeholder="Enter Email" required />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <input asp-for="MobileNo" class="form-control" maxlength="14" required pattern="^[0-9]{10,14}$"
+                                       title="Please enter a valid mobile number (10 to 14 digits only)." onkeypress="return isNumberKey(event)"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Enter Mobile No" />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <input asp-for="PasswordHash" type="password" class="form-control" maxlength="100" placeholder="Enter Password" required />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" maxlength="100" placeholder="Enter Confirm Password" required />
+                            </div>
+                            <div class="col-md-12 mb-4">
+                                <input asp-for="Country" class="form-control" maxlength="20" placeholder="Enter Country" required />
+                            </div>
+                            <div class="col-md-12 mb-4">
+                                <input type="file" class="form-control" name="ProfilePhoto" id="ProfilePhoto" />
+                                <div id="fileValidationMessage" style="display:none; color:red;"></div>
+                            </div>
+                            <div class="col-md-12 mb-4">
+                                <hr />
+                                <div class="g-recaptcha" data-sitekey="@configuration["ReCaptcha:SiteKey"]"></div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" id="registerBtn" class="theme-btn style-two">
+                                    <span data-hover="Register">Register</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Area End -->
+<!-- Features Area start -->
+<section class="features-area-three pt-50 rel z-1">
+    <div class="row justify-content-center">
+        <div class="col-xxl-3 col-xl-4 col-md-6" data-aos="flip-left" data-aos-duration="1500"
+             data-aos-offset="50">
+            <div class="feature-item style-three">
+                <div class="icon">
+                    <i class="fa "><img src="~/assetsuser/images/icons/user-icon.svg" width="60" /></i>
+                </div>
+                <div class="content">
+                    <h3><a>@ViewData["TotalUsers"]+ Users</a></h3>
+                    <p>
+                        Join Our Community! Discover meaningful connections and diverse profiles.
+                        Sign up today to start your journey toward friendship and lasting relationships!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-xl-4 col-md-6" data-aos="flip-left" data-aos-delay="50"
+             data-aos-duration="1500" data-aos-offset="50">
+            <div class="feature-item style-three bgc-secondary">
+                <div class="icon">
+                    <i class="fa "><img src="~/assetsuser/images/icons/profile.svg" width="60" /></i>
+                </div>
+                <div class="content">
+                    <h3>
+                        <a>@ViewData["TotalBiodata"]+ Matrimonial Profile</a>
+                    </h3>
+                    <p>
+                        Find Your Match! Explore diverse profiles and discover meaningful relationships. Join us today to begin your journey to love!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-xl-4 col-md-6" data-aos="flip-left" data-aos-delay="100"
+             data-aos-duration="1500" data-aos-offset="50">
+            <div class="feature-item style-three bgc-primary">
+                <div class="icon">
+                    <i class="fa "><img src="~/assetsuser/images/icons/verified.svg" width="60" /></i>
+                </div>
+                <div class="content">
+                    <h3><a>Verifications</a></h3>
+                    <p>
+                        Thousands of Genuine Members! 100% Privacy Guaranteed! Connect confidently with real people while keeping your personal information safe.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section class="filter-index" >
+    <div class="text-center">
+        <p class="mb-30" style="font-size: x-large;">Find Your Perfect Partner From <span style="color:var(--primary-color);">@ViewData["TotalBiodata"]</span> Profiles</p>
+    </div>
+    <div class="container">
+        <form method="get" asp-controller="matrimonial" asp-action="findpartner">
+            <div class="row justify-content-center">
+                <div class="form-group col-md-4 col-lg-3 mb-3">
+                    <select id="gender" name="gender" class="form-control">
+                        <option value="">Select Bride/Groom</option>
+                        <option value="Male">Looking For Groom</option>
+                        <option value="Female">Looking For Bride</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 col-lg-3 mb-3">
+                    <select id="maritalStatus" name="maritalStatus" class="form-control">
+                        <option value="">Select Marital Status</option>
+                        <option value="Un-Married">Un-Married</option>
+                        <option value="Widow">Widow</option>
+                        <option value="Divorcee">Divorcee</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 col-lg-3 mb-3">
+                    <select id="country" name="country" class="form-control">
+                        <option value="">Select Country</option>
+                        @foreach (var country in ViewBag.Countries as IEnumerable<suvarnyug.Models.Country>)
+                        {
+                            <option value="@country.CountryName">@country.CountryName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="form-group col-md-6 mb-3 d-flex align-items-center">
+                    <select id="minAge" name="minAge" class="form-control">
+                        @for (int i = 18; i <= 60; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <span class="mx-2">to</span>
+                    <select id="maxAge" name="maxAge" class="form-control">
+                        @for (int i = 18; i <= 60; i++)
+                        {
+                            <option value="@i" selected="60">@i</option>
+                        }
+                    </select>
+                </div>
+                <span id="ageValidationError" class="text-danger d-none">Min Age Cannot Be Greater Than Max Age!</span>
+                <div class="form-group col-md-3 mb-3">
+                    <button type="submit" class="theme-btn style-two w-100"><i class="fal fa-search"></i><span data-hover="SEARCH NOW">SEARCH NOW</span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<section class="hot-deals-area pt-70 rel z-1 ">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section-title text-center counter-text-wrap" data-aos="fade-up"
+                     data-aos-duration="1500" data-aos-offset="50">
+                    <h2>Find your <span>male</span> partner</h2>
+                    <p>Meet your perfect male partner for genuine connections and fulfilling relationships.</p>
+                </div>
+            </div>
+        </div>
+        <div class="hot-deals-active">
+            @if (ViewBag.LatestMale != null)
+            {
+                foreach (var user in ViewBag.LatestMale)
+                {
+                    <a href="@Url.Action("profile", "user", new { biodataId = user.BiodataId })">
+                        <div class="style-four" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                            <div class="card destination-item mb-4" style="background-color: #f9f9f7;">
+                                <div class="image">
+                                    <img src="@Url.Content(user.Image ?? "/assets/images/profiles/placeholder-image.jpg")" alt="Profile picture" />
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title dashboardonother">@user.FirstName @user.LastName</h5>
+                                    <p class="card-text">
+                                        <span class="dob"><i class="fal fa-calendar-alt"></i> @user.DOB.ToString("dd/MM/yyyy")</span><br />
+                                        <span class="education"><i class="fal fa-language"></i> @user.MotherTongue</span><br />
+                                        <span class="education"><i class="fal fa-ring"></i> @user.MaritalStatus</span>
+                                    </p>
+                                    <div class="theme-btn style-two d-flex">
+                                        <span data-hover="View Profile">View Profile</span>
+                                        <i class="fal fa-arrow-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!-- Find Partners female start -->
+<section class="hot-deals-area pt-70 rel z-1 ">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section-title text-center counter-text-wrap" data-aos="fade-up"
+                     data-aos-duration="1500" data-aos-offset="50">
+                    <h2>Find your <span>Female</span> partner</h2>
+                    <p>Discover amazing women ready to inspire and support your journey.</p>
+                </div>
+            </div>
+        </div>
+        <div class="hot-deals-active">
+            @if (ViewBag.LatestFemale != null)
+            {
+                foreach (var user in ViewBag.LatestFemale)
+                {
+                    <a href="@Url.Action("profile", "user", new {  biodataId = user.BiodataId })">
+                        <div class="style-four" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                            <div class="card destination-item mb-4" style="background-color: #f9f9f7;">
+                                <div class="image">
+                                    <img src="@Url.Content(user.Image ?? "/assets/images/profiles/placeholder-image.jpg")" alt="Profile picture" />
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title dashboardonother">@user.FirstName @user.LastName</h5>
+                                    <p class="card-text">
+                                        <span class="dob"><i class="fal fa-calendar-alt"></i> @user.DOB.ToString("dd/MM/yyyy")</span><br />
+                                        <span class="education"><i class="fal fa-language"></i> @user.MotherTongue</span><br />
+                                        <span class="education"><i class="fal fa-ring"></i> @user.MaritalStatus</span>
+                                    </p>
+                                    <div class="theme-btn style-two d-flex">
+                                        <span data-hover="View Profile">View Profile</span>
+                                        <i class="fal fa-arrow-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!-- Find Partners female Area end -->
+<section class="forum py-50 bgc-primary mt-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section-title text-center counter-text-wrap" data-aos="fade-up"
+                     data-aos-duration="1500" data-aos-offset="50">
+                    <h2><span>Forums</span></h2>
+                    <p>Join the conversation—Find support, share ideas, and solve problems together.</p>
+                </div>
+            </div>
+        </div>
+        @if (ViewBag.Forum != null)
+        {
+            @foreach (var forum in ViewBag.Forum)
+            {
+                <div class="post-group">
+                    <div class="post">
+                        <div class="post__avatar">
+                            <a href="#"><img class="rounded-circle img-thumbnail" src="@forum.ProfilePhotoPath" alt="User Avatar" style="height: 100%; width:100px;"></a>
+                        </div>
+                        <h3 class="post__author text-capitalize">@forum.Author</h3>
+                        <p class="post__timestamp">@forum.CreatedDate.ToString("dd/MM/yyyy")</p>
+                        <h4 class="post__body">@forum.Title</h4>
+                        <h5 class="post_description">@forum.Description</h5>
+
+                        <!-- Like/Comment buttons -->
+                        <div class="post__actions">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form asp-action="LikeForumindex" method="post">
+                                    <input type="hidden" name="forumId" value="@forum.ForumId" />
+                                    <button type="submit" class="button button--approve like-button">
+                                        <i class="fa fa-thumbs-o-up"></i>
+                                        <i class="fa fa-thumbs-up solid"></i>
+                                        <span class="like-count">@forum.TotalLikes</span>
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("login", "account")" class="button button--approve">
+                                    <i class="fa fa-thumbs-o-up"></i> @forum.TotalLikes
+                                </a>
+                            }
+                            <!-- Comment trigger -->
+                            <div class="button button--flag">
+                                <i class="fa fa-comment-o"></i><i class="fa fa-comment solid"></i>@forum.TotalReplies
+                            </div>
+
+                            <!-- Comments section -->
+                            <div class="post__comments">
+                                @foreach (var reply in forum.Replies)
+                                {
+                                    <div class="comment-group">
+                                        <div class="post">
+                                            <div class="post__avatarr comment__avatar">
+                                                <a href="#"><img class="rounded-circle img-thumbnail" src="@forum.ProfilePhotoPath" alt="User Avatar" style="height: 100%; width:100px;"></a>
+                                            </div>
+                                            <h3 class="post__author  text-capitalize">@reply.ReplyAuthor</h3>
+                                            <h4 class="post__timestamp">@reply.CreatedDate.ToString("dd/MM/yyyy")</h4>
+                                            <p class="post__body">@reply.Content</p>
+                                        </div>
+                                    </div>
+                                }
+
+                                <!-- Comment form -->
+                                <div class="comment-form">
+                                    <div class="comment-form__actions">
+                                        <a asp-action="forums" asp-controller="forum" class="theme-btn style-two"><span data-hover="Comment">Comment</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+<section class="mobile-app-area pt-100 rel z-1">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+                <div class="row no-gap rmb-55" data-aos="fade-left" data-aos-duration="1500" data-aos-offset="50">
+                    <div class="col-6 col-small">
+                        <div class="counter-item counter-text-wrap style-two">
+                            <div class="icon">
+                                <i class="fa ">
+                                    <img src="~/assetsuser/images/icons/smily.svg" width="60" />
+                                </i>
+                            </div>
+                            <span class="count-text plus" data-speed="3000" data-stop="@ViewData["TotalUsers"]">0</span>
+                            <span class="counter-title">Happy Users</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-small">
+                        <div class="counter-item counter-text-wrap style-two">
+                            <div class="icon">
+                                <i class="fa"><img src="~/assetsuser/images/icons/nri.svg" width="60" /></i>
+                            </div>
+                            <span class="count-text plus" data-speed="3000" data-stop="@ViewData["NriCount"]">0</span>
+                            <span class="counter-title">NRI</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-small">
+                        <div class="counter-item counter-text-wrap style-two">
+                            <div class="icon">
+                                <i class="fa">
+                                    <img src="~/assetsuser/images/icons/man.png"
+                                         width="60" />
+                                </i>
+                            </div>
+                            <span class="count-text plus" data-speed="3000" data-stop="@ViewBag.TotalMaleBiodata">0</span>
+                            <span class="counter-title">Celebrating Our Men</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-small">
+                        <div class="counter-item counter-text-wrap style-two">
+                            <div class="icon">
+                                <i class="fa">
+                                    <img src="~/assetsuser/images/icons/woman.png"
+                                         width="60" />
+                                </i>
+                            </div>
+                            <span class="count-text plus" data-speed="3000" data-stop="@ViewBag.TotalFemaleBiodata">0</span>
+                            <span class="counter-title">Celebrating Our Women</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-6">
+                <div class="mobile-app-content" data-aos="fade-right" data-aos-duration="1500" data-aos-offset="50">
+                    <div class="section-title mb-30">
+                        <h2>The Ultimate Matrimonial Experience That Fulfills Your Dream</h2>
+                    </div>
+                    <p>
+                        We understand that love is a unique experience for everyone, which is why we offer personalized matchmaking services tailored to your
+                        specific preferences and values. Our team of experts takes the time to understand your dreams, aspirations, and relationship goals,
+                        ensuring that you are paired with compatible partners.
+                    </p>
+                    <ul class="list-style-two mt-35 mb-30">
+                        <li>Experience Agency</li>
+                        <li>Professional Team</li>
+                        <li>Easy-to-Use Platform</li>
+                        <li>Online Support 24/7</li>
+                    </ul>
+                    <a asp-action="contact" asp-controller="home" class="theme-btn style-two contactus">
+                        <span data-hover="Contact Us">Contact Us</span>
+                        <i class="fal fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- CTA Three Area start -->
+<section class="cta-three-area rel z-1 my-100 success-stories-section">
+    <div class="container">
+
+        <div class="section-title text-center counter-text-wrap aos-init counted aos-animate" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+            <h2><span>Success Stories</span></h2>
+            <p class="pb-4">Real connections, Real stories: where love turns into lifelong relationships and lasting happiness.</p>
+        </div>
+
+        <div class="success-stories">
+            <div class="destination-item style-two" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                <div class="cta-three-inner bgc-black overflow-hidden br-10"
+                     style="background-image: url('/assetsuser/images/newsletter/newsletter-bg-lines.png');">
+                    <div class="row no-gap">
+                        <div class="col-lg-6 rel z-1">
+                            <div class="cta-three-content text-white" data-aos="zoom-in-right" data-aos-duration="1500"
+                                 data-aos-offset="50">
+                                <div class="section-title counter-text-wrap mb-45">
+                                    <h2>Love Across the Miles</h2>
+                                    <h4>
+                                        <img src="~/assetsuser/images/newsletter/wedding.png" alt="Couple" class="sucessstory"
+                                             style="width: 60px; height: 60px" />Rahul & Meera
+                                    </h4>
+                                    <p>
+                                        Long-distance relationship, sparked on Metromani, turned into a beautiful love story. Despite living
+                                        in different cities, they are now happily married, bridging the distance with love.
+                                    </p>
+                                </div>
+                                <a asp-action="findPartner" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                                   class="theme-btn style-two bgc-secondary">
+                                    <span data-hover="Click here">Click here </span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                            <div class="cta-three-shape">
+                                <img src="~/assetsuser/images/shapes/cta.png" alt="Shape">
+                            </div>
+                        </div>
+                        <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1500" data-aos-offset="50">
+                            <div class="cta-three-image bgs-cover"
+                                 style="background-image: url('assetsuser/images/contact/success1.jpg');"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="destination-item style-two" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                <div class="cta-three-inner bgc-black overflow-hidden br-10"
+                     style="background-image: url('/assetsuser/images/newsletter/newsletter-bg-lines.png');">
+                    <div class="row no-gap">
+                        <div class="col-lg-6 rel z-1">
+                            <div class="cta-three-content text-white" data-aos="zoom-in-right" data-aos-duration="1500"
+                                 data-aos-offset="50">
+                                <div class="section-title counter-text-wrap mb-45">
+                                    <h2>A Perfect Match</h2>
+                                    <h4>
+                                        <img src="~/assetsuser/images/newsletter/wedding.png" alt="Couple" class="sucessstory"
+                                             style="width: 60px; height: 60px" />Sanjay & Priya
+                                    </h4>
+                                    <p>
+                                        Found their perfect match on Metromani. Sharing common values, their connection grew quickly,
+                                        leading to a happy marriage built on love, trust, and mutual respect.
+                                    </p>
+                                </div>
+                                <a asp-action="findPartner" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                                   class="theme-btn style-two bgc-secondary">
+                                    <span data-hover="Click here">Click here </span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                            <div class="cta-three-shape">
+                                <img src="~/assetsuser/images/shapes/cta.png" alt="Shape">
+                            </div>
+                        </div>
+                        <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1500" data-aos-offset="50">
+                            <div class="cta-three-image bgs-cover"
+                                 style="background-image: url('assetsuser/images/contact/success2.jpg');"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="destination-item style-two" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                <div class="cta-three-inner bgc-black overflow-hidden br-10"
+                     style="background-image: url('/assetsuser/images/newsletter/newsletter-bg-lines.png');">
+                    <div class="row no-gap">
+                        <div class="col-lg-6 rel z-1">
+                            <div class="cta-three-content text-white" data-aos="zoom-in-right" data-aos-duration="1500"
+                                 data-aos-offset="50">
+                                <div class="section-title counter-text-wrap mb-45">
+                                    <h2>A Journey of Love & Trust</h2>
+                                    <h4>
+                                        <img src="~/assetsuser/images/newsletter/wedding.png" alt="Couple"
+                                             class="sucessstory" style="width: 60px; height: 60px" />Aman & Shruti
+                                    </h4>
+                                    <p>
+                                        Connection grew from shared values and trust. Thanks to Metromani, they found love,
+                                        leading to a strong and committed marriage grounded in mutual admiration and understanding.
+                                    </p>
+                                </div>
+                                <a asp-action="findPartner" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                                   class="theme-btn style-two bgc-secondary">
+                                    <span data-hover="Click here">Click here </span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                            <div class="cta-three-shape">
+                                <img src="~/assetsuser/images/shapes/cta.png" alt="Shape">
+                            </div>
+                        </div>
+                        <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1500" data-aos-offset="50">
+                            <div class="cta-three-image bgs-cover"
+                                 style="background-image: url('assetsuser/images/contact/success3.jpg');"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- CTA Three Area end -->
+<div id="otpModal" class="modal fade" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.43) !important;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Verify OTP</h5>
+            </div>
+            <div class="modal-body">
+                <p>Enter the OTP sent to your email:</p>
+                <input type="text" id="otpInput" class="form-control" maxlength="6" placeholder="Enter OTP" required onkeypress="return isNumberKey(event)"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                <span id="otpError" class="text-danger" style="display:none;"></span>
+                <span id="otpSuccess" class="text-success" style="display:none;">OTP verified successfully!</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="theme-btn style-two" id="verifyOtpBtn"><span data-hover="Verify">Verify</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilePhotoInput = document.getElementById("ProfilePhoto");
+            if (profilePhotoInput) {
+                profilePhotoInput.addEventListener("change", function () {
+                    const file = this.files[0];
+                    const fileValidationMessage = document.getElementById("fileValidationMessage");
+
+                    if (fileValidationMessage) {
+                        fileValidationMessage.style.display = "none";
+                        fileValidationMessage.textContent = "";
+
+                        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
+                        if (file && !allowedTypes.includes(file.type)) {
+                            fileValidationMessage.textContent = "Unsupported file type. Please upload a JPG, JPEG, PNG, or GIF.";
+                            fileValidationMessage.style.display = "block";
+                            this.value = "";
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <script>
+        $("#registerForm").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                type: "POST",
+                url: "/Account/Register",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        $("#otpSentMessage").show();
+                        $("#otpModal").modal("show");
+                    } else {
+                        window.location.href = "/Account/Register";
+                    }
+                },
+                error: function () {
+                    alert("An unexpected error occurred. Please try again.");
+                }
+            });
+        });
+        $("#verifyOtpBtn").click(function () {
+            var otp = $("#otpInput").val();
+            $("#otpError, #otpSuccess").hide().text("");
+
+            $.post("/Account/VerifyOTP", { enteredOTP: otp }, function (response) {
+                if (response.success) {
+                    $("#otpSuccess").text("OTP verified successfully!").show();
+                    setTimeout(() => window.location.href = "/", 2000);
+                } else {
+                    $("#otpError").text(response.message).show();
+                    $("#otpInput").val("").focus();
+                }
+            }).fail(function () {
+                $("#otpError").text("An error occurred. Please try again.").show();
+            });
+        });
+    </script>
+}

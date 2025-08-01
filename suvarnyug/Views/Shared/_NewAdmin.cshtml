@@ -1,0 +1,668 @@
+﻿@using System.Linq
+@using Suvarnyug.Data
+@using suvarnyug.Models
+@inject ApplicationDbContext _context
+@{
+    var notifications = _context.Notifications.Where(n => !n.IsRead).OrderByDescending(n => n.UserId).ToList();
+
+    var model = new AdminViewModel
+            {
+                Notifications = notifications,
+                NotificationCount = notifications.Count,
+            };
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Admin Dashboard - @ViewData["Title"]</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+          name="viewport" />
+    <link rel="icon"
+          href="~/assetsuser/images/logos/logo2.svg"
+          type="image/x-icon" />
+
+    <!-- Fonts and icons -->
+    <script src="~/newassets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+        families: [
+        "Font Awesome 5 Solid",
+        "Font Awesome 5 Regular",
+        "Font Awesome 5 Brands",
+        "simple-line-icons",
+        ],
+        urls: ["/newassets/css/fonts.min.css"],
+        },
+        active: function () {
+        sessionStorage.fonts = true;
+        },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/newassets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/newassets/css/plugins.min.css" />
+    @* <link rel="stylesheet" href="~/newassets/css/kaiadmin.min.css" /> *@
+    <link rel="stylesheet" href="~/newassets/css/kaiadmin.css" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="~/newassets/css/demo.css" />
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a asp-action="index" asp-controller="admin" class="logo">
+                        <img src="~/newassets/img/kaiadmin/logo_light.svg"
+                             alt="navbar brand"
+                             class="navbar-brand"
+                             style="height:70%" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a asp-controller="admin" asp-action="index">
+                                <i class="fas fa-home"></i>
+                                <span class="sub-item">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Users data</h4>
+                        </li>
+                        <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#base">
+                                <i class="fas fa-users"></i>
+                                <p>Users</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="base">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="@Url.Action("users", "admin")">
+                                            <span class="sub-item">Users List</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("useraccess", "admin")">
+                                            <span class="sub-item">User Role Access</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                                <i class="fas fa-crown"></i>
+                                <p>Subscribed Users</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="sidebarLayouts">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href ="@Url.Action("subscribed", "admin")">
+                                            <span class="sub-item">Subscribed Users List</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("directpaymentusers", "admin")">
+                                            <span class="sub-item">Direct Payment Users</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a asp-controller="admin" asp-action="matrimonialmanagement">
+                                <i class="fas fa-file-contract"></i>
+                                <p>Matrimonial Profiles</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="admin" asp-action="forums">
+                                <i class="fas fa-comments"></i>
+                                <p>Forums</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#forms">
+                                <i class="fas fa-globe-asia"></i>
+                                <p>Country/State/City</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="forms">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a asp-controller="admin" asp-action="managecountries">
+                                            <span class="sub-item">Add Country</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="admin" asp-action="managestates">
+                                            <span class="sub-item">Add State</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="admin" asp-action="managecities">
+                                            <span class="sub-item">Add City</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo">
+                    <!-- Logo Header -->
+                    <div class="logo-header" data-background-color="dark">
+                        <a asp-action="index" asp-controller="admin" class="logo">
+                            <img src="~/newassets/img/kaiadmin/logo_light.svg"
+                                 alt="navbar brand"
+                                 class="navbar-brand"
+                                 style="height:70%" />
+                        </a>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+                    </div>
+                    <!-- End Logo Header -->
+                </div>
+                <!-- Navbar Header -->
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                    <div class="container-fluid">
+                        <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="submit" class="btn btn-search pe-1">
+                                        <i class="fa fa-search search-icon"></i>
+                                    </button>
+                                </div>
+                                <input type="text" placeholder="Search ..." class="form-control" />
+                            </div>
+                        </nav>
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                            <li class="nav-item topbar-icon dropdown hidden-caret">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   id="messageDropdown"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    <i class="fa fa-envelope"></i>
+                                    <span class="notification">@(notifications.Count > 99 ? "99+" : notifications.Count.ToString())</span>
+                                </a>
+                                <ul class="dropdown-menu messages-notif-box animated fadeIn"
+                                    aria-labelledby="messageDropdown">
+                                    <li>
+                                        <div class="dropdown-title d-flex justify-content-between align-items-center">
+                                            Messages
+                                            <form asp-controller="Admin" asp-action="MarkAsRead" method="post" style="display:inline;">
+                                                <a href="#" class="small" onclick="this.closest('form').submit();">Mark all as read</a>
+                                            </form>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="message-notif-scroll scrollbar-outer">
+                                            <div class="notif-center">
+                                                @if (notifications.Any())
+                                                {
+                                                    foreach (var notification in notifications)
+                                                    {
+                                                        <a href="#">
+                                                            <div class="notif-img">
+                                                                <i class="icon-user-follow"></i>
+                                                            </div>
+                                                            <div class="notif-content">
+                                                                <span class="subject">@Html.Raw(notification.Message)</span>
+                                                            </div>
+                                                        </a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="dropdown-item-text">No new messages</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item topbar-user dropdown hidden-caret">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                                    <div class="avatar-sm">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            var profilePhotoUrl = User.Claims.FirstOrDefault(c => c.Type == "ProfilePhotoPath")?.Value;
+                                            if (string.IsNullOrEmpty(profilePhotoUrl))
+                                            {
+                                                profilePhotoUrl = Url.Content("~/images/default-profile.jpg");
+                                            }
+                                            else
+                                            {
+                                                profilePhotoUrl = Url.Content(profilePhotoUrl);
+                                            }
+                                            <img src="@profilePhotoUrl" alt="profile" class="img-thumbnail avatar-img rounded-circle" />
+                                        }
+                                    </div>
+                                    <span class="profile-username">
+                                        <span class="op-7">Hi,</span>
+                                        <span class="fw-bold">
+                                            @{
+                                                var firstName = User.Identity.Name.Split(' ').First();
+                                            }
+                                            @firstName
+                                        </span>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                    <li>
+                                        <div class="user-box">
+                                            <div class="avatar-lg">
+                                                    @if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        var profilePhotoUrl = User.Claims.FirstOrDefault(c => c.Type == "ProfilePhotoPath")?.Value;
+                                                        if (string.IsNullOrEmpty(profilePhotoUrl))
+                                                        {
+                                                            profilePhotoUrl = Url.Content("~/images/default-profile.jpg");
+                                                        }
+                                                        else
+                                                        {
+                                                            profilePhotoUrl = Url.Content(profilePhotoUrl);
+                                                        }
+                                                    <img src="@profilePhotoUrl" alt="image profile" class="avatar-img rounded" />
+                                                    }
+                                            </div>
+                                            <div class="u-text p-0 m-0 w-0">
+                                                <h4 class="dropdown-item">@User.Identity.Name</h4>
+                                                <p class="dropdown-item m-0">@User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" asp-action="dashboard" asp-controller="home">Home Dashboard</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="@Url.Action("myprofile", "admin")">My Profile</a>
+                                        <a class="dropdown-item" href="@Url.Action("changepassword", "admin")">Change Password</a>
+                                        <div class="dropdown-divider"></div>
+                                        <form id="logoutForm" method="post" asp-controller="account" asp-action="logout">
+                                            <a class="dropdown-item" href="#" onclick="this.closest('form').submit();">Logout</a>
+                                        </form>
+                                    </li>
+                    </div>
+                    </ul>
+                    </li>
+                    </ul>
+            </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+            @RenderBody()
+        <footer class="footer">
+            <div class="container-fluid d-flex justify-content-between">
+                <div class="copyright">
+                    &copy; Copyright @DateTime.Now.Year All Right Reserved By Suvaranyug
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Custom template | don't include it in your project! -->
+    <div class="custom-template">
+        <div class="title">Settings</div>
+        <div class="custom-content">
+            <div class="switcher">
+                <div class="switch-block">
+                    <h4>Logo Header</h4>
+                    <div class="btnSwitch" id="logoHeaderSwitch">
+                        <button type="button"
+                                class="selected changeLogoHeaderColor"
+                                data-color="dark"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="blue"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="purple"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="light-blue"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="green"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="orange"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="red"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="white"></button>
+                        <br />
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="dark2"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="blue2"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="purple2"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="light-blue2"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="green2"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="orange2"></button>
+                        <button type="button"
+                                class="changeLogoHeaderColor"
+                                data-color="red2"></button>
+                    </div>
+                </div>
+                <div class="switch-block">
+                    <h4>Navbar Header</h4>
+                    <div class="btnSwitch" id="navbarHeaderSwitch">
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="dark"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="blue"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="purple"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="light-blue"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="green"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="orange"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="red"></button>
+                        <button type="button"
+                                class="selected changeTopBarColor"
+                                data-color="white"></button>
+                        <br />
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="dark2"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="blue2"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="purple2"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="light-blue2"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="green2"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="orange2"></button>
+                        <button type="button"
+                                class="changeTopBarColor"
+                                data-color="red2"></button>
+                    </div>
+                </div>
+                <div class="switch-block" id="sidebarSwitch">
+                    <h4>Sidebar</h4>
+                    <div class="btnSwitch">
+                        <button type="button"
+                                class="changeSideBarColor"
+                                data-color="white"></button>
+                        <button type="button"
+                                class="selected changeSideBarColor"
+                                data-color="dark"></button>
+                        <button type="button"
+                                class="changeSideBarColor"
+                                data-color="dark2"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="custom-toggle">
+            <i class="icon-settings"></i>
+        </div>
+    </div>
+    <!-- End Custom template -->
+    </div>
+    <!--   Core JS Files   -->
+    <script src="~/newassets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="~/newassets/js/core/popper.min.js"></script>
+    <script src="~/newassets/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="~/newassets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="~/newassets/js/plugin/chart.js/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="~/newassets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="~/newassets/js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="~/newassets/js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="~/newassets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    @* <script src="~/newassets/js/plugin/jsvectormap/jsvectormap.min.js"></script> *@
+    @* <script src="~/newassets/js/plugin/jsvectormap/world.js"></script> *@
+
+    <!-- Sweet Alert -->
+    <script src="~/newassets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="~/newassets/js/kaiadmin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="~/newassets/js/setting-demo.js"></script>
+    <script src="~/newassets/js/demo.js"></script>
+    <script>
+        $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+          type: "line",
+          height: "70",
+          width: "100%",
+          lineWidth: "2",
+          lineColor: "#177dff",
+          fillColor: "rgba(23, 125, 255, 0.14)",
+        });
+
+        $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+          type: "line",
+          height: "70",
+          width: "100%",
+          lineWidth: "2",
+          lineColor: "#f3545d",
+          fillColor: "rgba(243, 84, 93, .14)",
+        });
+
+        $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+          type: "line",
+          height: "70",
+          width: "100%",
+          lineWidth: "2",
+          lineColor: "#ffa534",
+          fillColor: "rgba(255, 165, 52, .14)",
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.12/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.on("ReceiveNotification", function (message) {
+            // Update count badge
+            let badge = document.getElementById("notificationCountBadge");
+            let currentCount = parseInt(badge.innerText) || 0;
+            badge.innerText = currentCount + 1;
+            badge.style.display = 'inline-block';
+
+            // Append to notification list
+            let notifList = document.getElementById("notificationList");
+            let newNotif = document.createElement("a");
+            newNotif.href = "#";
+            newNotif.innerHTML = `
+                <div class="notif-img"><i class="icon-user-follow"></i></div>
+                <div class="notif-content"><span class="subject">${message}</span></div>
+            `;
+            notifList.prepend(newNotif);
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+    </script>
+    <script>
+        $(document).ready(function () {
+          $("#basic-datatables").DataTable({"order": []});
+        });
+    </script>
+    <script>
+             $(document).ready(function () {
+            // Click Events
+            $('.changeLogoHeaderColor').click(function () {
+                const color = $(this).data('color');
+                localStorage.setItem('logoHeaderColor', color);
+                applyLogoHeaderColor(color);
+                highlightSelectedButton('#logoHeaderSwitch', color);
+            });
+
+            $('.changeTopBarColor').click(function () {
+                const color = $(this).data('color');
+                localStorage.setItem('topBarColor', color);
+                applyTopBarColor(color);
+                highlightSelectedButton('#navbarHeaderSwitch', color);
+            });
+
+            $('.changeSideBarColor').click(function () {
+                const color = $(this).data('color');
+                localStorage.setItem('sideBarColor', color);
+                applySideBarColor(color);
+                highlightSelectedButton('#sidebarSwitch', color);
+            });
+
+            // Initial Load from localStorage
+            const savedLogoHeader = localStorage.getItem('logoHeaderColor') || 'dark';
+            const savedTopBar = localStorage.getItem('topBarColor') || 'white';
+            const savedSidebar = localStorage.getItem('sideBarColor') || 'dark';
+
+            applyLogoHeaderColor(savedLogoHeader);
+            applyTopBarColor(savedTopBar);
+            applySideBarColor(savedSidebar);
+
+            highlightSelectedButton('#logoHeaderSwitch', savedLogoHeader);
+            highlightSelectedButton('#navbarHeaderSwitch', savedTopBar);
+            highlightSelectedButton('#sidebarSwitch', savedSidebar);
+
+            // Functions
+            function applyLogoHeaderColor(color) {
+                $('.logo-header').attr('data-background-color', color);
+            }
+
+            function applyTopBarColor(color) {
+                $('.navbar-header').attr('data-background-color', color);
+            }
+
+            function applySideBarColor(color) {
+                $('.sidebar').attr('data-background-color', color);
+            }
+
+            function highlightSelectedButton(containerId, selectedColor) {
+                $(containerId + ' button').removeClass('selected');
+                $(containerId + ' button[data-color="' + selectedColor + '"]').addClass('selected');
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            const currentUrl = window.location.pathname.toLowerCase();
+
+            // Remove all previous active classes
+            $('.sidebar .nav-item, .sidebar .nav-item a').removeClass('active');
+            $('.sidebar .collapse').removeClass('show');
+
+            let found = false;
+
+            $('.sidebar .nav-item').each(function () {
+                const navItem = $(this);
+
+                navItem.find('a').each(function () {
+                    const href = $(this).attr('href');
+                    if (href && currentUrl === href.toLowerCase()) {
+                        navItem.addClass('active');
+                        $(this).addClass('active');
+
+                        // Show the collapsible if it's in one
+                        const collapse = $(this).closest('.collapse');
+                        if (collapse.length) {
+                            collapse.addClass('show');
+                        }
+
+                        found = true;
+                        return false; // Stop loop on first exact match
+                    }
+                });
+
+                if (found) return false; // Stop top-level loop too
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

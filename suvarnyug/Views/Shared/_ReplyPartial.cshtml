@@ -1,0 +1,157 @@
+﻿@model IEnumerable<suvarnyug.Models.Reply>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var reply in Model.Where(r => !r.IsDeleted))
+    {
+        <div class="comment-group" style="margin-left: @(reply.ParentReplyId != null ? "20px" : "0")">
+            <div class="post">
+                <div class="post__avatarr comment__avatar">
+                    <img class="img-thumbnail rounded-circle" src="@(!string.IsNullOrEmpty(reply.User?.ProfilePhotoPath) ? reply.User.ProfilePhotoPath : Url.Content("~/images/default-profile.jpg"))" alt="profile" style="height: 100%; width: 100%;">
+                </div>
+                <h3 class="post__author text-capitalize"><i class="fal fa-user"></i> @reply.User?.FirstName @reply.User?.LastName</h3>
+                <h4 class="post__timestamp"><i class="fal fa-calendar-alt"></i> @reply.CreatedDate.ToString("dd/MM/yyyy")</h4>
+                <div><p class="post__body">@reply.Content</p></div>
+
+                <div class="comment-actions">
+                    <button class="like-button reply-like-button" data-reply-id="@reply.ReplyId" style="background-color:#f9f9f7;">
+                        <i class="fa fa-thumbs-o-up"></i>
+                        <span class="like-count">@reply.Likes?.Count()</span>
+                    </button>
+
+                    <button class="reply-button" onclick="toggleReplyForm(@reply.ReplyId)" style="margin-left:10px;">
+                        <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Reply Form -->
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="reply-form" id="reply-form-@reply.ReplyId" style="display:none;">
+                <form class="reply-form ajax-reply-form" method="post">
+                    <input type="hidden" name="forumId" value="@reply.ForumId" />
+                    <input type="hidden" name="parentReplyId" value="@reply.ReplyId" />
+                    <textarea name="content" class="form-control" placeholder="Reply to this comment" required maxlength="300"></textarea>
+                    <button type="submit" class="theme-btn style-two mb-2">Submit</button>
+                </form>
+            </div>
+        }
+        <!-- Display replies recursively -->
+        @if (reply.Replies != null && reply.Replies.Any())
+        {
+            <div class="replies">
+                @Html.Partial("_ReplyPartial", reply.Replies.Where(r => !r.IsDeleted))
+            </div>
+        }
+    }
+}
+else
+{
+    <p><i class="fal fa-comments-alt"></i> No replies yet.</p>
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Event binding function
+        function bindReplyEvents() {
+            $(".reply-like-button").off("click").on("click", function (e) {
+                e.preventDefault();
+                const button = $(this);
+                const replyId = button.data("reply-id");
+
+                button.prop('disabled', true);
+                $.ajax({
+                    url: '/Forum/LikeReply',
+                    type: 'POST',
+                    data: { replyId: replyId },
+                    success: function (response) {
+                        const likeCount = button.find(".like-count");
+                        likeCount.text(response.likeCount);
+                        button.toggleClass("liked", response.liked);
+                        button.prop('disabled', false);
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 401) window.location.href = '/Account/Login';
+                        button.prop('disabled', false);
+                    }
+                });
+            });
+
+            $(".ajax-reply-form").off("submit").on("submit", function (e) {
+                e.preventDefault();
+                const form = $(this);
+                const formData = form.serialize();
+
+                $.ajax({
+                    url: '/Forum/AddReplyAjax',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            const newReplyHtml = `
+                                <div class="comment-group" style="margin-left: ${response.parentReplyId ? "20px" : "0"}">
+                                    <div class="post">
+                                        <div class="post__avatarr comment__avatar">
+                                            <img class="img-thumbnail rounded-circle" src="${response.profilePhotoPath}" style="height: 100%; width: 100%;">
+                                        </div>
+                                        <h3 class="post__author text-capitalize"><i class="fal fa-user"></i> ${response.userFullName}</h3>
+                                        <h4 class="post__timestamp"><i class="fal fa-calendar-alt"></i> ${response.createdDate}</h4>
+                                        <div><p class="post__body">${response.content}</p></div>
+                                        <div class="comment-actions">
+                                            <button class="like-button reply-like-button" data-reply-id="${response.replyId}" style="background-color:#f9f9f7;">
+                                                <i class="fa fa-thumbs-o-up"></i> <span class="like-count">0</span>
+                                            </button>
+                                            <button class="reply-button" onclick="toggleReplyForm(${response.replyId})" style="margin-left:10px;">
+                                                <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="reply-form" id="reply-form-${response.replyId}" style="display:none;">
+                                        <form class="reply-form ajax-reply-form" method="post">
+                                            <input type="hidden" name="forumId" value="${response.forumId}" />
+                                            <input type="hidden" name="parentReplyId" value="${response.replyId}" />
+                                            <textarea name="content" class="form-control" placeholder="Reply to this comment" required maxlength="300"></textarea>
+                                            <button type="submit" class="theme-btn style-two mb-2">Submit</button>
+                                        </form>
+                                    </div>
+                                    <div class="replies"></div>
+                                </div>`;
+
+                            form.find("textarea[name='content']").val(""); // Clear input
+
+                            if (response.parentReplyId) {
+                                let container = form.closest('.comment-group').find('.replies').first();
+                                if (!container.length) {
+                                    container = $('<div class="replies"></div>').appendTo(form.closest('.comment-group'));
+                                }
+                                container.append(newReplyHtml);
+                            } else {
+                                form.closest('.post__comments').find('.text-center').remove(); // remove "No Replies"
+                                form.before(newReplyHtml);
+                            }
+
+                            bindReplyEvents(); // re-bind events
+                        }
+                    },
+                    error: function () {
+                        alert("Error submitting reply. Please try again.");
+                    }
+                });
+            });
+        }
+
+        // Initial binding
+        bindReplyEvents();
+    });
+
+</script>
+<script>
+    function toggleReplyForm(replyId) {
+        const form = document.getElementById(`reply-form-${replyId}`);
+        if (form) {
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    }
+</script>

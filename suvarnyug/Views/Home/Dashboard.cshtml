@@ -1,0 +1,200 @@
+﻿@model ViewBiodataViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<section class="mobile-app-area py-25 rel z-1" style="background-image: url('/assetsuser/images/newsletter/bg3.png'); background-size: cover;">
+    <div class="container">
+        @if (Model.SelfBiodata != null && Model.SelfBiodata.Any())
+        {
+            foreach (var biodata in Model.SelfBiodata)
+            {
+                <div class="myprofile row ">
+                    <div class="col-lg-6">
+                        <div class="mobile-app-content rmb-55" data-aos="fade-left" data-aos-duration="1500" data-aos-offset="50">
+                            <div class="section-title">
+                                <h2 class="mb-2">Your <span>Matrimonial Profile</span></h2>
+                            </div>
+                            <p style="margin-bottom: 2rem;">Welcome to Your profile! Here, you can view Your details, make updates, and customize the content as needed.</p>
+                            <div class="card" style="background-image: url('/assetsuser/images/pricing/pricing-bg.png');background-color: #1c231f;">
+                                <div class="section-title mt-15">
+                                    <div class="userprofile">
+                                        <h2><i class="fal fa-user-alt text-white"></i> <span class="dashboardusername  text-capitalize">@biodata.FirstName @biodata.LastName</span></h2>
+                                    </div>
+                                </div>
+                                <div class="list-style-two col-lg-12 mt-15 mb-0">
+                                    <span class="dob col-6"><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</span>
+                                    <span class="gender col-6"><i class="fal fa-ring"></i> @biodata.MaritalStatus</span>
+                                </div>
+                                <div class="list-style-two col-lg-12 mt-10 mb-15">
+                                    <span class="education col-6"><i class="fal fa-language"></i> @biodata.MotherTongue</span>
+                                    <span class="views col-6"><i class="fal fa-eye"></i> Profile Visits: @biodata.ViewCount</span>
+                                </div>
+                                <div class="list-style-two col-lg-12 mt-15 mb-0">
+                                    <a href="@Url.Action("edit", "matrimonial", new { id = biodata.BiodataId })" class="theme-btn style-two bgc-secondary col-6 p-1">
+                                        <span data-hover="Edit Profile">Edit Profile</span>
+                                        <i class="fal fa-edit" style="transform: rotate(0deg);"></i>
+                                    </a>
+                                    <a href="@Url.Action("viewprofile", "matrimonial", new { id = biodata.BiodataId })" class="theme-btn style-two col-6 p-1">
+                                        <span data-hover="View Profile">View Profile</span>
+                                        <i class="fal fa-eye" style="transform: rotate(0deg);"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="Create-Profile-dasboard text-white mt-3">
+                                <a asp-action="CreateProfile" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                                   class="theme-btn style-two">
+                                    <span data-hover="Create Profile">Create Profile</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                                <a asp-action="interestedprofile" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                                   class="theme-btn style-two bgc-secondary">
+                                    <span data-hover="Interested in My Profiles">Interested in My Profiles</span>
+                                    <i class="fal fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mobile-app-images">
+                            <div class="images">
+                                <img src="~/assetsuser/images/mobile-app/ganesh.png" alt="Phone" data-aos="fade-down-left" data-aos-duration="1500" data-aos-offset="50">
+                                @if (biodata.Images != null && biodata.Images.Any())
+                                {
+                                    var defaultImage = biodata.Images.FirstOrDefault(i => i.IsDefault) ?? biodata.Images.First();
+                                    <img src="@Url.Content("~/" + defaultImage.ImageUrl)" alt="Profile picture" class="card-img-top" />
+                                    @* <img src="@Url.Content("~/" + biodata.Images.First().ImageUrl)" alt="Profile picture" class="card-img-top" /> *@
+                                }
+                                else
+                                {
+                                    <img src="~/images/default-profile.jpg" alt="Default Profile" class="card-img-top" />
+                                }
+                                <img src="~/assetsuser/images/logos/favicon.png" alt="Phone" data-aos="fade-up-right" data-aos-duration="1500" data-aos-offset="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="dashboardother">
+                <p>No Matrimonial Profile found for yourself.</p>
+                <div class="Create-Profile-dasboard text-white mt-3">
+                    <a asp-action="CreateProfile" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                       class="theme-btn style-two">
+                        <span data-hover="Create Profile">Create Profile</span>
+                        <i class="fal fa-arrow-right"></i>
+                    </a>
+                    <a asp-action="interestedprofile" asp-controller="matrimonial" data-toggle="modal" data-target="#profile"
+                       class="theme-btn style-two bgc-secondary">
+                        <span data-hover="Interested in My Profiles">Interested in My Profiles</span>
+                        <i class="fal fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<div class="borderdashboard"></div>
+<section class="your-biodata-area pt-35 rel z-1">
+    <div class="container">
+        <div class="row justify-space-between mb-2">
+            <div class="col-lg-9">
+                <div class="section-title text-left counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                    <h2>Other <span> Matrimonial Profile</span></h2>
+                    <p>You’re now viewing a profile managed on behalf of another individual. Feel free to review, edit, and enhance the details with ease. Keep everything up-to-date to ensure it reflects the best version of their journey.</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="behlafofother row mb-20">
+            @if (Model.OnBehalfOfBiodata != null && Model.OnBehalfOfBiodata.Any())
+            {
+                foreach (var biodata in Model.OnBehalfOfBiodata)
+                {
+                    <div class="col-md-4 col-lg-3 mb-4" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
+                        <div class="card destination-item">
+                            <div class="image">
+                                @if (biodata.Images != null && biodata.Images.Any())
+                                {
+                                    var defaultImage = biodata.Images.FirstOrDefault(i => i.IsDefault) ?? biodata.Images.First();
+                                    <img src="@Url.Content("~/" + defaultImage.ImageUrl)" alt="Profile picture" class="card-img-top" />
+                                    @* <img src="@Url.Content("~/" + biodata.Images.First().ImageUrl)" alt="Profile picture" class="card-img-top" /> *@
+                                }
+                                else
+                                {
+                                    <img src="~/images/default-profile.jpg" alt="Default Profile" class="card-img-top" />
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title dashboardonother">@biodata.FirstName @biodata.LastName</h5>
+                                <p class="card-text" style="font-size: 18px;">
+                                    <span class="for1"><i class="fal fa-id-card"></i> For: @biodata.BehalfOf</span><br />
+                                    <span class="dob1"><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</span><br />
+                                    <span class="gender1"><i class="fal fa-venus-mars"></i> @biodata.Gender</span><br />
+                                    <span class="education1"><i class="fal fa-language"></i> @biodata.MotherTongue</span><br />
+                                    <span class="views1"><i class="fal fa-eye"></i>Profile Visits: @biodata.ViewCount</span><br />
+                                </p>
+                                <div class="d-flex justify-content-around">
+                                    <a href="@Url.Action("edit", "matrimonial", new { id = biodata.BiodataId })" class="theme-btn style-two bgc-secondary viewbiodata">
+                                        <span data-hover="Edit Profile">Edit Profile</span>
+                                        <i class="fal fa-edit" style="transform: rotate(0deg);"></i>
+                                    </a>
+                                    <a href="@Url.Action("viewprofile", "matrimonial", new { id = biodata.BiodataId })" class="theme-btn style-two viewbiodata">
+                                        <span data-hover="View Profile">View Profile</span>
+                                        <i class="fal fa-eye" style="transform: rotate(0deg);"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row dashboardother">
+                    <p>No Matrimonial Profile found on behalf of others.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+@if (ViewBag.ShowPaymentModal != null && (bool)ViewBag.ShowPaymentModal)
+{
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="showInterestModalLabel" style="background-color: rgba(0, 0, 0, 0.43) !important;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 5px 15px 5px 15px;">
+                    <h5 class="modal-title text-danger" style="font-size:large" id="showInterestModalLabel"><i class="fal fa-exclamation-triangle"></i> Subscription Expired</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="$('#paymentModal').modal('hide');"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="image">
+                        <img src="~/images/avatar/Expire.png" alt="Default Profile" class="card-img-top" />
+                    </div>
+                    <div class="subscription-info text-center mt-3">
+                        <p><i class="fal fa-calendar-times"></i> <strong style="color:#f7921e;">Subscription Expired:</strong> @ViewBag.SubscriptionEndDate</p>
+                    </div>
+                    <p class="text-center" style="color:#63ab45;">Your subscription has expired. In order to continue enjoying premium features, please renew your subscription.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a href="@Url.Action("subscriptiondetails", "Payment")" class="theme-btn style-two bgc-secondary ali"><span data-hover="Subscription Now">Subscription Now</span> <i class="fal fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var showPaymentModal = '@(ViewBag.ShowPaymentModal != null && (bool)ViewBag.ShowPaymentModal ? "true" : "false")';
+
+            if (showPaymentModal === "true") {
+                $('#paymentModal').modal('show');
+            }
+        });
+    </script>
+}

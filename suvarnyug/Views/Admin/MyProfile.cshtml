@@ -1,0 +1,84 @@
+﻿@model Suvarnyug.Models.User
+
+@{
+    ViewData["Title"] = "Admin Profile";
+    // Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">My Profile</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Admin Profile</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                   
+                    <div class="card-header ">
+                        <div class="row align-items-center">
+                            <h4 class="card-title col-md-6">Admin Profile</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 user-img-name">
+                                <div class="text-center">
+                                    <img src="@Url.Content(Model.ProfilePhotoPath)" alt="Profile Photo" class="img-thumbnail rounded-circle" style="width: 200px; height: 200px;" />
+                                    <h3>@Model.FirstName @Model.LastName</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8 d-flex justify-content-center">
+                                <table id="basic-datatables " class="display table table-striped table-hover table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p><strong>Email -</strong></p>
+                                            </td>
+                                            <td>
+                                                <p>@Model.Email</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><strong>Mobile Number -</strong></p>
+                                            </td>
+                                            <td>
+                                                <p>@Model.MobileNo</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><strong>Country -</strong></p>
+                                            </td>
+                                            <td>
+                                                <p>@Model.Country.CountryName</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end">
+                        <a asp-controller="admin" asp-action="editprofile" class="btn btn-secondary text-end">
+                            <span><i class="fa fa-edit"></i> Edit Profile</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,182 @@
+﻿@model List<Country>
+@{
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+    ViewData["Title"] = "Add Country";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Add Country</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Country</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Add Country</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Add Country</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="countryContainer">
+                            @foreach (var country in Model)
+                            {
+                                <div class="col-md-6 col-lg-6 country-item">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="hidden" class="country-id" value="@country.CountryId" />
+                                            <input type="text" class="form-control country-name" value="@country.CountryName" />
+                                            <button type="button" class="btn deleteuser1 delete-country"><i class="fas fa-trash text-danger"></i></button>
+                                        </div>
+                                        <span class="text-danger country-error" style="display:none;">Enter a Country name</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between m-0">
+                        <button type="button" class="btn btn-primary text-end backtouser1" id="addCountry">+ Add Country</button>
+                        <button type="button" class="btn btn-success saverole text-end" data-toggle="modal" data-target="#saveCountryModal">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#addCountry").click(function () {
+                $("#countryContainer").append(`
+                    <div class="col-md-6 col-lg-6 country-item">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="hidden" class="country-id" value="0" />
+                                <input type="text" class="form-control country-name" value="" placeholder="Enter Country"/>
+                                <button type="button" class="btn deleteuser1 delete-country"><i class="fas fa-trash text-danger"></i></button>
+                            </div>
+                            <span class="text-danger country-error" style="display:none;">Enter a Country name</span>
+                        </div>
+                    </div>
+                `);
+            });
+
+            $(document).on("click", ".delete-country", function () {
+                $(this).closest(".country-item").remove();
+            });
+
+            $(".saverole").click(function () {
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you want to save changes to the country list?",
+                    icon: "info",
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            visible: true,
+                            className: "btn btn-secondary",
+                        },
+                        confirm: {
+                            text: "Yes, Save",
+                            className: "btn btn-success",
+                        }
+                    },
+                    dangerMode: false,
+                }).then((willSave) => {
+                    if (willSave) {
+                        var countries = [];
+                        var isValid = true;
+
+                        $(".country-item").each(function () {
+                            var countryId = $(this).find(".country-id").val();
+                            var countryName = $(this).find(".country-name").val();
+                            var errorElement = $(this).find(".country-error");
+
+                            if (countryName.trim() === "") {
+                                errorElement.show();
+                                isValid = false;
+                            } else {
+                                errorElement.hide();
+                                countries.push({
+                                    CountryId: parseInt(countryId),
+                                    CountryName: countryName,
+                                });
+                            }
+                        });
+
+                        if (!isValid) {
+                            swal("Validation Error", "Please enter all country names.", "error");
+                            return;
+                        }
+
+                        $.ajax({
+                            url: "/Admin/SaveCountries",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({ Countries: countries }),
+                            success: function (response) {
+                                swal({
+                                    title: "Saved!",
+                                    text: response.message,
+                                    icon: "success",
+                                    timer: 3000,
+                                    buttons: {
+                                        confirm: {
+                                            text: "OK",
+                                            className: "btn btn-success"
+                                        }
+                                    }
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function (xhr) {
+                                if (xhr.responseText.includes("Cannot delete")) {
+                                    swal({
+                                        title: "Error!",
+                                        content: {
+                                            element: "div",
+                                            attributes: {
+                                                innerHTML: xhr.responseText
+                                            }
+                                        },
+                                        icon: "error",
+                                        buttons: {
+                                            confirm: {
+                                                className: "btn btn-danger"
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    swal("Error!", "An error occurred while saving Country.", "error");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

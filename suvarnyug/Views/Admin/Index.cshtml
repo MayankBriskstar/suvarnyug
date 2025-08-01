@@ -1,0 +1,230 @@
+﻿@using System.Linq
+@model suvarnyug.Models.AdminViewModel
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Users</p>
+                                    <h4 class="card-title">@ViewData["TotalUsers"]</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-info bubble-shadow-small">
+                                    <i class="icon-notebook"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Profiles</p>
+                                    <h4 class="card-title">@ViewData["TotalBiodata"]</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-secondary bubble-shadow-small">
+                                    <i class="icon-book-open"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Forums</p>
+                                    <h4 class="card-title">@ViewData["TotalForums"]</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-success bubble-shadow-small">
+                                    <i class="icon-wallet"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Subscribers</p>
+                                    <h4 class="card-title">@ViewData["TotalSubscribedUsers"]</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-round">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">User Statistics</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="min-height: 375px">
+                            <canvas id="usersChart"></canvas>
+                        </div>
+                        <div id="myUsersChartLegend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biodata Chart -->
+            <div class="col-md-12">
+                <div class="card card-round">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Biodata Statistics</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="min-height: 375px">
+                            <canvas id="biodataChart"></canvas>
+                        </div>
+                        <div id="myBiodataChartLegend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forums Chart -->
+            <div class="col-md-12">
+                <div class="card card-round">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Forum Statistics</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="min-height: 375px">
+                            <canvas id="forumsChart"></canvas>
+                        </div>
+                        <div id="myForumsChartLegend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscribed Users Chart -->
+            <div class="col-md-12">
+                <div class="card card-round">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Subscribed User Statistics</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="min-height: 375px">
+                            <canvas id="subscribedUsersChart"></canvas>
+                        </div>
+                        <div id="mySubscribedUsersChartLegend"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-round">
+                    <div class="card-header">
+                        <div class="card-head-row card-tools-still-right">
+                            <div class="card-title">Latest Users</div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <!-- Projects table -->
+                            <table class="table align-items-center mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col" class="text-end">Profile Photo</th>
+                                        <th scope="col" class="text-end">Name</th>
+                                        <th scope="col" class="text-end">Email</th>
+                                        <th scope="col" class="text-end">Country</th>
+                                        <th scope="col" class="text-end">Created Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.LatestUsers != null)
+                                    {
+                                        foreach (var user in ViewBag.LatestUsers)
+                                        {
+                                            <tr>
+                                                <td class="text-center">
+                                                        <a><img class="img-thumbnail rounded-circle imagecss" src="@user.ProfilePhotoPath" alt="User Avatar"></a>
+                                                </td>
+                                                <td class="text-end">
+                                                    @user.FirstName @user.LastName
+                                                </td>
+                                                <td class="text-end">
+                                                    @user.Email
+                                                </td>
+                                                <td class="text-end">
+                                                    @user.Country.CountryName
+                                                </td>
+                                                <td class="text-end">
+                                                    @user.CreatedAt.ToString("dd/MM/yyyy")
+                                                </td>
+                                            </tr>
+                                            @* <tr>
+                                                <th scope="row">
+                                                    <button class="btn btn-icon btn-round btn-success btn-sm me-2">
+                                                        <i class="fa fa-check"></i>
+                                                    </button>
+                                                    Payment from #10231
+                                                </th>
+                                                <td class="text-end">Mar 19, 2020, 2.45pm</td>
+                                                <td class="text-end">$250.00</td>
+                                                <td class="text-end">
+                                                    <span class="badge badge-success">Completed</span>
+                                                </td>
+                                            </tr> *@
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var yearlyUserData = @Html.Raw(Json.Serialize(ViewBag.UsersYearlyCounts));
+    var yearlyBiodataData = @Html.Raw(Json.Serialize(ViewBag.BiodataYearlyCounts));
+    var yearlyForumsData = @Html.Raw(Json.Serialize(ViewBag.ForumsYearlyCounts));
+    var yearlySubscribedUsersData = @Html.Raw(Json.Serialize(ViewBag.SubscribedUsersYearlyCounts));
+
+</script>

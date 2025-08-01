@@ -1,0 +1,292 @@
+﻿@model IEnumerable<Suvarnyug.Models.Biodata>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Find Partner's";
+}
+<div class="filter-options">
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col-lg-4">
+                <a asp-controller="matrimonial" asp-action="createprofile" class="theme-btn style-two bgc-secondary findpatnerbutall">
+                    <span data-hover="Create Profile">Create Profile</span> <i class="fal fa-user-plus" style="transform: rotate(0deg);"></i>
+                </a>
+                <button type="button" class="theme-btn style-two findpatnerbutall" data-toggle="modal" data-target="#filterModal">
+                    <span data-hover="Filter by"> Filter by</span> <i class="fal fa-search" style="transform: rotate(0deg);"></i>
+                </button>
+
+            </div>
+            <div class="col-lg-8">
+                @if (Context.Request.Query.Count > 0 && ViewBag.IsAISuggestion != true)
+                {
+                    <div class="row">
+                        <div class="col-lg-12 text-end" style="font-size: 17px;">
+                            <div class="filter-header">
+                                <strong>Filter By</strong>
+                            </div>
+
+                            <div id="selectedFilters" class="selected-filters d-flex flex-wrap justify-content-end">
+                                @if (!string.IsNullOrEmpty(Context.Request.Query["gender"]))
+                                {
+                                    <span class="filter-tag">
+                                        Loogine For: @(Context.Request.Query["gender"] == "Male" ? " Groom" : (Context.Request.Query["gender"] == "Female" ? " Bride" : Context.Request.Query["gender"]))
+                                    </span>
+                                }
+                                @if (!string.IsNullOrEmpty(Context.Request.Query["maritalStatus"]))
+                                {
+                                    <span class="filter-tag">Marital Status: @Context.Request.Query["maritalStatus"]</span>
+                                }
+                                @if (!string.IsNullOrEmpty(Context.Request.Query["income"]))
+                                {
+                                    <span class="filter-tag">Income: @Context.Request.Query["income"]</span>
+                                }
+                                @if (!string.IsNullOrEmpty(Context.Request.Query["country"]))
+                                {
+                                    <span class="filter-tag">Country: @Context.Request.Query["country"]</span>
+                                }
+                                @if (!string.IsNullOrEmpty(Context.Request.Query["minAge"]) || !string.IsNullOrEmpty(Context.Request.Query["maxAge"]))
+                                {
+                                    <span class="filter-tag">
+                                        Age Range: @(string.IsNullOrEmpty(Context.Request.Query["minAge"]) ? "Any" : Context.Request.Query["minAge"])
+                                        - @(string.IsNullOrEmpty(Context.Request.Query["maxAge"]) ? "Any" : Context.Request.Query["maxAge"])
+                                    </span>
+                                }
+                            </div>
+                            <div class="clear-filter-btn">
+                                <a href="@Url.Action("FindPartner", "Matrimonial")" class="" style="color:#63ab45;"><strong>Clear Filters</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="filter-options">
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col-lg-7">
+                <div class="search-container d-flex justify-content-start">
+                    <input type="text" id="aiFilterInput" class="form-control w-50 me-1 seacrchquaryinputfiled" placeholder="Describe your ideal match..." value="@Context.Request.Query["query"]">
+                    <button id="aiFilterSearchBtn" class="theme-btn style-two findpatnerbutall">
+                        <span data-hover="Search">Search</span> <i class="fal fa-search" style="transform: rotate(0deg);"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div class="row col-lg-5 justify-content-end d-flex m-0">
+                <div class="col-lg-6 p-0">
+                    <button type="button" id="findAiPartnerBtn" class="theme-btn style-two findpatnerbutall" style="width: 100%;">
+                        <span data-hover="AI-Powered Match">AI-Powered Match</span>
+                    </button>
+                </div>
+                @if (ViewBag.IsAISuggestion != null && (bool)ViewBag.IsAISuggestion)
+                {
+                    <div class="col-lg-6 p-0">
+                        <a href="@Url.Action("FindPartner", "Matrimonial")" class="theme-btn style-two bgc-secondary findpatnerbutall ms-2" style="width: 100%;">
+                            <span data-hover="Clear Ai Filter">Clear Ai Filter</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true" style="background-color: rgba(0, 0, 0, 0.43) !important; overflow-y:hidden;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="filterForm" class="filter-form">
+                <div class="modal-header" style="padding: 5px 15px 5px 15px;">
+                    <h5 class="modal-title" id="showInterestModalLabel"><i class="fal fa-search"></i> Filter Partner</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="$('#filterModal').modal('hide');"></button>
+                </div>
+                <div class="modal-body" style="padding: 10px 10px 10px 10px;">
+                    <div class="filter-form">
+                        <div>
+                            <label for="gender">Looking for</label>
+                            <select id="gender" name="gender" class="form-control">
+                                <option value="">Select Bride/Groom</option>
+                                <option value="Male">Looking for Groom</option>
+                                <option value="Female">Looking for Bride</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="maritalStatus">Marital Status</label>
+                            <select id="maritalStatus" name="maritalStatus" class="form-control">
+                                <option value="">Select Marital Status</option>
+                                <option value="Un-Married">Un-Married</option>
+                                <option value="Widow">Widow</option>
+                                <option value="Divorcee">Divorcee</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="income">Income</label>
+                            <select id="income" name="income" class="form-control">
+                                <option value="">Please select Income</option>
+                                <option value="Under 1 Lac">Under 1 Lac</option>
+                                <option value="1-2 Lac">1-2 Lac</option>
+                                <option value="2-5 Lac">2-5 Lac</option>
+                                <option value="5-10 Lac">5-10 Lac</option>
+                                <option value="Over 10 Lac">Over 10 Lac</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="country">Country</label>
+                            <select id="country" name="country" class="form-control">
+                                <option value="">Select Country</option>
+                                @foreach (var country in ViewBag.Countries as IEnumerable<suvarnyug.Models.Country>)
+                                {
+                                    <option value="@country.CountryName">@country.CountryName</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label for="minAge">Age Range</label>
+                            <div class="d-flex">
+                                <select id="minAge" name="minAge" class="form-control">
+                                    @for (int i = 18; i <= 60; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <span class="mx-2">to</span>
+                                <select id="maxAge" name="maxAge" class="form-control">
+                                    @for (int i = 18; i <= 60; i++)
+                                    {
+                                        <option value="@i" selected="60">@i</option>
+                                    }
+                                </select>
+                            </div>
+                            <span id="ageValidationError" class="text-danger d-none">Min Age Cannot Be Greater Than Max Age!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" id="applyFilterBtn" class="theme-btn style-two"><span data-hover="Apply Filters">Apply Filters</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<section class="find-partner-area pt-20 rel z-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section-title text-center counter-text-wrap" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                    @if (ViewBag.IsAISuggestion != null && (bool)ViewBag.IsAISuggestion)
+                    {
+                        <h2>AI-Powered <span>Matchs</span> <strong class="filterbycountshow">@ViewBag.TotalOrFilteredCount</strong> Suggested Profiles</h2>
+                        <p>Our AI has carefully analyzed profiles to bring you the best matches. Find your perfect partner effortlessly!</p>
+                    }
+                    else
+                    {
+                        <h2>Find Your <span>Partner</span> Among <strong class="filterbycountshow">@ViewBag.TotalOrFilteredCount</strong> Profiles</h2>
+                        <p>Meet your perfect partner for genuine connections and fulfilling relationships.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="hotel-area py-15 rel z-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            @foreach (var biodata in Model)
+            {
+                <div class="col-lg-6 col-md-6 col-sm-12 mb-15">
+                    <a href="@Url.Action("profile", "user", new { biodataId = biodata.BiodataId })">
+                        <div>
+                            <div class="destination-item style-three bgc-lighter aos-init aos-animate" data-aos="fade-up" data-aos-duration="1500" data-aos-offset="50">
+                                <div class="image">
+                                    @* <img src="/images/databio\3.jpg" alt="Hotel"> *@
+                                    @if (biodata.Images != null && biodata.Images.Any())
+                                    {
+                                        var firstImage = biodata.Images.FirstOrDefault(i => i.IsDefault) ?? biodata.Images.First();
+                                        <img src="@Url.Content("~/" + firstImage.ImageUrl)" alt="Profile picture" class="profileimageallfind" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/default-profile.jpg" alt="Default Profile" />
+                                    }
+                                </div>
+                                <div class="content conttsixz">
+
+                                    <span class="location"><i class="fal fa-map-marker-alt"></i> @biodata.Country.CountryName</span>
+                                    <h5 class="contentfirstnamelastname text-capitalize">@biodata.FirstName @biodata.LastName</h5>
+                                    <ul class="list-style-one prfoiledetail">
+                                        <li><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</li>
+                                        <li><i class="fal fa-language"></i> @biodata.MotherTongue</li>
+                                        <li><i class="fal fa-ring"></i> @biodata.MaritalStatus</li>
+                                        <li><i class="fal fa-money"></i> @biodata.Income</li>
+                                    </ul>
+                                    <div class="destination-footer m-0" style="align-items: normal;">
+                                        <div class="read-more">View Profile <i class="fal fa-angle-right"></i></div>
+                                        <span class="location text-end" style="font-size:14px; color:#63ab45;">
+                                            Last Login: @(biodata.User?.UserLogin.OrderByDescending(l => l.LoginTime).FirstOrDefault()?.LoginTime.ToString("dd/MM/yyyy - HH:mm") ?? "N/A")
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("applyFilterBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            let form = document.getElementById("filterForm");
+            let formData = new FormData(form);
+            let params = new URLSearchParams();
+            formData.forEach((value, key) => {
+                if (value.trim() !== "") {
+                    params.append(key, value);
+                }
+            });
+            let minAge = document.getElementById("minAge").value;
+            let maxAge = document.getElementById("maxAge").value;
+            let ageError = document.getElementById("ageValidationError");
+            if (minAge && maxAge && parseInt(minAge) > parseInt(maxAge)) {
+                ageError.classList.remove("d-none");
+                return;
+            } else {
+                ageError.classList.add("d-none");
+            }
+
+            let url = "/Matrimonial/FindPartner";
+            if (params.toString().length > 0) {
+                url += "?" + params.toString();
+            }
+
+            window.location.href = url;
+        });
+    </script>
+    <script>
+        document.getElementById("findAiPartnerBtn").addEventListener("click", function () {
+            window.location.href = "/Matrimonial/FindPartnerAI";
+        });
+    </script>
+    <script>
+        document.getElementById("aiFilterSearchBtn").addEventListener("click", function () {
+            let searchQuery = document.getElementById("aiFilterInput").value;
+            if (searchQuery.trim() !== "") {
+                window.location.href = "/Matrimonial/FindPartnerAISearch?query=" + encodeURIComponent(searchQuery);
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get("query");
+
+            if (queryParam) {
+                document.getElementById("aiFilterInput").value = queryParam;
+            }
+        });
+    </script>
+}

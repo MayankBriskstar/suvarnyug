@@ -1,0 +1,132 @@
+﻿@model Suvarnyug.Models.User
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    // Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Edit Profile</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">My Profile</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Edit Profile</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="editprofile" asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <h4 class="card-title col-md-6">Edit Profile</h4>
+                                <div class="col-md-6 text-end">
+                                    <a href="@Url.Action("myprofile", "admin")" class="btn text-end backtouser ">
+                                        <i class="fas fa-angle-left"></i> Back
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" asp-for="UserId" />
+                            <input type="hidden" asp-for="PasswordHash" />
+                            <input type="hidden" asp-for="ConfirmPassword" />
+                            <input type="hidden" asp-for="Country" />
+                            <div class="form-group">
+                                <label asp-for="FirstName">First Name <span class="star-validation-ddl">*</span></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="LastName">Last Name <span class="star-validation-ddl">*</span></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Email">Email <span class="star-validation-ddl">*</span></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="MobileNo">Mobile Number <span class="star-validation-ddl">*</span></label>
+                                <input asp-for="MobileNo" class="form-control" required maxlength="14" pattern="^[0-9]{10,14}$" title="Please enter a valid mobile number (10 to 14 digits only)." onkeypress="return isNumberKey(event)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                <span asp-validation-for="MobileNo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="CountryId" class="form-label">Country <span class="star-validation-ddl">*</span></label>
+                                <select asp-for="CountryId" class="form-control" id="CountryId" required>
+                                    @foreach (var country in ViewBag.Countries)
+                                    {
+                                        <option value="@country.CountryId">@country.CountryName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ProfilePhoto">Upload Profile Photo</label>
+                                <input type="file" class="form-control" name="ProfilePhoto" id="mayank" />
+                                <span id="fileValidationMessage" class="text-danger" style="display:none;"></span>
+                                @if (!string.IsNullOrEmpty(Model.ProfilePhotoPath))
+                                {
+                                    <div class="mt-2">
+                                        <img class="img-thumbnail rounded-circle" src="@Model.ProfilePhotoPath" alt="Profile Photo" style="width: 150px; height: 150px;" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success saverole">
+                                <span class="ti-save-alt" style="margin-right:5px;"></span> Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    document.getElementById("mayank").addEventListener("change", function () {
+        const file = this.files[0];
+        const fileValidationMessage = document.getElementById("fileValidationMessage");
+
+        fileValidationMessage.style.display = "none";
+        fileValidationMessage.textContent = "";
+
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
+        if (file) {
+            if (!allowedTypes.includes(file.type)) {
+                fileValidationMessage.textContent = "Unsupported file type. Please upload a JPG, JPEG, PNG, or GIF.";
+                fileValidationMessage.style.display = "block";
+                this.value = "";
+            }
+        }
+    });
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>

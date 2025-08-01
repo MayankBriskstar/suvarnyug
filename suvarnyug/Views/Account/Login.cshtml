@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/assetsuser/images/logos/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link href="~/assetsuser/css/login.css" rel="stylesheet" />
+    <title>SuvarnYug - Login</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="forms-container">
+            <div class="signin-signup">
+                <form class="sign-in-form" onsubmit="event.preventDefault(); submitLogin();">
+                    <img src="~/assetsuser/images/logos/logo.svg" alt="Logo" style="width:80%" />
+                    <h2 class="title">Sign In</h2>
+                    <div id="error-message"></div>
+                    <div class="input-field">
+                        <i class="fa fa-user"></i>
+                        <input type="email" name="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-field">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" name="text" id="password" placeholder="Password" required>
+                    </div>
+                    <button type="button" class="btn solid" onclick="submitLogin()">Login</button>
+                </form>
+                <div class="social-text">
+                    <div>
+                        <p class="forgot"><a class="Password" href="@Url.Action("forgotPassword", "account")"><span data-hover="Forgot your password?">Forgot Your Password?</span></a></p>
+                    </div>
+                    <div>
+                        <p class="account">Don't have an account? <a asp-controller="account" asp-action="register" class="register"><span data-hover="Sign Up">Sign Up</span></a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panels-container">
+            <div class="panel left-panel">
+                <div class="content">
+                    <h3>Welcome Back to Metromai.</h3>
+                    <p>
+                        Log in to connect with your matches, join vibrant forum discussions, and explore threads that matter to you.
+                        New here? Create an account and become part of the Metromai community today.
+                    </p>
+                </div>
+                <img src="~/assetsuser/images/logos/login.svg" class="image" alt="" />
+            </div>
+        </div>
+    </div>
+    <script>
+        async function submitLogin() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (!email) {
+                errorMessage.textContent = 'Email is required.';
+                return;
+            }
+            if (!password) {
+                errorMessage.textContent = 'Password is required.';
+                return;
+            }
+
+            errorMessage.textContent = '';
+
+            try {
+                const response = await fetch('@Url.Action("Login", "Account")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ Email: email, Password: password })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    window.location.href = result.redirectUrl;
+                } else {
+                    const error = await response.json();
+                    errorMessage.textContent = error.message || 'Invalid Email or Password.';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'An unexpected error occurred. Please try again later.';
+            }
+        }
+    </script>
+</body>
+</html>

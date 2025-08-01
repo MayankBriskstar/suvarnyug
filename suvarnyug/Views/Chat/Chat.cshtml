@@ -1,0 +1,176 @@
+﻿@model List<suvarnyug.Models.ChatMessage>
+@{
+    ViewData["Title"] = "Chat with " + ViewBag.OtherUser.FirstName;
+}
+
+<section class="chat-container">
+    <div class="chat-header">
+        <a href="@(!string.IsNullOrEmpty(ViewBag.OtherUser.ProfilePhotoPath) ? ViewBag.OtherUser.ProfilePhotoPath : Url.Content("~/images/default-profile.jpg"))" target="_blank">
+            <img src="@(!string.IsNullOrEmpty(ViewBag.OtherUser.ProfilePhotoPath) ? ViewBag.OtherUser.ProfilePhotoPath : Url.Content("~/images/default-profile.jpg"))"
+                 alt="User Avatar" class="avatar img-thumbnail">
+        </a>
+        <span class="chat-title">@ViewBag.OtherUser.FirstName @ViewBag.OtherUser.LastName</span>
+        <div class="chat-icons">
+            <a href="@Url.Action("Index", "Chat")" class="text-white">
+                <i class="fa fa-arrow-left me-2"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <div id="chat-messages" class="chat-box">
+        @foreach (var message in Model)
+        {
+            <div class="message-wrapper @(message.SenderId == ViewBag.OtherUser.UserId ? "received-wrapper" : "sent-wrapper")" id="message-@message.MessageId">
+                <div class="message-time @(message.SenderId == ViewBag.OtherUser.UserId ? "received-time" : "sent-time")">
+                    @message.SentAt.ToString("HH:mm | dd/MM/yyyy")
+                </div>
+
+                @if (message.SenderId == ViewBag.OtherUser.UserId)
+                {
+                    <div class="message-sender received-sender">
+                        @ViewBag.OtherUser.FirstName @ViewBag.OtherUser.LastName
+                    </div>
+                }
+                else
+                {
+                    <div class="message-sender sent-sender">
+                        You
+                    </div>
+                }
+
+                <div class="message @(message.SenderId == ViewBag.OtherUser.UserId ? "received" : "sent")">
+                    <p class="mb-0" style="font-size:16px;">@message.MessageText</p>
+                </div>
+
+                @if (message.SenderId != ViewBag.OtherUser.UserId)
+                {
+                    <div class="message-status">
+                        @if (message.IsRead)
+                        {
+                            <span>Seen</span>
+                        }
+                        else
+                        {
+                            <span>Unread</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="message-input" placeholder="Type a message..." class="chat-input form-control">
+        <button id="send-btn" class="send-btn"><i class="fa fa-paper-plane"></i></button>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.14/signalr.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const receiverId = @ViewBag.OtherUser.UserId;
+        const receiverName = "@Html.Raw(ViewBag.OtherUser?.FirstName)" + " " + "@Html.Raw(ViewBag.OtherUser?.LastName)";
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        function updateMessageStatus(messageId, isSeen) {
+            const messageWrapper = document.querySelector(`#message-${messageId}`);
+            if (!messageWrapper) return;
+
+            const statusDiv = messageWrapper.querySelector('.message-status');
+            if (statusDiv) {
+                if (isSeen) {
+                    statusDiv.innerText = 'Seen';
+                    statusDiv.classList.remove('unread');
+                    statusDiv.classList.add('seen');
+                }
+            }
+        }
+
+        function scrollToBottom() {
+            const chat = document.getElementById("chat-messages");
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Send message
+        function sendMessage() {
+            let message = document.getElementById("message-input").value;
+            if (message.trim() === '') return;
+
+            fetch("/chat/SendMessage", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `receiverId=${receiverId}&message=${message}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                let chat = document.getElementById("chat-messages");
+                chat.innerHTML += `<div class="message-wrapper sent-wrapper" id="message-${data.messageId}">
+                                        <div class="message-time sent-time">Just Now</div>
+                                        <div class="message-sender sent-sender">You</div>
+                                        <div class="message sent">
+                                            <p class="mb-0" style="font-size:16px;">${message}</p>
+                                        </div>
+                                        <div class="message-status">Unread</div>
+                                    </div>`;
+                document.getElementById("message-input").value = "";
+                chat.scrollTop = chat.scrollHeight;
+            });
+        }
+
+        // Attach the sendMessage function to the button click
+        document.getElementById("send-btn").addEventListener("click", sendMessage);
+        document.getElementById("message-input").addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+        // SignalR receive message
+        connection.on("ReceiveMessage", (senderId, message, messageId) => {
+            if (senderId === receiverId) {
+                let chat = document.getElementById("chat-messages");
+                chat.innerHTML += `<div class="message-wrapper received-wrapper" id="message-${messageId}">
+                                      <div class="message-time received-time">Just Now</div>
+                                      <div class="message-sender received-sender">${receiverName}</div>
+                                      <div class="message received">
+                                          <p class="mb-0" style="font-size:16px;">${message}</p>
+                                      </div>
+                                  </div>`;
+                chat.scrollTop = chat.scrollHeight;
+                fetch(`/chat/MarkMessageAsRead?messageId=${messageId}`)
+                .then(() => {
+                    connection.invoke("NotifyMessageSeen", messageId, senderId);
+                })
+                .catch(error => console.error("Error marking message as seen:", error));
+            }
+        });
+        connection.on("MessageSeen", (messageId) => {
+            updateMessageStatus(messageId, true);
+        });
+        window.onload = function () {
+            scrollToBottom();
+            fetch(`/Chat/MarkMessagesAsRead/${receiverId}`, { method: "POST" })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(err => { throw new Error(err); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    data.messageIds.forEach(messageId => {
+                        updateMessageStatus(messageId, true);
+                    });
+                } 
+            })
+            .catch(error => console.error("Error marking messages as read:", error));
+        };
+    });
+</script>

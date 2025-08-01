@@ -1,0 +1,23 @@
+﻿@* @{
+    ViewData["Title"] = "Verify Aadhaar";
+}
+
+<h2>Verify Aadhaar</h2>
+<p>Please enter your 12-digit Aadhaar number for age verification.</p>
+
+<form method="post">
+    <div class="form-group">
+        <label for="aadhaarNumber">Enter Aadhaar Number</label>
+        <input type="text" name="aadhaarNumber" class="form-control" pattern="\d{12}" required
+               title="Aadhaar number must be 12 digits">
+    </div>
+    <button type="submit" class="btn btn-primary">Verify</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false)
+    </div>
+}
+ *@

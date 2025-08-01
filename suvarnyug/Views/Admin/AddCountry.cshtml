@@ -1,0 +1,141 @@
+﻿@model List<Country>
+
+@{
+    Layout = "~/Views/Shared/_Adminlayout.cshtml";
+    ViewData["Title"] = "Manage Countries, States, and Cities";
+}
+
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header viewuser">
+                    <strong class="col-lg-10"><i class="ti-pulse" style="color:#63ab45 !important;"></i> Manage Countries, States, and Cities</strong>
+                </div>
+                <form id="countriesForm">
+                    <div id="countriesContainer">
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var country in Model)
+                            {
+                                <div class="maindivaddcountry">
+                                    <div class="card addcountrycard">
+                                        <div class="country-group">
+                                            <h4>Country</h4>
+                                            <input type="text" name="countryName" value="@country.CountryName" required class="form-control1" />
+                                            <button type="button" class="btn btn-outline-danger deleteuser1">
+                                                <span class="ti-trash" style="margin-right: 5px;"></span>Remove Country
+                                            </button>
+
+                                            <div class="statesContainer">
+                                                @foreach (var state in country.States)
+                                                {
+                                                    <div class="state-group">
+                                                        <input type="text" name="stateName" value="@state.StateName" required class="form-control1" />
+                                                        <button type="button" class="btn btn-outline-danger deleteuser1">
+                                                            <span class="ti-trash" style="margin-right: 5px;"></span>Remove State
+                                                        </button>
+
+                                                        <div class="citiesContainer row m-0" style="padding: 15px;">
+                                                            @foreach (var city in state.Cities)
+                                                            {
+                                                                <div class="col-lg-6">
+                                                                    <input type="text" name="cityName" value="@city.CityName" required class="form-control1" />
+                                                                    <button type="button" class="btn btn-outline-danger deleteuser1">
+                                                                        <span class="ti-trash" style="margin-right: 5px;"></span>Remove City
+                                                                    </button>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        <button type="button" class="addCityBtn">Add City</button>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <button type="button" class="addStateBtn">Add State</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <button type="button" id="addCountryBtn">Add Country</button>
+                    <div class="card-footer d-flex justify-content-end">
+                        <button type="submit">Save All</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#addCountryBtn").click(function () {
+                $("#countriesContainer").append(`
+                    <div class="country-group">
+                        <h4>Country</h4>
+                        <input type="text" name="countryName" required class="form-control1"/>
+                        <button type="button" class="removeCountryBtn">Remove Country</button>
+                        <div class="statesContainer"></div>
+                        <button type="button" class="addStateBtn">Add State</button>
+                    </div>
+                `);
+            });
+
+            $(document).on("click", ".addStateBtn", function () {
+                $(this).siblings(".statesContainer").append(`
+                    <div class="state-group">
+                        <input type="text" name="stateName" required class="form-control1" placeholder="Enter State.."/>
+                        <button type="button" class="removeStateBtn">Remove State</button>
+                        <div class="citiesContainer row"></div>
+                        <button type="button" class="addCityBtn">Add City</button>
+                    </div>
+                `);
+            });
+
+            $(document).on("click", ".addCityBtn", function () {
+                $(this).siblings(".citiesContainer").append(`
+                    <div class="col-lg-6">
+                        <input type="text" name="cityName" required class="form-control1" placeholder="Enter City.." />
+                        <button type="button" class="btn btn-outline-danger deleteuser1">
+                            <span class="ti-trash" style="margin-right: 5px;"></span>Remove City
+                        </button>
+                    </div>
+                `);
+            });
+
+            $(document).on("click", ".removeCountryBtn", function () { $(this).parent().remove(); });
+            $(document).on("click", ".removeStateBtn", function () { $(this).parent().remove(); });
+            $(document).on("click", ".removeCityBtn", function () { $(this).parent().remove(); });
+
+            $("#countriesForm").submit(function (e) {
+                e.preventDefault();
+
+                let countries = [];
+                $(".country-group").each(function () {
+                    let country = { CountryName: $(this).find("[name='countryName']").val(), States: [] };
+                    $(this).find(".state-group").each(function () {
+                        let state = { StateName: $(this).find("[name='stateName']").val(), Cities: [] };
+                        $(this).find("[name='cityName']").each(function () {
+                            state.Cities.push({ CityName: $(this).val() });
+                        });
+                        country.States.push(state);
+                    });
+                    countries.push(country);
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/SaveCountries",
+                    contentType: "application/json",
+                    data: JSON.stringify(countries),
+                    success: function (response) {
+                        if (response.success) alert("Saved successfully!");
+                        else alert("Error: " + response.message);
+                    }
+                });
+            });
+        });
+    </script>
+}

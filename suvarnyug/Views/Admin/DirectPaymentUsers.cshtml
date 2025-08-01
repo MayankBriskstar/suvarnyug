@@ -1,0 +1,109 @@
+﻿@model List<suvarnyug.Models.DirectPayment>
+@{
+    ViewData["Title"] = "Direct Payment Users";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Direct Payment Users</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Subscribed Users</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Direct Payment Users</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Direct Payment Users</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables"
+                                   class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Sub ID</th>
+                                        <th>Email</th>
+                                        <th data-orderable="false">Mobile No</th>
+                                        <th>Description</th>
+                                        <th>Payment Status</th>
+                                        <th data-orderable="false">Payment Screenshot</th>
+                                        <th data-orderable="false">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var payment in Model)
+                                    {
+                                        <tr>
+                                            <td>@payment.UserId</td>
+                                            <td>
+                                                @{
+                                                    var email = payment.Email.Length > 15
+                                                    ? payment.Email.Substring(0, 15) + "..."
+                                                    : payment.Email;
+                                                }
+                                                @email
+                                            </td>
+                                            <td>@payment.MobileNo</td>
+                                            <td>
+                                                @{
+                                                    var shortDescription = payment.Description.Length > 20
+                                                    ? payment.Description.Substring(0, 20) + "..."
+                                                    : payment.Description;
+                                                }
+                                                @shortDescription
+                                            </td>
+                                            <td>
+                                                @if (payment.PaymentStatus == "Pending")
+                                                {
+                                                    <span class="text-danger">Pending</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success">Approved</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="@payment.PaymentScreenshot" target="_blank">
+                                                    <img src="@payment.PaymentScreenshot" width="55" height="55" />
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a asp-action="directpaymentview" asp-controller="admin" asp-route-id="@payment.PaymentId" class="btn btn-link btn-primary">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                                @if (payment.PaymentStatus == "Pending")
+                                                {
+                                                    <a asp-action="directpaymentedit" asp-controller="admin" asp-route-id="@payment.PaymentId" class="btn btn-link btn-primary">
+                                                        <i class="far fa-edit"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Suvarnyug.Models.User>
+
+@{
+    ViewData["Title"] = "User Access";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Users Role Access</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Users</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Users Role Access</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Users Role Access</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables"
+                                   class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Current Role</th>
+                                        <th data-orderable="false">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td>@user.UserId</td>
+                                            <td>@user.FirstName @user.LastName</td>
+                                            <td style="word-break: break-word;white-space: normal;">
+                                                @user.Email
+                                            </td>
+                                            <td>@user.Role</td>
+                                            <td>
+                                                <a asp-action="edituserrole" asp-controller="admin" asp-route-userId="@user.UserId" type="button" class="btn btn-link btn-primary">
+                                                    <i class="far fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

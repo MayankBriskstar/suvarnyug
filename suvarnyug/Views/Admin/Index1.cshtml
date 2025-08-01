@@ -1,0 +1,270 @@
+﻿@using System.Linq
+@model suvarnyug.Models.AdminViewModel
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="animated fadeIn">
+    <!-- Widgets  -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-4">
+                            <i class="pe-7s-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">@ViewData["TotalUsers"]</span></div>
+                                <div class="stat-heading">Users</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-1">
+                            <i class="pe-7s-note2"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">@ViewData["TotalBiodata"]</span></div>
+                                <div class="stat-heading">Profiles</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <i class="pe-7s-browser"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">@ViewData["TotalForums"]</span></div>
+                                <div class="stat-heading">Forums</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card" data-toggle="modal" data-target="#notificationModal" style="cursor: pointer;">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib color-red">
+                            <i class="pe-7s-bell"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <span class="count" id="notificationCount">@Model.NotificationCount</span>
+                                <div class="stat-heading">Notifications</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel"><span class="ti-bell text-danger"></span> Notifications</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        @if (Model.Notifications != null && Model.Notifications.Any())
+                        {
+                            foreach (var notification in Model.Notifications)
+                            {
+                                <li class="list-group-item">
+                                    <span class="ti-user"></span>
+                                    <span>@notification.Message</span>
+                                    <form asp-action="markasread" asp-route-id="@notification.NotificationId" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-link markasreadlink"><span class="ti-bookmark"></span>Mark as Read</button>
+                                    </form>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item">No new notifications</li>
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="box-title"><i class="pe-7s-users flat-color-4"></i>User Growth</h4>
+                    <canvas id="usersChart" style="height: 300px; width: 100%;"></canvas>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="box-title"><i class="pe-7s-note2 flat-color-1"></i>Profiles Growth</h4>
+                    <canvas id="biodataChart" style="height: 300px; width: 100%;"></canvas>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="box-title"><i class="pe-7s-browser flat-color-3"></i>Forums Growth</h4>
+                    <canvas id="forumsChart" style="height: 300px; width: 100%;"></canvas>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="box-title"><i class="pe-7s-wallet flat-color-2"></i> Subscribed Users Growth</h4>
+                    <canvas id="subscribedUsersChart" style="height: 300px; width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="orders">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">Latest Users </h4>
+                    </div>
+                    <div class="card-body--">
+                        <div class="table-stats order-table ov-h">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="serial">UserID</th>
+                                        <th class="avatar">Profile Photo</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Country</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.LatestUsers != null)
+                                    {
+                                        foreach (var user in ViewBag.LatestUsers)
+                                        {
+                                            <tr>
+                                                <td class="serial">@user.UserId</td>
+                                                <td class="avatar">
+                                                    <div class="round-img">
+                                                        <a href="#"><img class="img-thumbnail rounded-circle" src="@user.ProfilePhotoPath" alt="User Avatar"></a>
+                                                    </div>
+                                                </td>
+                                                <td>@user.FirstName @user.LastName</td>
+                                                <td>@user.Email</td>
+                                                <td>@user.Country.CountryName</td>
+                                                <td>@user.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.12/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/notificationHub")
+        .build();
+
+    connection.on("ReceiveNotification", function (message) {
+        var notificationCount = parseInt(document.getElementById("notificationCount").innerText) || 0;
+        document.getElementById("notificationCount").innerText = notificationCount + 1;
+        var notificationList = document.querySelector("#notificationModal .list-group");
+        var newNotification = document.createElement("li");
+        newNotification.className = "list-group-item";
+        newNotification.innerHTML = `<i class="fa fa-info"></i><span>${message}</span>`;
+        notificationList.appendChild(newNotification);
+    });
+
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.bundle.min.js"></script>
+
+<!--Chartist Chart-->
+<script src="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartist-plugin-legend@0.6.2/chartist-plugin-legend.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const usersData = @Html.Raw(Json.Serialize(ViewBag.UsersYearlyCounts));
+    const forumsData = @Html.Raw(Json.Serialize(ViewBag.ForumsYearlyCounts));
+    const biodataData = @Html.Raw(Json.Serialize(ViewBag.BiodataYearlyCounts));
+    const subscribedUsersData = @Html.Raw(Json.Serialize(ViewBag.SubscribedUsersYearlyCounts));
+
+    const blueShades = ['rgba(135, 206, 250, 1)', 'rgba(68, 152, 204, 1)', 'rgba(22, 112, 168, 1)', 'rgba(4, 77, 122, 1)', 'rgba(0, 53, 86, 1)'];
+    const orangeShades = ['rgba(255, 216, 144, 1)', 'rgba(216, 163, 65, 1)', 'rgba(161, 111, 17, 1)', 'rgba(135, 87, 0, 1)'];
+    const greenShades = ['rgba(127, 241, 127, 1)', 'rgba(61, 200, 61, 1)', 'rgba(21, 162, 21, 1)', 'rgba(0, 98, 0, 1)'];
+    const redShades = ['rgba(255, 99, 132, 1)', 'rgba(220, 20, 60, 1)', 'rgba(178, 34, 34, 1)', 'rgba(139, 0, 0, 1)'];
+
+    function renderChart(ctx, yearlyData, label, colorShades) {
+        const datasets = Object.keys(yearlyData).map((year, index) => ({
+            label: `${label} - ${year}`,
+            data: yearlyData[year],
+            borderColor: colorShades[index % colorShades.length],
+            backgroundColor: colorShades[index % colorShades.length].replace('1)', '0.2)'),
+            fill: true,
+            tension: 0.4
+        }));
+
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+    const ctxUsers = document.getElementById('usersChart').getContext('2d');
+    renderChart(ctxUsers, usersData, 'Users Registered', blueShades);
+
+    const ctxForums = document.getElementById('forumsChart').getContext('2d');
+    renderChart(ctxForums, forumsData, 'Forums Created', orangeShades);
+
+    const ctxBiodata = document.getElementById('biodataChart').getContext('2d');
+    renderChart(ctxBiodata, biodataData, 'Biodata Created', greenShades);
+    
+    const ctxSubscribedUsers = document.getElementById('subscribedUsersChart').getContext('2d');
+    renderChart(ctxSubscribedUsers, subscribedUsersData, 'Subscribed Users', redShades);
+
+</script>

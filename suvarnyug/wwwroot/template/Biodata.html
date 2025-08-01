@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrimonial Bio-Data</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0px;
+            background-color: #f5f5f5;
+            height: 0 auto;
+            width: 100%;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            padding: 40px;
+            margin: 0 auto;
+            position: relative;
+            background-color: white;
+            /*background-image: url('https://i.imghippo.com/files/grkL9012iZY.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center center;*/
+            z-index: 2;
+            page-break-before: always;
+        }
+            .container img.background-img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 1237px;
+                object-fit: cover;
+                z-index: 1;
+            }
+        .header {
+            text-align: center;
+            font-size: 22px;
+            color: #a8652d;
+            font-weight: bold;
+            z-index: 2;
+        }
+            .header img {
+                width: 100px;
+                margin-top: 50px;
+                z-index: 2;
+                position: relative;
+            }
+        .section {
+            margin-top: 20px;
+            padding: 5px 50px 5px 50px;
+            position: relative;
+            z-index: 2;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #a8652d;
+            border-bottom: 2px solid #a8652d;
+            padding-bottom: 5px;
+			margin-left: 10px;
+			margin-right: 10px;
+        }
+        .details {
+            margin-top: 10px;
+        }
+        .details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .details td {
+            padding: 6px;
+            vertical-align: top;
+        }
+        .details td:first-child {
+            font-weight: bold;
+        }
+        .photo {
+            position: absolute;
+            top: 37px;
+            right: 60px;
+            border: 3px solid #a8652d;
+            padding: 5px;
+            border-radius: 5px;
+            width: 165px;
+            z-index: 2;
+        }
+        .photo img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .info {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 8px;
+            margin-right: 15px;
+        }
+		.info strong {
+			color: #a8652d;
+			min-width: 190px;
+		}
+		.table-photo {
+			width: 120px;
+			height: auto;
+			border: 3px solid #a8652d;
+			padding: 5px;
+			border-radius: 5px;
+		}
+		.photo-td {
+			text-align: right;
+			vertical-align: top;
+		}
+		.title1{
+			margin-left: 20px;
+		}
+		.text-details {
+			margin-left: 20px;
+		}
+		.text-details1 {
+			margin-left: 20px;
+			margin-top: 10px;
+		}
+		.logo {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 130px;
+			width: 100%;
+		}
+		.logo img {
+			max-width: 100%;
+			height: auto;
+			max-height: 120px;
+			object-fit: contain;
+		}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="{{backgroundImage}}" alt="Background Image" class="background-img">
+        <div class="header">
+            <img src="{{ganeshImage}}" alt="" border="0">
+            <div style="z-index: 2; position: relative;">ॐ श्री गणेशाय नमः</div>
+        </div>
+        <div class="section">
+            <div class="section-title"><div class="title1">PERSONAL DETAILS</div></div>
+            <div class="details">
+                <div class="text-details">
+                    <div class="info"><strong>Name:</strong>  {{name}}</div>
+                    <div class="info"><strong>Date of Birth:</strong>{{dob}}</div>
+                    <div class="info"><strong>Age:</strong> {{age}}</div>
+                    <div class="info"><strong>Height:</strong>  {{height}}</div>
+                    <div class="info"><strong>Place of Birth:</strong>{{placeOfBirth}}</div>
+                    <div class="info" style="width: 70%; word-break: break-word; align-items: baseline;"><strong>Education:</strong> {{education}}</div>
+                    <div class="info"><strong>Cast:</strong> {{cast}}</div>
+                    <div class="info"><strong>Mother Tongue:</strong> {{MotherTongue}}</div>
+                    <div class="info"><strong>Income:</strong>  {{income}}</div>
+
+                </div>
+                <div class="photo">
+                    <img src="{{profilePicture}}" alt="" border="0">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="section">
+            <div class="section-title"><div class="title1">FAMILY DETAILS</div></div>
+            <div class="text-details1">
+                <div class="info"><strong>Father’s Name:</strong> {{fatherName}}</div>
+                <div class="info"><strong>Father’s Status:</strong> {{fathersstatus}}</div>
+                <div class="info"><strong>Mother’s Name:</strong> {{motherName}}</div>
+                <div class="info"><strong>Mother’s Status:</strong> {{mothersstatus}}</div>
+                <div class="info"><strong>Siblings:</strong> {{siblings}}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><div class="title1">CONTACT DETAILS</div></div>
+            <div class="text-details1">
+                <div class="info"><strong>Contact Number:</strong> {{contactNumber}}</div>
+                <div class="info"><strong>Email ID:</strong> {{email}}</div>
+                <div class="info"><strong>Current State:</strong> {{country}}</div>
+                <div class="info"><strong>Current State:</strong> {{state}}</div>
+                <div class="info"><strong>Current City:</strong> {{city}}</div>
+                <div class="info"><strong>Residential Address:</strong> {{address}}</div>
+                <div class="info"><strong>House Type:</strong> {{houseType}}</div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="logo">
+                <img src="{{logoImage}}" alt="Logo" border="0">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

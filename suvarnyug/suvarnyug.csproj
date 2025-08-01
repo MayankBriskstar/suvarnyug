@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\assets-User\**" />
+    <Content Remove="wwwroot\assets-User\**" />
+    <EmbeddedResource Remove="wwwroot\assets-User\**" />
+    <None Remove="wwwroot\assets-User\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.ReCaptcha" Version="1.8.2" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="Google.Cloud.Vision.V1" Version="3.7.0" />
+    <PackageReference Include="GoogleReCaptcha.V3" Version="1.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ML" Version="4.0.2" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.5" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="PuppeteerSharp" Version="20.0.5" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\databio\" />
+    <Folder Include="wwwroot\images\profilePhotos\" />
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Admin\ChangePassword.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Mayank Sanghani\.nuget\packages\tesseract\5.2.0\build\\..\x86\leptonica-1.82.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Mayank Sanghani\.nuget\packages\tesseract\5.2.0\build\\..\x86\tesseract50.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Mayank Sanghani\.nuget\packages\tesseract\5.2.0\build\\..\x86\leptonica-1.82.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Mayank Sanghani\.nuget\packages\tesseract\5.2.0\build\\..\x86\tesseract50.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Mayank Sanghani\.nuget\packages\tesseract\5.2.0\build\\..\x64\leptonica-1.82.0.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Mayank Sanghani\.nuget\packages\tesseract\5.2.0\build\\..\x64\tesseract50.dll" />
+  </ItemGroup>
+
+</Project>

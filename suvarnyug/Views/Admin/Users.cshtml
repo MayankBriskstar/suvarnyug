@@ -1,0 +1,174 @@
+﻿@model IEnumerable<Suvarnyug.Models.User>
+
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_NewAdmin.cshtml";
+}
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Users List</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Users</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Users List</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Users List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables"
+                                   class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Country</th>
+                                        <th>Email</th>
+                                        @* <th>Profile Image</th> *@
+                                        <th>Is Active</th>
+                                        <th data-orderable="false">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td>@user.UserId</td>
+                                            <td>@user.FirstName @user.LastName</td>
+                                            <td>@user.Country.CountryName</td>
+                                            <td style="word-break: break-word;white-space: normal;">
+                                                @user.Email
+                                            </td>
+                                            @*  <td class="avatar">
+                                                <div class="round-img">
+                                                    <a href="#"><img class="img-thumbnail rounded-circle" src="@user.ProfilePhotoPath" alt="Profile Image" style="width: 50px; height: 50px;" /></a>
+                                                </div>
+                                            </td> *@
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <span class="text-danger">In-Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success">Active</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a type="button" href="@Url.Action("viewuser", "admin", new { id = user.UserId })" class="btn btn-link btn-primary">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                                @if (user.Role != "Admin")
+                                                {
+                                                    if (!user.IsActive)
+                                                    {
+                                                        <a type="button" href="javascript:void(0)" class="btn btn-link btn-danger delete-user-btn"
+                                                           data-user-id="@user.UserId">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-link btn-danger deletedisablebutton" disabled
+                                                                style="">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </button>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).on("click", ".delete-user-btn", function () {
+            var userId = $(this).data("user-id");
+            swal({
+                title: "Are you sure?",
+                text: "Do you really want to delete this user?",
+                icon: "error",
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        visible: true,
+                        className: "btn btn-secondary",
+                    },
+                    confirm: {
+                        text: "Yes, delete!",
+                        className: "btn btn-danger",
+                    }
+                },
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: '@Url.Action("deleteuser", "account")' + '?id=' + userId,
+                        type: 'GET',
+                        success: function (response) {
+                            if (response.success) {
+                                swal("Deleted!", "User deleted successfully.", {
+                                    icon: "success",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-success"
+                                        }
+                                    }
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                swal("Error!", response.message || "User could not be deleted.", {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger"
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            swal("Error!", "An error occurred while deleting the user.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger"
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+  
+}

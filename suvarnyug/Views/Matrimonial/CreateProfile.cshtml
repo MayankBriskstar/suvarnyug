@@ -1,0 +1,788 @@
+﻿@model Suvarnyug.Models.Biodata
+
+@{
+    ViewData["Title"] = "Create Profile";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+<div class="container mt-10">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="section-title"><h2 class="text-center"><span>Create Matrimonial Profile</span></h2></div>
+            <form asp-action="createprofile" method="post" enctype="multipart/form-data" id="biodataForm">
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(""))
+                {
+                    <div class="alert alert-danger">
+                        @ViewData.ModelState[""].Errors.First().ErrorMessage
+                    </div>
+                }
+                <div class="accordion" id="biodataAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPersonal">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePersonal" aria-expanded="true" aria-controls="collapsePersonal">
+                                1. Personal Information
+                            </button>
+                        </h2>
+                        <div id="collapsePersonal" class="accordion-collapse collapse show" aria-labelledby="headingPersonal" data-bs-parent="#biodataAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label asp-for="IsForSelf" class="form-label">Profile For:</label>
+                                    <select asp-for="IsForSelf" class="form-control progress-track" id="profileForSelect">
+                                        <option value="" selected>Please Select</option>
+                                        <option value="1">Myself</option>
+                                        <option value="0">On Behalf Of</option>
+                                    </select>
+                                    <span id="IsForSelfError" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3" id="behalfOfContainer" style="display:none;">
+                                    <label asp-for="BehalfOf" class="form-label">On Behalf Of:</label>
+                                    <select asp-for="BehalfOf" class="form-control progress-track" id="BehalfOf">
+                                        <option value="Son">Son</option>
+                                        <option value="Daughter">Daughter</option>
+                                        <option value="Brother">Brother</option>
+                                        <option value="Sister">Sister</option>
+                                        <option value="Friend">Friend</option>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="FirstName" class="form-label">First Name <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="FirstName" class="form-control progress-track" placeholder="Please Enter First Name" />
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="LastName" class="form-label">Last Name <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="LastName" class="form-control progress-track" placeholder="Please Enter Last Name" />
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="DOB" class="form-label">Date of Birth <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="DOB" type="date" class="form-controldate progress-track" id="DOB" />
+                                        <span asp-validation-for="DOB" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="TimeOfBirth" class="form-label">Time of Birth <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="TimeOfBirth" type="time" class="form-controldate progress-track" />
+                                        <span asp-validation-for="TimeOfBirth" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PlaceOfBirth" class="form-label">Place of Birth <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="PlaceOfBirth" class="form-control progress-track" placeholder="Please Enter Place Of Birth" />
+                                        <span asp-validation-for="PlaceOfBirth" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Gender" class="form-label">Gender <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="Gender" class="form-control progress-track" id="Gender">
+                                            <option value="">Please select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                        <span id="genderError" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Height" class="form-label">Height <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="Height" class="nice-select form-control progress-track" id="height" required>
+                                            <option value="">Please select Height</option>
+                                            @for (int i = 40; i <= 80; i++)
+                                            {
+                                                <option value="@($"{i / 10.0} Feet")">@($"{i / 10.0} Feet")</option>
+                                            }
+                                        </select>
+                                        <span id="heightError" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Weight" class="form-label">Weight(kg) <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="Weight" class="form-control progress-track" placeholder="Please Enter Weight" />
+                                        <span asp-validation-for="Weight" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PhysicalStatus" class="form-label">Physical Status <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="PhysicalStatus" class="form-control progress-track" id="PhysicalStatus" required>
+                                            <option value="">Please select Physical Status</option>
+                                            <option value="Healthy">Healthy</option>
+                                            <option value="Disabled">Disabled</option>
+                                        </select>
+                                        <span id="PhysicalStatusError" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="CountryId" class="form-label">Country <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="CountryId" class="form-control progress-track" id="CountryId" required style="background-image:none !important;">
+                                            <option value="">Select Country</option>
+                                            @foreach (var country in ViewBag.Countries)
+                                            {
+                                                <option value="@country.CountryId">@country.CountryName</option>
+                                            }
+                                        </select>
+                                        <span id="CountryIdError" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="StateId" class="form-label">State <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="StateId" class="form-control progress-track" id="StateId" required style="background-image:none !important;">
+                                            <option value="">Select State</option>
+                                        </select>
+                                        <span id="StateIdError" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="CityId" class="form-label">City <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="CityId" class="form-control progress-track" id="CityId" required style="background-image:none !important;">
+                                            <option value="">Select City</option>
+                                        </select>
+                                        <span id="CityIdError" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Cast" class="form-label">Caste <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="Cast" class="form-control1 progress-track" placeholder="Please Enter Cast" />
+                                        <span asp-validation-for="Cast" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Subcaste" class="form-label">Sub Caste <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="Subcaste" class="form-control progress-track" placeholder="Please Enter Sub Caste" />
+                                        <span asp-validation-for="Subcaste" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Education <span class="star-validation-ddl">*</span></label>
+                                        <div class="nice-select form-control" tabindex="0" id="educationNiceSelect">
+                                            <span class="current">Select Education</span>
+                                            <ul class="list">
+                                                <li class="option text-center" style="color: #63ab45;"><strong>Medical Degrees</strong></li>
+                                                <li data-value="MBBS" class="option"><input type="checkbox" value="MBBS"> MBBS</li>
+                                                <li data-value="B.A.M.S." class="option"><input type="checkbox" value="B.A.M.S."> B.A.M.S.</li>
+                                                <li data-value="B.D.S" class="option"><input type="checkbox" value="B.D.S"> B.D.S</li>
+                                                <li data-value="B.H.M.S." class="option"><input type="checkbox" value="B.H.M.S."> B.H.M.S.</li>
+                                                <li data-value="B.OPTOMETRY" class="option"><input type="checkbox" value="B.OPTOMETRY"> B.OPTOMETRY</li>
+                                                <li data-value="B.PHARM" class="option"><input type="checkbox" value="B.PHARM"> B.PHARM</li>
+                                                <li data-value="M.B.B.S." class="option"><input type="checkbox" value="M.B.B.S."> M.B.B.S.</li>
+                                                <li data-value="M.D." class="option"><input type="checkbox" value="M.D."> M.D.</li>
+                                                <li data-value="M.D.S. (Master of Dental Surgery)" class="option"><input type="checkbox" value="M.D.S. (Master of Dental Surgery)"> M.D.S. (Master of Dental Surgery)</li>
+                                                <li data-value="M.PHARM" class="option"><input type="checkbox" value="M.PHARM"> M.PHARM</li>
+                                                <li data-value="PHARM-D" class="option"><input type="checkbox" value="PHARM-D"> PHARM-D</li>
+                                                <li data-value="Physiotherapist" class="option"><input type="checkbox" value="Physiotherapist"> Physiotherapist</li>
+                                                <li data-value="Nursing Course" class="option"><input type="checkbox" value="Nursing Course"> Nursing Course</li>
+                                                <li class="option text-center" style="color: #63ab45;"><strong>Engineering & IT</strong></li>
+                                                <li data-value="B.E. Metallurgy" class="option"><input type="checkbox" value="B.E. Metallurgy"> B.E. Metallurgy</li>
+                                                <li data-value="B.E./B.Tech Civil" class="option"><input type="checkbox" value="B.E./B.Tech Civil"> B.E./B.Tech Civil</li>
+                                                <li data-value="B.E./B.Tech Computer Engg." class="option"><input type="checkbox" value="B.E./B.Tech Computer Engg."> B.E./B.Tech Computer Engg.</li>
+                                                <li data-value="B.E./B.Tech Mechanical" class="option"><input type="checkbox" value="B.E./B.Tech Mechanical"> B.E./B.Tech Mechanical</li>
+                                                <li data-value="BCA" class="option"><input type="checkbox" value="BCA"> BCA</li>
+                                                <li data-value="Bio-engineering" class="option"><input type="checkbox" value="Bio-engineering"> Bio-engineering</li>
+                                                <li data-value="Diploma Engg." class="option"><input type="checkbox" value="Diploma Engg."> Diploma Engg.</li>
+                                                <li data-value="M.E./M.Tech" class="option"><input type="checkbox" value="M.E./M.Tech"> M.E./M.Tech</li>
+                                                <li data-value="M.Sc." class="option"><input type="checkbox" value="M.Sc."> M.Sc.</li>
+                                                <li class="option text-center" style="color: #63ab45;"><strong>Business & Commerce</strong></li>
+                                                <li data-value="B.B.A." class="option"><input type="checkbox" value="B.B.A."> B.B.A.</li>
+                                                <li data-value="B.COM" class="option"><input type="checkbox" value="B.COM"> B.COM</li>
+                                                <li data-value="C.A (Chartered Accountant)" class="option"><input type="checkbox" value="C.A (Chartered Accountant)"> C.A (Chartered Accountant)</li>
+                                                <li data-value="C.S (Company Secretary)" class="option"><input type="checkbox" value="C.S (Company Secretary)"> C.S (Company Secretary)</li>
+                                                <li data-value="ICWA/CMA" class="option"><input type="checkbox" value="ICWA/CMA"> ICWA/CMA</li>
+                                                <li data-value="M.B.A" class="option"><input type="checkbox" value="M.B.A"> M.B.A</li>
+                                                <li data-value="M.COM" class="option"><input type="checkbox" value="M.COM"> M.COM</li>
+                                                <li class="option text-center" style="color: #63ab45;"><strong>Arts & Humanities</strong></li>
+                                                <li data-value="Applied Art" class="option"><input type="checkbox" value="Applied Art"> Applied Art</li>
+                                                <li data-value="Architect/Interior Decorator" class="option"><input type="checkbox" value="Architect/Interior Decorator"> Architect/Interior Decorator</li>
+                                                <li data-value="B. Architect" class="option"><input type="checkbox" value="B. Architect"> B. Architect</li>
+                                                <li data-value="B.A." class="option"><input type="checkbox" value="B.A."> B.A.</li>
+                                                <li data-value="M.A." class="option"><input type="checkbox" value="M.A."> M.A.</li>
+                                                <li data-value="Hotel & Hospitality Management" class="option"><input type="checkbox" value="Hotel & Hospitality Management"> Hotel & Hospitality Management</li>
+                                                <li class="option text-center" style="color: #63ab45;"><strong>Law</strong></li>
+                                                <li data-value="L.L.B." class="option"><input type="checkbox" value="L.L.B."> L.L.B.</li>
+                                                <li data-value="M.Ed." class="option"><input type="checkbox" value="M.Ed."> M.Ed.</li>
+                                                <li class="option text-center" style="color: #63ab45;"><strong>Other</strong></li>
+                                                <li data-value="Ph.D" class="option"><input type="checkbox" value="Ph.D"> Ph.D</li>
+                                                <li data-value="Under Graduate" class="option"><input type="checkbox" value="Under Graduate"> Under Graduate</li>
+                                            </ul>
+                                        </div>
+                                        <input type="hidden" id="Education" name="Education">
+                                        <span class="text-danger" id="educationError"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Income" class="form-label">Income <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="Income" class="form-control progress-track" id="Income" required>
+                                            <option value="">Please select Income</option>
+                                            <option value="Under 1 Lac">Under 1 Lac</option>
+                                            <option value="1-2 Lac">1-2 Lac</option>
+                                            <option value="2-5 Lac">2-5 Lac</option>
+                                            <option value="5-10 Lac">5-10 Lac</option>
+                                            <option value="Over 10 Lac">Over 10 Lac</option>
+                                        </select>
+                                        <span id="IncomeError" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="MaritalStatus" class="form-label">Marital Status <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="MaritalStatus" class="form-control progress-track" id="Marital" required>
+                                            <option value="">Please select Marital Status</option>
+                                            <option value="Un-Married">Un-Married</option>
+                                            <option value="Widow">Widow</option>
+                                            <option value="Divorcee">Divorcee</option>
+                                        </select>
+                                        <span id="MaritalError" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="MotherTongue" class="form-label">Mother Tongue <span class="star-validation-ddl">*</span></label>
+                                        <select asp-for="MotherTongue" class="form-control progress-track" id="MotherTongue" required>
+                                            <option value="">Please select Mother Tongue</option>
+                                            <option value="Gujarati">Gujarati</option>
+                                            <option value="Hindi">Hindi</option>
+                                            <option value="English">English</option>
+                                            <option value="Tamil">Tamil</option>
+                                            <option value="Urdu">Urdu</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <span id="MotherTongueError" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFamily">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFamily" aria-expanded="false" aria-controls="collapseFamily">
+                                2. Family Details
+                            </button>
+                        </h2>
+                        <div id="collapseFamily" class="accordion-collapse collapse" aria-labelledby="headingFamily" data-bs-parent="#biodataAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="FatherName" class="form-label">Father's Name <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="FatherName" class="form-control progress-track" placeholder="Please Enter Father Name" />
+                                        <span asp-validation-for="FatherName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="MotherName" class="form-label">Mother's Name <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="MotherName" class="form-control progress-track" placeholder="Please Enter Mother Name" />
+                                        <span asp-validation-for="MotherName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="FathersStatus" class="form-label">Father's Status <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="FathersStatus" class="form-control progress-track" placeholder="Please Enter Father Status" />
+                                        <span asp-validation-for="FathersStatus" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="MothersStatus" class="form-label">Mother's Status <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="MothersStatus" class="form-control progress-track" placeholder="Please Enter Mother Status" />
+                                        <span asp-validation-for="MothersStatus" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NumberOfBrothers" class="form-label">Number of Brothers</label>
+                                        <select asp-for="NumberOfBrothers" class="form-control progress-track" required>
+                                            @for (int i = 0; i <= 10; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NumberOfSisters" class="form-label">Number of Sisters</label>
+                                        <select asp-for="NumberOfSisters" class="form-control progress-track" required>
+                                            @for (int i = 0; i <= 10; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingContact">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContact" aria-expanded="false" aria-controls="collapseContact">
+                                3. Contact Information
+                            </button>
+                        </h2>
+                        <div id="collapseContact" class="accordion-collapse collapse" aria-labelledby="headingContact" data-bs-parent="#biodataAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label asp-for="MobileNumber" class="form-label">Mobile Number <span class="star-validation-ddl">*</span></label>
+                                    <input asp-for="MobileNumber" class="form-control1 progress-track" maxlength="10" placeholder="Please Enter Mobile Number" pattern="^[0-9]{10,14}$" title="Please enter a valid mobile number (10 to 14 digits only)." onkeypress="return isNumberKey(event)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                                    <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">Email <span class="star-validation-ddl">*</span></label>
+                                    <input asp-for="Email" class="form-control1 progress-track" placeholder="Please Enter Email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Address" class="form-label">Address <span class="star-validation-ddl">*</span></label>
+                                    <input asp-for="Address" class="form-control1 progress-track" placeholder="Please Enter Address" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="HouseType" class="form-label">House Type <span class="star-validation-ddl">*</span></label>
+                                    <select asp-for="HouseType" class="form-control progress-track" id="Housetype" required>
+                                        <option value="">Please select House Type</option>
+                                        <option value="Own">Own</option>
+                                        <option value="Rent">Rent</option>
+                                    </select>
+                                    <span id="HousetypeError" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="imageUpload" class="form-label">Upload Images (max 5 images) <span class="star-validation-ddl">*</span></label>
+                                    <input type="file" name="images" id="imageUpload" multiple class="form-control progress-track" accept=".jpg,.jpeg,.png" />
+                                    <span id="fileError" class="text-danger"></span>
+                                </div>
+                                <div id="imagePreviewContainer" class="image-preview-container"></div>
+                                <input type="hidden" name="defaultImageIndex" id="defaultImageIndex" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPatner">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePatner" aria-expanded="false" aria-controls="collapsePatner">
+                                4. Partner's Details
+                            </button>
+                        </h2>
+                        <div id="collapsePatner" class="accordion-collapse collapse" aria-labelledby="headingPatner" data-bs-parent="#biodataAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PartnerMaritalStatus" class="form-label">Partner's Marital Status <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="PartnerMaritalStatus" class="form-control progress-track" placeholder="Please Enter Partner's Marital Status" />
+                                        <span asp-validation-for="PartnerMaritalStatus" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PartnerEducation" class="form-label">Partner's Education <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="PartnerEducation" class="form-control progress-track" placeholder="Please Enter Partner's Education" />
+                                        <span asp-validation-for="PartnerEducation" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PartnerCast" class="form-label">Partner's Cast <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="PartnerCast" class="form-control progress-track" placeholder="Please Enter Partner's Cast" />
+                                        <span asp-validation-for="PartnerCast" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PartnerCountry" class="form-label">Partner's Country <span class="star-validation-ddl">*</span></label>
+                                        <input asp-for="PartnerCountry" class="form-control progress-track" placeholder="Please Enter Partner's Country" />
+                                        <span asp-validation-for="PartnerCountry" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="AboutMyPartner" class="form-label">About My Partner <span class="star-validation-ddl">*</span></label>
+                                    <textarea asp-for="AboutMyPartner" class="form-control progress-track" placeholder="Please Enter About My Partner"></textarea>
+                                    <span asp-validation-for="AboutMyPartner" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mb-20">
+                    <button type="submit" class="theme-btn style-two"><span data-hover="Submit">Submit</span></button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1">
+            <div class="progress-text" id="progressText">Complete your profile</div>
+            <div class="progress-container">
+                <div class="progress">
+                    <div id="progressBar" class="progress-bar">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.8/dist/umd/popper.min.js"></script> *@
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let formFields = document.querySelectorAll('.progress-track');
+            let progress = document.querySelector('.progress');
+            let progressBar = document.getElementById('progressBar');
+            let progressText = document.getElementById('progressText');
+            let profileForSelect = document.getElementById('profileForSelect');
+            let behalfOfSelect = document.getElementById('BehalfOf');
+            let progressContainer = document.querySelector('.progress-container');
+            let footer = document.querySelector('footer');
+            function updateProgress() {
+                let filledFields = 0;
+                let totalFields = formFields.length;
+
+                if (profileForSelect.value === "1") {
+                    totalFields--;
+                }
+                formFields.forEach(field => {
+                    if (profileForSelect.value === "1" && field.id === "BehalfOf") {
+                        return;
+                    }
+                    if (field.tagName === "SELECT") {
+                        if (field.value && field.value.trim() !== "") {
+                            filledFields++;
+                        }
+                    } else if (field.type === 'file') {
+                        if (field.files.length > 0) {
+                            filledFields++;
+                        }
+                    } else if (field.value && field.value.trim() !== "") {
+                        filledFields++;
+                    }
+                });
+                let progressPercent = Math.round((filledFields / totalFields) * 100);
+                progress.style.height = progressPercent + "%";
+                progressBar.textContent = progressPercent + " %";
+                if (progressPercent <= 15) {
+                    progressText.textContent = "Complete your Matrimonial profile";
+                } else if (progressPercent > 15 && progressPercent <= 50) {
+                    progressText.textContent = "You're almost halfway there!";
+                } else if (progressPercent > 50 && progressPercent <= 75) {
+                    progressText.textContent = "Almost there!";
+                } else if (progressPercent > 75 && progressPercent <= 98) {
+                    progressText.textContent = "Just a few more steps!";
+                } else {
+                    progressText.textContent = "Profile Complete!";
+                }
+            }
+            function adjustProgressPosition() {
+                let footerRect = footer.getBoundingClientRect();
+                let windowHeight = window.innerHeight;
+
+                if (footerRect.top < windowHeight) {
+                    let offset = windowHeight - footerRect.top + 20;
+                    progressContainer.style.transform = `translateY(-${offset}px)`;
+                    progressText.style.transform = `translateY(-${offset}px)`;
+                } else {
+                    progressContainer.style.transform = "translateY(0)";
+                    progressText.style.transform = "translateY(0)";
+                }
+            }
+
+            formFields.forEach(field => {
+                field.addEventListener("input", updateProgress);
+                field.addEventListener("change", updateProgress);
+            });
+
+            let imageUpload = document.getElementById('imageUpload');
+            if (imageUpload) {
+                imageUpload.addEventListener('change', updateProgress);
+            }
+
+            $('select').on('change', function () {
+                updateProgress();
+            });
+
+            $(document).on('click', '.nice-select .option', function () {
+                let selectElement = $(this).closest('.nice-select').prev('select');
+                selectElement.trigger('change');
+            });
+
+            profileForSelect.addEventListener("change", function () {
+                updateProgress();
+            });
+
+            window.addEventListener('scroll', adjustProgressPosition);
+            updateProgress();
+            adjustProgressPosition();
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            updateEducationText();
+            $('#CountryId').change(function () {
+                var countryId = $(this).val();
+                $('#StateId').html('<option value="">Select State</option>').niceSelect('update');
+                $('#CityId').html('<option value="">Select City</option>').niceSelect('update');
+                if (countryId) {
+                    $.getJSON('/Matrimonial/GetStates/' + countryId, function (data) {
+                    $.each(data, function (index, state) {
+                        $('#StateId').append('<option value="' + state.stateId + '">' + state.stateName + '</option>');
+                    });
+                    $('#StateId').niceSelect('update');
+                    });
+                }
+            });
+
+            $('#StateId').change(function () {
+                var stateId = $(this).val();
+                $('#CityId').html('<option value="">Select City</option>').niceSelect('update');
+                if (stateId) {
+                    $.getJSON('/Matrimonial/GetCities/' + stateId, function (data) {
+                        $.each(data, function (index, city) {
+                            $('#CityId').append('<option value="' + city.cityId + '">' + city.cityName + '</option>');
+                        });
+                        $('#CityId').niceSelect('update');
+                    });
+                }
+            });
+            $('#educationNiceSelect').niceSelect('update');
+            $('#educationNiceSelect .list .option').each(function () {
+                var checkbox = $(this).find('input');
+                $(this).click(function (e) {
+                    e.stopPropagation();
+                    var isChecked = checkbox.prop('checked');
+                    checkbox.prop('checked', !isChecked);
+                    updateEducationText();
+                });
+                checkbox.click(function (e) {
+                    e.stopPropagation();
+                    updateEducationText();
+                });
+            });
+            function updateEducationText() {
+                var selectedValues = [];
+                $('#educationNiceSelect .list .option input:checked').each(function () {
+                    selectedValues.push($(this).val());
+                });
+                $("#Education").val(selectedValues.join(","));
+                if (selectedValues.length > 0) {
+                    $("#educationNiceSelect .current").text(selectedValues.join(", "));
+                    $("#educationNiceSelect").removeClass('is-invalid');
+                    $("#educationError").text('');
+                } else {
+                    $("#educationNiceSelect .current").text("Select Education");
+                }
+            }
+            $('#biodataForm').submit(function (event) {
+                var isValid = true;
+                var profileFor = $('#profileForSelect').val();
+                if (profileFor === "") {
+                    isValid = false;
+                    $('#IsForSelfError').text("Please Select Profile For");
+                    $('#profileForSelect').addClass('is-invalid');
+                } else {
+                    $('#IsForSelfError').text('');
+                    $('#profileForSelect').removeClass('is-invalid');
+                }
+                var gender = $('#Gender').val();
+                if (gender === "") {
+                    isValid = false;
+                    $('#genderError').text("Please Select Gender");
+                    $('#Gender').addClass('is-invalid');
+                } else {
+                    $('#genderError').text('');
+                    $('#Gender').removeClass('is-invalid');
+                }
+                var Height = $('#height').val();
+                if (Height === "") {
+                    isValid = false;
+                    $('#heightError').text("Please Select Height");
+                    $('#height').addClass('is-invalid');
+                } else {
+                    $('#heightError').text('');
+                    $('#height').removeClass('is-invalid');
+                }
+                var CountryId = $('#CountryId').val();
+                if (CountryId === "") {
+                    isValid = false;
+                    $('#CountryIdError').text("Please Select Country");
+                    $('#CountryId').addClass('is-invalid');
+                } else {
+                    $('#CountryIdError').text('');
+                    $('#CountryId').removeClass('is-invalid');
+                }
+                var StateId = $('#StateId').val();
+                if (StateId === "") {
+                    isValid = false;
+                    $('#StateIdError').text("Please Select State");
+                    $('#StateId').addClass('is-invalid');
+                } else {
+                    $('#StateIdError').text('');
+                    $('#StateId').removeClass('is-invalid');
+                }
+                var CityId = $('#CityId').val();
+                if (CityId === "") {
+                    isValid = false;
+                    $('#CityIdError').text("Please Select City");
+                    $('#CityId').addClass('is-invalid');
+                } else {
+                    $('#CityIdError').text('');
+                    $('#CityId').removeClass('is-invalid');
+                }
+                var PhysicalStatus = $('#PhysicalStatus').val();
+                if (PhysicalStatus === "") {
+                    isValid = false;
+                    $('#PhysicalStatusError').text("Please Select Physical Status");
+                    $('#PhysicalStatus').addClass('is-invalid');
+                } else {
+                    $('#PhysicalStatusError').text('');
+                    $('#PhysicalStatus').removeClass('is-invalid');
+                }
+                var educationNiceSelect = $('#Education').val();
+                if (educationNiceSelect === "") {
+                    isValid = false;
+                    $('#educationError').text("Please Select Education");
+                    $('#educationNiceSelect').addClass('is-invalid');
+                } else {
+                    $('#educationError').text('');
+                    $('#educationNiceSelect').removeClass('is-invalid');
+                }
+                var Income = $('#Income').val();
+                if (Income === "") {
+                    isValid = false;
+                    $('#IncomeError').text("Please Select Income");
+                    $('#Income').addClass('is-invalid');
+                } else {
+                    $('#IncomeError').text('');
+                    $('#Income').removeClass('is-invalid');
+                }
+                var MotherTongue = $('#MotherTongue').val();
+                if (MotherTongue === "") {
+                    isValid = false;
+                    $('#MotherTongueError').text("Please Select Mother Tongue");
+                    $('#MotherTongue').addClass('is-invalid');
+                } else {
+                    $('#MotherTongueError').text('');
+                    $('#MotherTongue').removeClass('is-invalid');
+                }
+                var Marital = $('#Marital').val();
+                if (Marital === "") {
+                    isValid = false;
+                    $('#MaritalError').text("Please Select Marital Status");
+                    $('#Marital').addClass('is-invalid');
+                } else {
+                    $('#MaritalError').text('');
+                    $('#Marital').removeClass('is-invalid');
+                }
+                    var Housetype = $('#Housetype').val();
+                if (Housetype === "") {
+                    isValid = false;
+                    $('#HousetypeError').text("Please Select House Type");
+                    $('#Housetype').addClass('is-invalid');
+                } else {
+                    $('#HousetypeError').text('');
+                    $('#Housetype').removeClass('is-invalid');
+                }
+                $(this).find('input[required], textarea[required]').each(function () {
+                    var field = $(this);
+                    var validationMessage = field.next('span[data-valmsg-for]').first();
+                        if (field.val() === "" || field.val() === null) {
+                        field.addClass('is-invalid');
+                        isValid = false;
+                        if (validationMessage.length) {
+                            validationMessage.text(field.data('val-required') || 'This field Is Required');
+                        }
+                    } else {
+                        field.removeClass('is-invalid');
+                        if (validationMessage.length) {
+                            validationMessage.text('');
+                        }
+                    }
+                });
+                var imageFiles = $('#imageUpload')[0].files;
+                if (imageFiles.length === 0) {
+                    isValid = false;
+                    $('#fileError').text('Please Upload At Least One Image');
+                }
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
+            $('#imageUpload').change(function () {
+                var maxFileCount = 5;
+                var files = this.files;
+                var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+                var fileError = '';
+
+                if (files.length > maxFileCount) {
+                    fileError = 'You Can Upload A Maximum Of 5 Images';
+                }
+                else
+                {
+                    var previewContainer = $('#imagePreviewContainer');
+                    previewContainer.html('');
+                    for (var i = 0; i < files.length; i++)
+                    {
+                        if (!allowedExtensions.exec(files[i].name)) {
+                            fileError = 'Only .jpg, .jpeg, .png Files Are Allowed';
+                            break;
+                        }
+                        if (files[i].size > 5 * 1024 * 1024) {
+                            fileError = 'Each Image Must Be Less Than 5 MB';
+                            break;
+                        }
+                        var reader = new FileReader();
+                        reader.onload = (function (fileIndex) {
+                            return function (e) {
+                                var container = $('<div class="image-item"></div>');
+                                var imageDiv = $('<div class="image-preview"></div>');
+                                imageDiv.append('<img src="' + e.target.result + '" alt="Preview Image" />');
+                                var radioContainer = $('<div class="radio-container"></div>');
+                                var radioInput = $('<input type="radio" name="defaultImageIndex" value="' + fileIndex + '" ' +
+                                                    (fileIndex === 0 ? "checked" : "") + ' onchange="setDefaultImage(' + fileIndex + ')" />');
+                                var label = $('<label>Set as Default Image</label>');
+
+                                radioContainer.append(radioInput).append(label);
+                                container.append(imageDiv).append(radioContainer);
+
+                                previewContainer.append(container);
+                            };
+                        })(i);
+                        reader.readAsDataURL(files[i]);
+                    }
+                }
+                if (fileError !== '') {
+                    $('#fileError').text(fileError);
+                    this.value = '';
+                } else {
+                    $('#fileError').text('');
+                }
+            });
+            $('#profileForSelect').change(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue === '1') {
+                    $('#behalfOfContainer').hide();
+                    $('#BehalfOf').val('');
+                }
+                else if (selectedValue === '0') {
+                    $('#behalfOfContainer').show();
+                    $('#BehalfOf').val('');
+                }
+                else {
+                    $('#behalfOfContainer').hide();
+                    $('#BehalfOf').val('');
+                }
+            });
+            $('#profileForSelect').trigger('change');
+        });
+        function setDefaultImage(index) {
+            $('#defaultImageIndex').val(index);
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let dobInput = document.getElementById("DOB");
+            let validationMessage = document.createElement("span");
+            validationMessage.classList.add("text-danger");
+            validationMessage.style.display = "none";
+            dobInput.parentNode.appendChild(validationMessage);
+
+            if (dobInput) {
+                let today = new Date();
+                let minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                dobInput.setAttribute("max", minDate.toISOString().split("T")[0]);
+
+                dobInput.addEventListener("change", function () {
+                    let selectedDate = new Date(this.value);
+                    if (selectedDate > minDate) {
+                        validationMessage.textContent = "You must be at least 18 years old.";
+                        validationMessage.style.display = "block";
+                        this.value = "";
+                    } else {
+                        validationMessage.style.display = "none";
+                    }
+                });
+            }
+        });
+    </script>
+}

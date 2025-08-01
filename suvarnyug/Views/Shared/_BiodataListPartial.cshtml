@@ -1,0 +1,75 @@
+﻿<div class="behlafofother row">
+    @if (ViewData["OnBehalfOfBiodata"] != null && (ViewData["OnBehalfOfBiodata"] as List<Suvarnyug.Models.Biodata>).Any())
+    {
+        @foreach (var biodata in ViewData["OnBehalfOfBiodata"] as List<Suvarnyug.Models.Biodata>)
+        {
+            <div class="col-lg-3 mb-20">
+                <div class="card destination-item selectable-card" data-biodata-id="@biodata.BiodataId">
+                    <div class="image" style="height:200px;">
+                        @if (biodata.Images != null && biodata.Images.Any())
+                        {
+                            <img src="@Url.Content("~/" + biodata.Images.First().ImageUrl)" alt="Profile picture" class="card-img-top" />
+                        }
+                        else
+                        {
+                            <img src="~/images/default-profile.jpg" alt="Default Profile" class="card-img-top" />
+                        }
+                    </div>
+                    <div class="card-body" style="padding: 10px 10px 0px 10px;">
+                        <h5 class="card-title dashboardonother">@biodata.FirstName @biodata.LastName</h5>
+                        <p class="card-text show instrest mb-0">
+                            <span><i class="fal fa-id-card"></i> For: @biodata.BehalfOf</span><br />
+                            <span><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</span><br />
+                            <span><i class="fal fa-language"></i> @biodata.MotherTongue</span><br />
+                            <span><i class="fal fa-money"></i> @biodata.Income</span><br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="noprofileintrest">No profiles available. Please create a Matrimonial Profile to Send interest.</p>
+        <div class="text-center">
+            <a asp-controller="matrimonial" asp-action="createprofile" class="theme-btn style-two mt-3"><span data-hover="Create Profile">Create Profile</span> <i class="fal fa-user-plus" style="transform: rotate(0deg);"></i></a>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $(".selectable-card").click(function () {
+            $(".selectable-card").removeClass("selected");
+            $(this).addClass("selected");
+            var selectedBiodataId = $(this).data("biodata-id");
+            $("#selectedBiodataId").val(selectedBiodataId);
+        });
+    });
+</script>
+
+<style>
+    p.card-text.show.instrest span, i {
+        width: 25px;
+    }
+
+    p.noprofileintrest {
+        text-align: center;
+        margin: 0;
+        color: var(--secondary-color);
+    }
+
+    .selectable-card {
+        transition: transform 0.2s;
+    }
+
+    .selectable-card:hover {
+        transform: scale(1.05);
+    }
+
+    .selectable-card.selected {
+        border: 2px solid #63ab45;
+        background-color: rgba(99, 171, 69, 0.1);
+        box-shadow: 0px 4px 15px rgba(99, 171, 69, 0.6);
+    }
+
+</style>
