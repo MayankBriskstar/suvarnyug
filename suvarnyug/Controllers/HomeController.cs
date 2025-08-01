@@ -73,7 +73,7 @@ public class HomeController : Controller
             .Take(10)
             .ToList();
 
-        var forums = await _context.Forums.Include(f => f.User).Include(f => f.Replies).Include(f => f.ForumLikes).Where(f => !f.IsDeleted && f.User.IsActive).OrderByDescending(f => f.CreatedDate).Take(2)
+        var forums = await _context.Forums.Include(f => f.User).Include(f => f.Replies).Include(f => f.ForumLikes).Where(f => !f.IsDeleted).OrderByDescending(f => f.CreatedDate).Take(2)
             .Select(f => new
             {
                 f.ForumId,
@@ -85,7 +85,7 @@ public class HomeController : Controller
                 TotalReplies = f.Replies.Count(r => !r.IsDeleted && !r.User.IsActive),
                 TotalLikes = f.ForumLikes.Count(),
                 Replies = f.Replies
-                .Where(f => !f.IsDeleted && !f.User.IsActive)
+                .Where(f => !f.IsDeleted)
             .OrderByDescending(r => r.CreatedDate)
             .Take(2)
             .Select(r => new { r.ReplyId, r.Content, r.CreatedDate, ReplyAuthor = r.User.FirstName + " " + r.User.LastName, r.IsDeleted }).Where(r => !r.IsDeleted)
