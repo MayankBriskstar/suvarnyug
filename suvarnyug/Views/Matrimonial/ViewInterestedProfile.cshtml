@@ -26,9 +26,9 @@
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-lg-12 text-end">
-                                <a href="@Url.Action("Chat", "Chat", new { userId = Model.UserId })" class="theme-btn style-two bgc-primary userprofileviewid" style="padding: 5px 15px;">
+                                @*<a href="@Url.Action("Chat", "Chat", new { userId = Model.UserId })" class="theme-btn style-two bgc-primary userprofileviewid" style="padding: 5px 15px;">
                                     <i class="fal fa-comments m-0" style="transform: rotate(0deg);"></i> <span data-hover="Chat" class="m-0">Chat</span>
-                                </a>
+                                </a>*@
                                 <a href="#contactModal" class="theme-btn style-two userprofileviewid" data-bs-toggle="modal" data-bs-target="#contactModal" style="padding: 5px 15px 5px 15px;">
                                     <span data-hover="Contact" class="m-0">Contact</span>
                                 </a>
@@ -295,14 +295,6 @@
                                     <div class="col-lg-12 profile-info">
                                         <div class="row">
                                             <div class="col-lg-3">
-                                                <strong>Mobile Number:</strong>
-                                            </div>
-                                            <div class="col-lg-9">
-                                                <p>@Model.MobileNumber</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-3">
                                                 <strong>Email:</strong>
                                             </div>
                                             <div class="col-lg-9">
@@ -331,14 +323,6 @@
                                             </div>
                                             <div class="col-lg-9">
                                                 <p>@Model.City.CityName</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-3">
-                                                <strong>Address:</strong>
-                                            </div>
-                                            <div class="col-lg-9">
-                                                <p>@Model.Address</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -473,13 +457,13 @@
                         <a href="mailto:@Model.Email" class="ms-2 contactmodelinstrestecd">@Model.Email</a>
                     </div>
                 </div>
-                <div class="row ">
+                @*<div class="row ">
                     <div class="col-lg-12">
                         <i class="fal fa-phone-alt"></i>
                         <a href="tel:@Model.MobileNumber" id="mobileNumber" class="ms-2 contactmodelinstrestecd">@Model.MobileNumber</a>
                     </div>
-                </div>
-                <div id="mobileOptions" style="display:none; margin-top: 10px;">
+                </div>*@
+                @*<div id="mobileOptions" style="display:none; margin-top: 10px;">
                     <div class="row">
                         <div class="col-lg-12">
                             <a href="tel:@Model.MobileNumber" class="ms-3 contactmodelinstrestecd">
@@ -492,7 +476,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div>*@
             </div>
             <div class="modal-footer">
                 <button type="button" class="theme-btn style-two" onclick="$('#contactModal').modal('hide');">

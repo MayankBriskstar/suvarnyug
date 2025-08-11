@@ -19,8 +19,7 @@ namespace suvarnyug.Models
     public enum PlanType
     {
         Free,
-        Gold,
-        Platinum
+        Premium
     }
 
 }

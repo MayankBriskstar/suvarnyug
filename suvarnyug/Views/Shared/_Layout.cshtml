@@ -69,7 +69,7 @@
                                                 <a asp-controller="account" asp-action="editprofile"><i class="fa fa-pencil"></i>Edit Profile</a>
                                                 <a asp-controller="account" asp-action="changepassword"><i class="fa fa-unlock"></i>Change Password</a>
                                                 <a asp-controller="payment" asp-action="subscriptiondetails">Subscription Details</a>
-                                                <a asp-controller="chat" asp-action="index"><i class="fa fa-comments"></i>Chat</a>
+                                                @* <a asp-controller="chat" asp-action="index"><i class="fa fa-comments"></i>Chat</a> *@
                                                 @if (User.IsInRole("Admin"))
                                                 {
                                                     <a asp-action="index" asp-controller="admin" class="btn-admin">Admin Dashboard</a>
@@ -94,7 +94,7 @@
                                         <li class="current"><a asp-action="Index" asp-controller="Home">Home</a></li>
                                         <li><a asp-action="forums" asp-controller="forum">Forums</a></li>
                                         <li><a asp-action="findpartner" asp-controller="matrimonial">Matrimonial</a></li>
-                                        <li><a asp-action="index" asp-controller="chat">Chats</a></li>
+                                        @* <li><a asp-action="index" asp-controller="chat">Chats</a></li> *@
                                         <li><a asp-action="contact" asp-controller="home">Contact Us</a></li>
                                         <li class=" d-md-none d-bolck"><a asp-controller="home" asp-action="dashboard">Dashboard</a></li>
                                     </ul>
@@ -137,7 +137,7 @@
                                         <a asp-controller="account" asp-action="editprofile"><i class="fa fa-edit"></i>Edit Profile</a>
                                         <a asp-controller="account" asp-action="changepassword"><i class="fa fa-key"></i>Change Password</a>
                                         <a asp-controller="payment" asp-action="subscriptiondetails"><i class="fa fa-dollar-sign"></i>Subscription</a>
-                                        <a asp-controller="chat" asp-action="index"><i class="fa fa-comments"></i>Chat</a>
+                                        @* <a asp-controller="chat" asp-action="index"><i class="fa fa-comments"></i>Chat</a> *@
                                         @if (User.IsInRole("Admin"))
                                         {
                                             <a asp-action="index" asp-controller="admin" class="btn-admin"><i class="fa fa-wrench"></i>Admin Dashboard</a>
@@ -237,7 +237,7 @@
                                     <li><a asp-controller="home" asp-action="about">About Company</a></li>
                                     <li><a asp-controller="forum" asp-action="forums">Forums</a></li>
                                     <li><a asp-controller="matrimonial" asp-action="findpartner">Matrimonial</a></li>
-                                    <li><a asp-action="index" asp-controller="chat">Chats</a></li>
+                                    @* <li><a asp-action="index" asp-controller="chat">Chats</a></li> *@
                                     <li><a asp-controller="home" asp-action="contact">Contact Us</a></li>
                                 </ul>
                             </div>

@@ -311,21 +311,21 @@
                         </h2>
                         <div id="collapseContact" class="accordion-collapse collapse" aria-labelledby="headingContact" data-bs-parent="#biodataAccordion">
                             <div class="accordion-body">
-                                <div class="mb-3">
+                                @* <div class="mb-3">
                                     <label asp-for="MobileNumber" class="form-label">Mobile Number <span class="star-validation-ddl">*</span></label>
                                     <input asp-for="MobileNumber" class="form-control1 progress-track" maxlength="10" placeholder="Please Enter Mobile Number" pattern="^[0-9]{10,14}$" title="Please enter a valid mobile number (10 to 14 digits only)." onkeypress="return isNumberKey(event)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
                                     <span asp-validation-for="MobileNumber" class="text-danger"></span>
-                                </div>
+                                </div> *@
                                 <div class="mb-3">
                                     <label asp-for="Email" class="form-label">Email <span class="star-validation-ddl">*</span></label>
                                     <input asp-for="Email" class="form-control1 progress-track" placeholder="Please Enter Email" />
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
-                                <div class="mb-3">
+                               @*  <div class="mb-3">
                                     <label asp-for="Address" class="form-label">Address <span class="star-validation-ddl">*</span></label>
                                     <input asp-for="Address" class="form-control1 progress-track" placeholder="Please Enter Address" />
                                     <span asp-validation-for="Address" class="text-danger"></span>
-                                </div>
+                                </div> *@
                                 <div class="mb-3">
                                     <label asp-for="HouseType" class="form-label">House Type <span class="star-validation-ddl">*</span></label>
                                     <select asp-for="HouseType" class="form-control progress-track" id="Housetype" required>

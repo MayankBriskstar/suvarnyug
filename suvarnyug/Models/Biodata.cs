@@ -125,20 +125,20 @@ namespace Suvarnyug.Models
         [Display(Name = "Number of Sisters")]
         public int NumberOfSisters { get; set; }
 
-        [Required(ErrorMessage = "Please Enter Mobile Number")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Invalid Mobile Number. It Should Be Eactly 10 Digits.")]
-        [Phone]
-        [Display(Name = "Mobile Number")]
-        public string MobileNumber { get; set; }
+        //[Required(ErrorMessage = "Please Enter Mobile Number")]
+        //[RegularExpression(@"^\d{10}$", ErrorMessage = "Invalid Mobile Number. It Should Be Eactly 10 Digits.")]
+        //[Phone]
+        //[Display(Name = "Mobile Number")]
+        //public string MobileNumber { get; set; }
 
         [Required(ErrorMessage = "Please Enter EmailId")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         [StringLength(100, ErrorMessage = "Email Cannot Be Longer Than 100 Characters")]
         public string? Email { get; set; }
 
-        [Required(ErrorMessage = "Please Enter Address")]
-        [StringLength(250, ErrorMessage = "Address Cannot Be Longer Than 250 Characters")]
-        public string? Address { get; set; }
+        //[Required(ErrorMessage = "Please Enter Address")]
+        //[StringLength(250, ErrorMessage = "Address Cannot Be Longer Than 250 Characters")]
+        //public string? Address { get; set; }
 
         [Required(ErrorMessage = "Please Select House Type")]
         [RegularExpression(@"^(?!\s*$).+", ErrorMessage = "Please Select House Type")]

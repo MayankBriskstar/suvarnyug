@@ -24,8 +24,8 @@ namespace Suvarnyug.Data
         public DbSet<ContactUs> ContactUs { get; set; }
         public DbSet<InterestedProfile> InterestedProfiles { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<ChatRoom> ChatRooms { get; set; }
-        public DbSet<ChatMessage> ChatMessages { get; set; }
+        //public DbSet<ChatRoom> ChatRooms { get; set; }
+        //public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<City> Cities { get; set; }

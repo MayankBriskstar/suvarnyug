@@ -5,7 +5,7 @@ using suvarnyug.Middleware;
 using suvarnyug.Services;
 using Suvarnyug.Data;
 using Suvarnyug.Models;
-using suvarnyug.Hubs;
+//using suvarnyug.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -116,7 +116,7 @@ app.Use(async (context, next) =>
 });
 
 app.MapHub<NotificationHub>("/notificationHub");
-app.MapHub<ChatHub>("/chathub");
+//app.MapHub<ChatHub>("/chathub");
 
 app.MapControllerRoute(
     name: "default",

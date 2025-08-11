@@ -73,8 +73,7 @@ namespace suvarnyug.Controllers
 
             var planPrices = new Dictionary<string, decimal>
             {
-                { "Gold", 1499 },
-                { "Platinum", 1999 }
+                { "Premium", 1999 }
             };
 
             if (!planPrices.ContainsKey(planType))

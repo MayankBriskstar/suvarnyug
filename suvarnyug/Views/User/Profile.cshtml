@@ -14,7 +14,7 @@
                 <div class="profile-image mb-10">
                     @if (Model.Images != null && Model.Images.Any())
                     {
-                        <img src="@Url.Content("~/" + Model.Images.First().ImageUrl)" alt="Profile Picture" class="profileimageall"/>
+                        <img src="@Url.Content("~/" + Model.Images.First().ImageUrl)" alt="Profile Picture" class="profileimageall" />
                     }
                     else
                     {
@@ -27,10 +27,10 @@
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-lg-12 text-end">
-                                <a href="@Url.Action("Chat", "Chat", new { userId = Model.UserId })" class="theme-btn style-two bgc-primary userprofileviewid">
+                                @*<a href="@Url.Action("Chat", "Chat", new { userId = Model.UserId })" class="theme-btn style-two bgc-primary userprofileviewid">
                                     <i class="fal fa-comments m-0" style="transform: rotate(0deg);"></i> <span data-hover="Chat" class="m-0">Chat</span>
-                                </a>
-                                <button id="interestedButton" class="theme-btn style-two userprofileviewid" data-biodata-id="@Model.BiodataId" >
+                                </a>*@
+                                <button id="interestedButton" class="theme-btn style-two userprofileviewid" data-biodata-id="@Model.BiodataId">
                                     <span data-hover="Show Interest" class="m-0">Show Interest</span>
                                 </button>
                                 <a href="@Url.Action("findPartner", "matrimonial")" class="theme-btn style-two bgc-secondary userprofileviewid">
@@ -294,7 +294,7 @@
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-lg-12 profile-info">
-                                        <div class="row">
+                                        @*<div class="row">
                                             <div class="col-lg-3">
                                                 <strong>Mobile Number:</strong>
                                             </div>
@@ -308,20 +308,13 @@
                                                     <p class="text-danger">Subscribe to view contact details.</p>
                                                 }
                                             </div>
-                                        </div>
+                                        </div>*@
                                         <div class="row">
                                             <div class="col-lg-3">
                                                 <strong>Email:</strong>
                                             </div>
                                             <div class="col-lg-9">
-                                                @if ((bool)ViewData["IsSubscribed"])
-                                                {
-                                                    <p>@Model.Email</p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-danger">Subscribe to view contact details.</p>
-                                                }
+                                                <p>@Model.Email</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -329,16 +322,9 @@
                                                 <strong>Country:</strong>
                                             </div>
                                             <div class="col-lg-9">
-                                                @if ((bool)ViewData["IsSubscribed"])
+                                                @if (Model.Country != null)
                                                 {
-                                                    @if (Model.Country != null)
-                                                    {
-                                                        <p>@Model.Country.CountryName</p>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                    <p>@Model.Country.CountryName</p>
                                                 }
                                             </div>
                                         </div>
@@ -347,16 +333,9 @@
                                                 <strong>State:</strong>
                                             </div>
                                             <div class="col-lg-9">
-                                                @if ((bool)ViewData["IsSubscribed"])
+                                                @if (Model.State != null)
                                                 {
-                                                    @if (Model.State != null)
-                                                    {
-                                                        <p>@Model.State.StateName</p>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                    <p>@Model.State.StateName</p>
                                                 }
                                             </div>
                                         </div>
@@ -365,20 +344,13 @@
                                                 <strong>City:</strong>
                                             </div>
                                             <div class="col-lg-9">
-                                                @if ((bool)ViewData["IsSubscribed"])
+                                                @if (Model.City != null)
                                                 {
-                                                    @if (Model.City != null)
-                                                    {
-                                                        <p>@Model.City.CityName</p>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-danger">Subscribe to view contact details.</p>
+                                                    <p>@Model.City.CityName</p>
                                                 }
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        @*<div class="row">
                                             <div class="col-lg-3">
                                                 <strong>Address:</strong>
                                             </div>
@@ -392,20 +364,13 @@
                                                     <p class="text-danger">Subscribe to view contact details.</p>
                                                 }
                                             </div>
-                                        </div>
+                                        </div>*@
                                         <div class="row">
                                             <div class="col-lg-3">
                                                 <strong>House Type:</strong>
                                             </div>
                                             <div class="col-lg-9">
-                                                @if ((bool)ViewData["IsSubscribed"])
-                                                {
-                                                    <p>@Model.HouseType</p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-danger">Subscribe to view contact details.</p>
-                                                }
+                                                <p>@Model.HouseType</p>
                                             </div>
                                         </div>
                                     </div>
@@ -427,7 +392,6 @@
                                             <ul id="lightgallery">
                                                 @if (Model.Images != null && Model.Images.Any())
                                                 {
-
                                                     @foreach (var image in Model.Images)
                                                     {
                                                         <li data-src="@Url.Content("~/" + image.ImageUrl)">
@@ -439,7 +403,6 @@
                                                             </a>
                                                         </li>
                                                     }
-
                                                 }
                                                 else
                                                 {

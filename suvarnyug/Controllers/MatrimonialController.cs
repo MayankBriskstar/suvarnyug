@@ -66,7 +66,7 @@ namespace suvarnyug.Controllers
             {
                 var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || (subscription.PlanType != PlanType.Gold && subscription.PlanType != PlanType.Platinum))
+                if (subscription == null || (subscription.PlanType != PlanType.Premium))
                 {
                     return RedirectToAction("SubscriptionDetails", "Payment");
                 }
@@ -104,7 +104,7 @@ namespace suvarnyug.Controllers
             {
                 var subscription = await _context.Subscriptions.FirstOrDefaultAsync(s => s.UserId == int.Parse(userId) && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || (subscription.PlanType != PlanType.Gold && subscription.PlanType != PlanType.Platinum))
+                if (subscription == null || (subscription.PlanType != PlanType.Premium))
                 {
                     return RedirectToAction("SubscriptionDetails", "Payment");
                 }
@@ -190,7 +190,7 @@ namespace suvarnyug.Controllers
             {
                 var subscription = await _context.Subscriptions.FirstOrDefaultAsync(s => s.UserId == int.Parse(userId) && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || subscription.PlanType != PlanType.Platinum)
+                if (subscription == null || subscription.PlanType != PlanType.Premium)
                 {
                     return RedirectToAction("SubscriptionDetails", "Payment");
                 }
@@ -361,7 +361,7 @@ namespace suvarnyug.Controllers
             {
                 var subscription = await _context.Subscriptions.FirstOrDefaultAsync(s => s.UserId == int.Parse(userId) && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || subscription.PlanType != PlanType.Platinum)
+                if (subscription == null || subscription.PlanType != PlanType.Premium)
                 {
                     return RedirectToAction("SubscriptionDetails", "Payment");
                 }
@@ -634,9 +634,9 @@ namespace suvarnyug.Controllers
             existingBiodata.MothersStatus = biodata.MothersStatus;
             existingBiodata.NumberOfBrothers = biodata.NumberOfBrothers;
             existingBiodata.NumberOfSisters = biodata.NumberOfSisters;
-            existingBiodata.MobileNumber = biodata.MobileNumber;
+            //existingBiodata.MobileNumber = biodata.MobileNumber;
             existingBiodata.Email = biodata.Email;
-            existingBiodata.Address = biodata.Address;
+            //existingBiodata.Address = biodata.Address;
             existingBiodata.HouseType = biodata.HouseType;
             existingBiodata.PartnerMaritalStatus = biodata.PartnerMaritalStatus;
             existingBiodata.PartnerEducation = biodata.PartnerEducation;
@@ -714,7 +714,7 @@ namespace suvarnyug.Controllers
             {
                 var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == loggedInUserId && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || (subscription.PlanType != PlanType.Gold && subscription.PlanType != PlanType.Platinum))
+                if (subscription == null || (subscription.PlanType != PlanType.Premium))
                 {
                     return Json(new { success = false, redirectUrl = Url.Action("SubscriptionDetails", "Payment"), message = "Please subscribe to show interest." });
                 }
@@ -797,12 +797,12 @@ namespace suvarnyug.Controllers
                 .Replace("{{motherName}}", biodata.MotherName ?? "N/A")
                 .Replace("{{mothersstatus}}", biodata.MothersStatus ?? "N/A")
                 .Replace("{{siblings}}", $"{biodata.NumberOfBrothers} Brothers, {biodata.NumberOfSisters} Sisters")
-                .Replace("{{contactNumber}}", biodata.MobileNumber)
+                //.Replace("{{contactNumber}}", biodata.MobileNumber)
                 .Replace("{{email}}", biodata.Email ?? "N/A")
                 .Replace("{{country}}", biodata.Country.CountryName ?? "N/A")
                 .Replace("{{state}}", biodata.State.StateName ?? "N/A")
                 .Replace("{{city}}", biodata.City.CityName ?? "N/A")
-                .Replace("{{address}}", biodata.Address ?? "N/A")
+                //.Replace("{{address}}", biodata.Address ?? "N/A")
                 .Replace("{{houseType}}", biodata.HouseType ?? "N/A")
                 .Replace("{{profilePicture}}", profilePictureUrl)
                 .Replace("{{backgroundImage}}", backgroundImageUrl)
