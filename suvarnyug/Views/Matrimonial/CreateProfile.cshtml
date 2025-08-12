@@ -385,6 +385,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingvipbiodata">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsevipbiodata" aria-expanded="false" aria-controls="collapsevipbiodata">
+                                5. Make Matrimonial Profile VIP
+                            </button>
+                        </h2>
+                        <div id="collapsevipbiodata" class="accordion-collapse collapse" aria-labelledby="headingvipbiodata" data-bs-parent="#biodataAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" asp-for="VipBiodata" />
+                                            <label class="form-check-label ms-3" asp-for="VipBiodata">
+                                                Mark this profile as VIP
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p style="color: var(--bs-danger);">Note: <span style="color: var(--base-color);">When you mark this profile as VIP, it will not be visible to other users. This matrimonial profile can only be viewed by the admin.</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="text-center mb-20">
                     <button type="submit" class="theme-btn style-two"><span data-hover="Submit">Submit</span></button>

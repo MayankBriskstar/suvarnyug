@@ -19,9 +19,11 @@ namespace suvarnyug.Services
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    var now = DateTime.Now;
+
 
                     var expiredSubscriptions = dbContext.Subscriptions
-                        .Where(s => s.EndDate < DateTime.Now && s.IsActive)
+                        .Where(s => s.EndDate < now && s.IsActive)
                         .ToList();
 
                     foreach (var subscription in expiredSubscriptions)
@@ -29,12 +31,37 @@ namespace suvarnyug.Services
                         subscription.IsActive = false;
                         subscription.PaymentStatus = "Pending";
                         subscription.PlanType = PlanType.Free;
+
+                        var maleBiodatas = dbContext.Biodata
+                            .Where(b => b.UserId == subscription.UserId && b.Gender.ToLower() == "male").ToList();
+
+                        foreach (var biodata in maleBiodatas)
+                        {
+                            biodata.IsPremiumActive = true; // hide male biodata
+                        }
                     }
+                    var activeSubscriptions = dbContext.Subscriptions
+                        .Where(s => s.EndDate >= now && s.IsActive)
+                        .ToList();
+
+                    foreach (var subscription in activeSubscriptions)
+                    {
+                        // Set male biodata IsPremiumActive = 0
+                        var maleBiodatas = dbContext.Biodata
+                            .Where(b => b.UserId == subscription.UserId && b.Gender.ToLower() == "male" && b.User.Role != "Admin")
+                            .ToList();
+
+                        foreach (var biodata in maleBiodatas)
+                        {
+                            biodata.IsPremiumActive = false; // make male biodata visible
+                        }
+                    }
+
 
                     await dbContext.SaveChangesAsync();
                 }
 
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
             }
         }
     }

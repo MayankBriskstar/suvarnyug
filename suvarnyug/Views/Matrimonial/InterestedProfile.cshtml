@@ -42,15 +42,16 @@
                                                 @($"{interest.InterestedByBiodata?.FirstName ?? "N/A"} {interest.InterestedByBiodata?.LastName ?? "N/A"}")
                                             </h5>
                                             <p class="card-text row instrprofiledetail">
+                                                <span class="gender instprodet1 col-6"><span class="me-2">ID: </span> @(interest.InterestedByBiodata?.ProfileId ?? "N/A")</span><br />
                                                 <span class="dob instprodet1 col-6"><i class="fal fa-calendar-alt"></i> @(interest.InterestedByBiodata?.DOB.ToString("dd/MM/yyyy") ?? "N/A")</span><br />
+                                            </p>
+                                            <p class="card-text row instrprofiledetail">
                                                 <span class="gender instprodet1 col-6"><i class="fal fa-venus-mars"></i> @(interest.InterestedByBiodata?.Gender ?? "N/A")</span><br />
-                                            </p>
-                                            <p class="card-text row instrprofiledetail">
                                                 <span class="education instprodet1 col-6"><i class="fal fa-language"></i> @(interest.InterestedByBiodata?.MotherTongue ?? "N/A")</span><br />
-                                                <span class="education instprodet1 col-6"><i class="fal fa-ring"></i> @(interest.InterestedByBiodata?.MaritalStatus ?? "N/A")</span><br />
                                             </p>
                                             <p class="card-text row instrprofiledetail">
-                                                <span class="education instprodet1 col-12"><i class="fal fa-map-marker-alt"></i> @(interest.InterestedByBiodata?.Country?.CountryName ?? "N/A")</span><br />
+                                                <span class="education instprodet1 col-6"><i class="fal fa-ring"></i> @(interest.InterestedByBiodata?.MaritalStatus ?? "N/A")</span><br />
+                                                <span class="education instprodet1 col-6"><i class="fal fa-map-marker-alt"></i> @(interest.InterestedByBiodata?.Country?.CountryName ?? "N/A")</span><br />
                                             </p>
                                             <div class="theme-btn style-two d-flex p-5">
                                                 <span data-hover="View Profile">View Profile</span>
@@ -80,15 +81,16 @@
                                             @($"{interest.YourProfile?.FirstName ?? "N/A"} {interest.YourProfile?.LastName ?? "N/A"}")
                                         </h5>
                                         <p class="card-text row instrprofiledetail">
+                                            <span class="gender instprodet1 col-6"><span class="me-2">ID: </span> @(interest.InterestedByBiodata?.ProfileId ?? "N/A")</span><br />
                                             <span class="dob instprodet1 col-6"><i class="fal fa-calendar-alt"></i> @(interest.YourProfile?.DOB.ToString("dd/MM/yyyy") ?? "N/A")</span><br />
+                                        </p>
+                                        <p class="card-text row instrprofiledetail">
                                             <span class="gender instprodet1 col-6"><i class="fal fa-venus-mars"></i> @(interest.YourProfile?.Gender ?? "N/A")</span><br />
-                                        </p>
-                                        <p class="card-text row instrprofiledetail">
                                             <span class="education instprodet1 col-6"><i class="fal fa-language"></i> @(interest.YourProfile?.MotherTongue ?? "N/A")</span><br />
-                                            <span class="education instprodet1 col-6"><i class="fal fa-ring"></i> @(interest.YourProfile?.MaritalStatus ?? "N/A")</span><br />
                                         </p>
                                         <p class="card-text row instrprofiledetail">
-                                            <span class="education col-12"><i class="fal fa-map-marker-alt"></i> @(interest.YourProfile?.Country?.CountryName ?? "N/A")</span><br />
+                                            <span class="education instprodet1 col-6"><i class="fal fa-ring"></i> @(interest.YourProfile?.MaritalStatus ?? "N/A")</span><br />
+                                            <span class="education col-6"><i class="fal fa-map-marker-alt"></i> @(interest.YourProfile?.Country?.CountryName ?? "N/A")</span><br />
                                         </p>
                                     </div>
                                 </div>

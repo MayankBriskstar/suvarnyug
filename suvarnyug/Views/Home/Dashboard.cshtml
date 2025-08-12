@@ -22,6 +22,9 @@
                                         <h2><i class="fal fa-user-alt text-white"></i> <span class="dashboardusername  text-capitalize">@biodata.FirstName @biodata.LastName</span></h2>
                                     </div>
                                 </div>
+                                <div class="list-style-two col-lg-12 mb-0 text-center">
+                                    <span class="gender col-12"><span class="me-2">ID: </span> @biodata.ProfileId</span>
+                                </div>
                                 <div class="list-style-two col-lg-12 mt-15 mb-0">
                                     <span class="dob col-6"><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</span>
                                     <span class="gender col-6"><i class="fal fa-ring"></i> @biodata.MaritalStatus</span>
@@ -130,6 +133,7 @@
                             <div class="card-body">
                                 <h5 class="card-title dashboardonother">@biodata.FirstName @biodata.LastName</h5>
                                 <p class="card-text" style="font-size: 18px;">
+                                    <span class="for1"><span class="me-2">ID: </span>@biodata.ProfileId</span><br />
                                     <span class="for1"><i class="fal fa-id-card"></i> For: @biodata.BehalfOf</span><br />
                                     <span class="dob1"><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</span><br />
                                     <span class="gender1"><i class="fal fa-venus-mars"></i> @biodata.Gender</span><br />

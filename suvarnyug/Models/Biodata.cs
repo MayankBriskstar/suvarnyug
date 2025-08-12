@@ -174,11 +174,20 @@ namespace Suvarnyug.Models
         [Display(Name = "About My Partner")]
         public string AboutMyPartner { get; set; }
 
+        [StringLength(10)]
+        [Display(Name = "Profile ID")]
+        public string ProfileId { get; set; }
+
+        public bool IsDeleted { get; set; }
         public ICollection<BiodataImage> Images { get; set; }
         public Country Country { get; set; }
         public State State { get; set; }
         public City City { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsPremiumActive { get; set; }
+        
+        [Display(Name = "VIP Biodata")]
+        public bool VipBiodata { get; set; }
+
         public User User { get; set; }
 
         public DateTime CreatedAt { get; set; }

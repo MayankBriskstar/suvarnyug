@@ -10,38 +10,82 @@
 }
 <div class="container">
     <div class="page-inner">
-        <div class="page-header">
-            <h3 class="fw-bold mb-3">View Matrimonial Profile</h3>
-            <ul class="breadcrumbs mb-3">
-                <li class="nav-home">
-                    <a href="#">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Matrimonial Profile</a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="#">View Matrimonial Profile</a>
-                </li>
-            </ul>
-        </div>
+        @if (Model.VipBiodata == false)
+        {
+            <div class="page-header">
+                <h3 class="fw-bold mb-3">View Matrimonial Profile</h3>
+                <ul class="breadcrumbs mb-3">
+                    <li class="nav-home">
+                        <a href="#">
+                            <i class="icon-home"></i>
+                        </a>
+                    </li>
+                    <li class="separator">
+                        <i class="icon-arrow-right"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">Matrimonial</a>
+                    </li>
+                    <li class="separator">
+                        <i class="icon-arrow-right"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">Matrimonial Profiles</a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="page-header">
+                <h3 class="fw-bold mb-3">View VIP Matrimonial Profile</h3>
+                <ul class="breadcrumbs mb-3">
+                    <li class="nav-home">
+                        <a href="#">
+                            <i class="icon-home"></i>
+                        </a>
+                    </li>
+                    <li class="separator">
+                        <i class="icon-arrow-right"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">Matrimonial</a>
+                    </li>
+                    <li class="separator">
+                        <i class="icon-arrow-right"></i>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">VIP Profile</a>
+                    </li>
+                </ul>
+            </div>
+        }
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <h4 class="card-title col-md-6">View Matrimonial Profile</h4>
+                            @if (Model.VipBiodata == false)
+                            {
+                                <h4 class="card-title col-md-6">View Matrimonial Profile</h4>
+                            }
+                            else
+                            {
+                                <h4 class="card-title col-md-6">View VIP Matrimonial Profile</h4>
+                            }
                             <div class="col-md-6 text-end">
-                                <a href="@Url.Action("MatrimonialManagement", "Admin")" class="btn text-end backtouser">
-                                    <i class="fas fa-angle-left"></i> Back
-                                </a>
+                                @if (Model.VipBiodata == false)
+                                {
+                                    <a href="@Url.Action("MatrimonialManagement", "Admin")" class="btn text-end backtouser">
+                                        <i class="fas fa-angle-left"></i> Back
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("vipmatrimonialmanagement", "Admin")" class="btn text-end backtouser">
+                                        <i class="fas fa-angle-left"></i> Back
+                                    </a>
+                                }
                                 <span class="rightborder1"></span>
                                 @if (Model.IsDeleted)
                                 {
@@ -85,6 +129,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-9 profile-info">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p><strong>ID -</strong></p>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <p class="text-capitalize">@Model.ProfileId</p>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-lg-3">
                                                         <p><strong>Name -</strong></p>

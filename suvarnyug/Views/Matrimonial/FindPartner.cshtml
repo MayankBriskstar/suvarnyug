@@ -210,8 +210,10 @@
                                     }
                                 </div>
                                 <div class="content conttsixz">
-
-                                    <span class="location"><i class="fal fa-map-marker-alt"></i> @biodata.Country.CountryName</span>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="location"><i class="fal fa-map-marker-alt"></i> @biodata.Country.CountryName</span>
+                                        <span class="location"><span>ID: </span> @biodata.ProfileId</span>
+                                    </div>
                                     <h5 class="contentfirstnamelastname text-capitalize">@biodata.FirstName @biodata.LastName</h5>
                                     <ul class="list-style-one prfoiledetail">
                                         <li><i class="fal fa-calendar-alt"></i> @biodata.DOB.ToString("dd/MM/yyyy")</li>

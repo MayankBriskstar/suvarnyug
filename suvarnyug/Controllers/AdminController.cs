@@ -363,10 +363,16 @@ namespace suvarnyug.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult MatrimonialManagement()
         {
-            var biodataList = _context.Biodata.OrderByDescending(u => u.BiodataId).Include(u => u.Country).ToList();
+            var biodataList = _context.Biodata.OrderByDescending(u => u.BiodataId).Include(u => u.Country).Where(u => u.VipBiodata== false).ToList();
             return View(biodataList);
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult vipmatrimonialmanagement()
+        {
+            var biodataList = _context.Biodata.OrderByDescending(u => u.BiodataId).Include(u => u.Country).Where(u => u.VipBiodata == true).ToList();
+            return View(biodataList);
+        }
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBiodata(int id)

@@ -42,6 +42,7 @@ namespace suvarnyug.Controllers
             var biodata = await _context.Biodata
                 .Include(b => b.Images)
                 .Include(b => b.Country).Include(b => b.State).Include(b => b.City)
+                .Where(b => b.IsPremiumActive == false)
                 .FirstOrDefaultAsync(b => b.BiodataId == id && b.UserId.ToString() == userId);
 
             if (biodata == null)
@@ -62,15 +63,15 @@ namespace suvarnyug.Controllers
             }
             var userId = int.Parse(userIdClaim.Value);
             var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-            if (user.Role != "Admin")
-            {
-                var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId && s.IsActive && s.EndDate > DateTime.Now);
+            //if (user.Role != "Admin")
+            //{
+            //    var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == userId && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || (subscription.PlanType != PlanType.Premium))
-                {
-                    return RedirectToAction("SubscriptionDetails", "Payment");
-                }
-            }
+            //    if (subscription == null || (subscription.PlanType != PlanType.Premium))
+            //    {
+            //        return RedirectToAction("SubscriptionDetails", "Payment");
+            //    }        
+            //}
             var receivedInterestProfiles = _context.InterestedProfiles
                 .Where(ip => ip.InterestedUserId == userId && ip.Biodata.IsDeleted == false && !ip.Biodata.User.IsActive)
                 .Include(ip => ip.Biodata)
@@ -79,14 +80,15 @@ namespace suvarnyug.Controllers
                 .ToList();
 
             var receivedBiodata = receivedInterestProfiles
-                .Select(ip => (InterestedByBiodata: ip.Biodata,YourProfile: _context.Biodata
+                .Select(ip => (InterestedByBiodata: ip.Biodata, YourProfile: _context.Biodata
                 .Include(b => b.Country)
                 .Include(b => b.Images.OrderByDescending(i => i.IsDefault))
+                .Where(b => b.IsPremiumActive == false)
                 .FirstOrDefault(b => b.BiodataId == ip.InterestedBiodataId))).ToList();
 
             var model = new ViewBiodataViewModel
             {
-                InterestedProfilesWithYourProfile = receivedBiodata
+                InterestedProfilesWithYourProfile = receivedBiodata.Where(x => x.InterestedByBiodata != null && x.YourProfile != null).ToList()
             };
 
             return View(model);
@@ -100,15 +102,15 @@ namespace suvarnyug.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _context.Users.FirstOrDefault(u => u.UserId == int.Parse(userId));
-            if (user.Role != "Admin")
-            {
-                var subscription = await _context.Subscriptions.FirstOrDefaultAsync(s => s.UserId == int.Parse(userId) && s.IsActive && s.EndDate > DateTime.Now);
+            //if (user.Role != "Admin")
+            //{
+            //    var subscription = await _context.Subscriptions.FirstOrDefaultAsync(s => s.UserId == int.Parse(userId) && s.IsActive && s.EndDate > DateTime.Now);
 
-                if (subscription == null || (subscription.PlanType != PlanType.Premium))
-                {
-                    return RedirectToAction("SubscriptionDetails", "Payment");
-                }
-            }
+            //    if (subscription == null || (subscription.PlanType != PlanType.Premium))
+            //    {
+            //        return RedirectToAction("SubscriptionDetails", "Payment");
+            //    }
+            //}
             var interestedProfile = await _context.InterestedProfiles
                 .Include(ip => ip.Biodata)
                 .ThenInclude(b => b.Images.OrderByDescending(i => i.IsDefault))
@@ -137,9 +139,20 @@ namespace suvarnyug.Controllers
                 .Include(b => b.Images.OrderByDescending(i => i.IsDefault))
                 .Where(b => b.IsDeleted == false && !b.User.IsActive)
                 .AsQueryable();
+
+            var loggedInUserId = int.Parse(userId);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == loggedInUserId);
+            var subscription = _context.Subscriptions
+                    .FirstOrDefault(s => s.UserId == loggedInUserId && s.IsActive && s.EndDate > DateTime.Now);
+            bool hasPremium = subscription != null && subscription.PlanType == PlanType.Premium;
+
             if (!string.IsNullOrEmpty(userId))
             {
                 allBiodata = allBiodata.Where(b => b.UserId.ToString() != userId);
+            }
+            if (!hasPremium && user.Role != "Admin")
+            {
+                allBiodata = allBiodata.Where(b => b.Gender == "Male");
             }
             ViewBag.TotalOrFilteredCount = allBiodata.Count();
             if (!string.IsNullOrEmpty(gender))
@@ -176,10 +189,10 @@ namespace suvarnyug.Controllers
                 }
             }
             ViewBag.TotalOrFilteredCount = allBiodata.Count();
-            allBiodata = allBiodata.OrderByDescending(b => b.CreatedAt);
+            allBiodata = allBiodata.Where(b => b.VipBiodata == false).OrderByDescending(b => b.CreatedAt);
             return View(allBiodata.ToList());
         }
-        
+
         #region Find patner using text
         [Authorize]
         public async Task<IActionResult> FindPartnerAISearch(string query = "")
@@ -204,7 +217,7 @@ namespace suvarnyug.Controllers
                 .Include(b => b.User.UserLogin)
                 .Include(b => b.Images)
                 .Include(b => b.City).ThenInclude(c => c.State).ThenInclude(s => s.Country)
-                .Where(b => b.UserId.ToString() != userId && !b.IsDeleted && !b.User.IsActive)
+                .Where(b => b.UserId.ToString() != userId && !b.IsDeleted && !b.User.IsActive && b.VipBiodata == false)
                 .AsQueryable();
             if (!string.IsNullOrEmpty(filters.Gender))
             {
@@ -349,12 +362,12 @@ namespace suvarnyug.Controllers
         }
 
         #endregion
-        
+
         #region Find patner using button
         [Authorize]
         public async Task<IActionResult> FindPartnerAI()
         {
-           
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _context.Users.FirstOrDefault(u => u.UserId == int.Parse(userId));
             if (user.Role != "Admin")
@@ -381,7 +394,7 @@ namespace suvarnyug.Controllers
                 .Include(b => b.User.UserLogin)
                 .Include(b => b.Images)
                 .Include(b => b.Country)
-                .Where(b => b.UserId.ToString() != userId && !b.IsDeleted)
+                .Where(b => b.UserId.ToString() != userId && !b.IsDeleted && b.VipBiodata == false)
                 .AsEnumerable()
                 .Where(b => userProfiles.Any(up => up.Gender != b.Gender && !b.User.IsActive &&
                                                    (up.CountryId == b.CountryId || up.StateId == b.StateId)))
@@ -455,7 +468,7 @@ namespace suvarnyug.Controllers
         }
 
         #endregion
-        
+
         [HttpGet]
         public async Task<JsonResult> GetStates(int id)
         {
@@ -501,23 +514,106 @@ namespace suvarnyug.Controllers
             biodata.CreatedAt = DateTime.Now;
             var selectedEducation = form["Education"];
             biodata.Education = string.Join(",", selectedEducation);
-            if (isForSelfBool)
+            var loggedInUserId = int.Parse(userIdClaim.Value);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == loggedInUserId);
+            if (user.Role != "Admin")
             {
-                var existingBiodata = await _context.Biodata
-                    .FirstOrDefaultAsync(b => b.UserId == biodata.UserId && b.IsForSelf == true && b.IsDeleted == false);
+                var subscription = _context.Subscriptions
+                    .FirstOrDefault(s => s.UserId == loggedInUserId && s.IsActive && s.EndDate > DateTime.Now);
+                bool hasPremium = subscription != null && subscription.PlanType == PlanType.Premium;
 
-                if (existingBiodata != null)
+                if (isForSelfBool)
                 {
-                    ModelState.AddModelError(string.Empty, "You Have Already Created Matrimonial Profile For ' MySelf '. Only One Matrimonial Profile Is Allowed For ' MySelf '.");
-                    ViewBag.Countries = await _context.Countries.ToListAsync();
-                    return View(biodata);
+                    var existingBiodata = await _context.Biodata
+                        .FirstOrDefaultAsync(b => b.UserId == biodata.UserId && b.IsForSelf && !b.IsDeleted);
+
+                    if (existingBiodata != null)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                            "You Have Already Created Matrimonial Profile For 'MySelf'. Only One Profile Is Allowed.");
+                        ViewBag.Countries = await _context.Countries.ToListAsync();
+                        return View(biodata);
+                    }
+
+                    biodata.BehalfOf = "self";
+
+                    if (biodata.Gender?.ToLower() == "male" && !hasPremium)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                            "You cannot create a male profile for yourself without a Premium subscription.");
+                        ViewBag.Countries = await _context.Countries.ToListAsync();
+                        return View(biodata);
+                    }
                 }
-                biodata.BehalfOf = "self";
+                else
+                {
+                    if (!string.IsNullOrEmpty(behalfOf))
+                    {
+                        biodata.BehalfOf = behalfOf.ToLower();
+
+                        if (biodata.BehalfOf == "daughter" || biodata.BehalfOf == "sister")
+                        {
+                            if (biodata.Gender?.ToLower() != "female")
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                    "Only female profiles are allowed for Daughter or Sister.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(biodata);
+                            }
+                        }
+                        else if (biodata.BehalfOf == "friend")
+                        {
+                            if (biodata.Gender?.ToLower() == "male" && !hasPremium)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                    "You cannot create a male profile for a Friend without a Premium subscription.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(biodata);
+                            }
+                        }
+                        else if (biodata.BehalfOf == "son" || biodata.BehalfOf == "brother")
+                        {
+                            if (!hasPremium)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                    $"You cannot create a profile for {biodata.BehalfOf} without a Premium subscription.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(biodata);
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty,
+                                "You can only create profiles on behalf of Daughter, Sister, Friend, Son, or Brother.");
+                            ViewBag.Countries = await _context.Countries.ToListAsync();
+                            return View(biodata);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty,
+                            "BehalfOf is required when creating for others.");
+                        ViewBag.Countries = await _context.Countries.ToListAsync();
+                        return View(biodata);
+                    }
+                }
             }
-            else if (!isForSelfBool && !string.IsNullOrEmpty(behalfOf))
+            var lastProfile = await _context.Biodata
+                .Where(b => b.ProfileId.StartsWith("SY-"))
+                .OrderByDescending(b => b.ProfileId)
+                .FirstOrDefaultAsync();
+
+            int nextNumber = 1;
+            if (lastProfile != null)
             {
-                biodata.BehalfOf = behalfOf;
+                string numberPart = lastProfile.ProfileId.Substring(3);
+                if (int.TryParse(numberPart, out int lastNumber))
+                {
+                    nextNumber = lastNumber + 1;
+                }
             }
+
+            biodata.ProfileId = $"SY-{nextNumber:D4}";
             _context.Biodata.Add(biodata);
             await _context.SaveChangesAsync();
 
@@ -564,6 +660,7 @@ namespace suvarnyug.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var biodata = await _context.Biodata
                 .Include(b => b.Images)
+                .Where(b => b.IsPremiumActive == false)
                 .FirstOrDefaultAsync(b => b.BiodataId == id && b.UserId.ToString() == userId);
             ViewBag.Countries = await _context.Countries.ToListAsync();
             if (biodata == null)
@@ -595,11 +692,87 @@ namespace suvarnyug.Controllers
 
                 if (anotherSelfBiodata != null)
                 {
-                    ModelState.AddModelError(string.Empty, "You Have Already Created Matrimonial Profile For ' MySelf '. Only One Matrimonial Profile Is Allowed ' MySelf '.");
+                    ModelState.AddModelError(string.Empty, "You Have Already Created Matrimonial Profile For 'MySelf'. Only One Profile Is Allowed.");
                     ViewBag.Countries = await _context.Countries.ToListAsync();
                     return View(existingBiodata);
                 }
             }
+            var user = _context.Users.FirstOrDefault(u => u.UserId == int.Parse(userId));
+
+            if (user.Role != "Admin")
+            {
+                var subscription = _context.Subscriptions
+                    .FirstOrDefault(s => s.UserId == int.Parse(userId) && s.IsActive && s.EndDate > DateTime.Now);
+                bool hasPremium = subscription != null && subscription.PlanType == PlanType.Premium;
+
+                if (isForSelfBool)
+                {
+                    biodata.BehalfOf = "self";
+
+                    if (biodata.Gender?.ToLower() == "male" && !hasPremium)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                            "You cannot edit a male profile for yourself without a Premium subscription.");
+                        ViewBag.Countries = await _context.Countries.ToListAsync();
+                        return View(existingBiodata);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(behalfOf))
+                    {
+                        existingBiodata.BehalfOf = behalfOf.ToLower();
+
+                        if (existingBiodata.BehalfOf == "daughter" || existingBiodata.BehalfOf == "sister")
+                        {
+                            if (biodata.Gender?.ToLower() != "female")
+                            {
+                                ModelState.AddModelError(string.Empty, "Only female profiles are allowed for Daughter or Sister.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(existingBiodata);
+                            }
+                        }
+                        else if (existingBiodata.BehalfOf == "friend")
+                        {
+                            if (biodata.Gender?.ToLower() == "male" && !hasPremium)
+                            {
+                                ModelState.AddModelError(string.Empty, "You cannot edit a male profile for a Friend without a Premium subscription.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(existingBiodata);
+                            }
+                        }
+                        else if (existingBiodata.BehalfOf == "son" || existingBiodata.BehalfOf == "brother")
+                        {
+                            if (biodata.Gender?.ToLower() != "male")
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                    $"Only male profiles are allowed for {existingBiodata.BehalfOf}.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(existingBiodata);
+                            }
+                            if (!hasPremium)
+                            {
+                                ModelState.AddModelError(string.Empty, $"You cannot edit a profile for {existingBiodata.BehalfOf} without a Premium subscription.");
+                                ViewBag.Countries = await _context.Countries.ToListAsync();
+                                return View(existingBiodata);
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "You can only edit profiles on behalf of Daughter, Sister, Friend, Son, or Brother.");
+                            ViewBag.Countries = await _context.Countries.ToListAsync();
+                            return View(existingBiodata);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "BehalfOf is required when creating for others.");
+                        ViewBag.Countries = await _context.Countries.ToListAsync();
+                        return View(existingBiodata);
+                    }
+                }
+            }
+
             existingBiodata.IsForSelf = isForSelfBool;
             if (isForSelfBool)
             {
@@ -643,6 +816,7 @@ namespace suvarnyug.Controllers
             existingBiodata.PartnerCast = biodata.PartnerCast;
             existingBiodata.PartnerCountry = biodata.PartnerCountry;
             existingBiodata.AboutMyPartner = biodata.AboutMyPartner;
+            existingBiodata.VipBiodata = biodata.VipBiodata;
 
             var existingImagesCount = existingBiodata.Images.Count;
             if (images != null && images.Count > 0 && (existingImagesCount + images.Count) <= 5)
@@ -782,6 +956,7 @@ namespace suvarnyug.Controllers
             string templatePath = Path.Combine(_webHostEnvironment.WebRootPath, "template", "Biodata.html");
             string htmlContent = System.IO.File.ReadAllText(templatePath);
             htmlContent = htmlContent
+                .Replace("{{profileid}}", $"{biodata.ProfileId}")
                 .Replace("{{name}}", $"{biodata.FirstName} {biodata.LastName}")
                 .Replace("{{dob}}", biodata.DOB.ToString("dd-MM-yyyy"))
                 .Replace("{{age}}", age.ToString())

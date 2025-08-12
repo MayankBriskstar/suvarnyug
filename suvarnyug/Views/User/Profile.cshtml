@@ -25,8 +25,11 @@
             <div class="col-lg-9 profile-info">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="row">
-                            <div class="col-lg-12 text-end">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 text-start">
+                                <p style="margin:0 !important;">ID: @Model.ProfileId</p>
+                            </div>
+                            <div class="col-lg-6 text-end">
                                 @*<a href="@Url.Action("Chat", "Chat", new { userId = Model.UserId })" class="theme-btn style-two bgc-primary userprofileviewid">
                                     <i class="fal fa-comments m-0" style="transform: rotate(0deg);"></i> <span data-hover="Chat" class="m-0">Chat</span>
                                 </a>*@

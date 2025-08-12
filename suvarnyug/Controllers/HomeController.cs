@@ -40,6 +40,7 @@ public class HomeController : Controller
         var latestMale = _context.Biodata.Where(b => b.Gender == "Male" && !b.User.IsActive == true )
             .Select(b => new
             {
+                b.ProfileId,
                 b.FirstName,
                 b.LastName,
                 b.DOB,
@@ -47,15 +48,18 @@ public class HomeController : Controller
                 b.MotherTongue,
                 b.MaritalStatus,
                 b.CreatedAt,
+                b.IsPremiumActive,
+                b.VipBiodata,
                 b.IsDeleted,
                 Image = b.Images.Where(i => i.IsDefault).Select(i => i.ImageUrl).FirstOrDefault() ?? b.Images.FirstOrDefault().ImageUrl ?? "/path/to/default/image.jpg",
                 BiodataId = b.BiodataId
-            }).Where(b => b.IsDeleted == false)
+            }).Where(b => b.IsDeleted == false && b.VipBiodata == false)
             .AsEnumerable().GroupBy(b => b.BiodataId).Select(g => g.OrderByDescending(b => b.CreatedAt).FirstOrDefault())
             .OrderByDescending(b => b.CreatedAt).Take(10).ToList();
 
         var latestFemale = _context.Biodata.Where(b => b.Gender == "Female" && !b.User.IsActive == true).Select(b => new
         {
+            b.ProfileId,
             b.FirstName,
             b.LastName,
             b.DOB,
@@ -63,10 +67,11 @@ public class HomeController : Controller
             b.Education,
             b.MotherTongue,
             b.CreatedAt,
+            b.VipBiodata,
             b.IsDeleted,
             Image = b.Images.Where(i => i.IsDefault).Select(i => i.ImageUrl).FirstOrDefault() ?? b.Images.FirstOrDefault().ImageUrl ?? "/path/to/default/image.jpg",
             BiodataId = b.BiodataId
-        }).Where(b => b.IsDeleted == false)
+        }).Where(b => b.IsDeleted == false && b.VipBiodata == false)
             .AsEnumerable().GroupBy(b => new { b.BiodataId, b.FirstName, b.LastName, b.DOB, b.Education, b.MaritalStatus, b.CreatedAt })
             .Select(g => g.OrderByDescending(b => b.CreatedAt).FirstOrDefault())
             .OrderByDescending(b => b.CreatedAt)
@@ -120,7 +125,7 @@ public class HomeController : Controller
             .Include(b => b.Images.OrderByDescending(i => i.IsDefault))
             .Include(b => b.User)
             .Include(b => b.ProfileViews)
-            .Where(b => b.IsDeleted == false)
+            .Where(b => b.IsDeleted == false && b.IsPremiumActive == false)
             .ToList();
         var selfBiodata = biodataList.Where(b => b.IsForSelf).ToList();
         var onBehalfOfBiodata = biodataList.Where(b => !b.IsForSelf).ToList();

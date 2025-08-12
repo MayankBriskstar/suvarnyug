@@ -74,7 +74,7 @@
 <!-- Features Area start -->
 <section class="features-area-three pt-50 rel z-1">
     <div class="row justify-content-center">
-        <div class="col-xxl-3 col-xl-4 col-md-6" data-aos="flip-left" data-aos-duration="1500"
+        <div class="col-xxl-3 col-xl-3 col-md-6" data-aos="flip-left" data-aos-duration="1500"
              data-aos-offset="50">
             <div class="feature-item style-three">
                 <div class="icon">
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-3 col-xl-4 col-md-6" data-aos="flip-left" data-aos-delay="50"
+        <div class="col-xxl-3 col-xl-3 col-md-6" data-aos="flip-left" data-aos-delay="50"
              data-aos-duration="1500" data-aos-offset="50">
             <div class="feature-item style-three bgc-secondary">
                 <div class="icon">
@@ -105,9 +105,25 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-3 col-xl-4 col-md-6" data-aos="flip-left" data-aos-delay="100"
+        <div class="col-xxl-3 col-xl-3 col-md-6" data-aos="flip-left" data-aos-delay="100"
              data-aos-duration="1500" data-aos-offset="50">
             <div class="feature-item style-three bgc-primary">
+                <div class="icon">
+                    <i class="fa "><img src="~/assetsuser/images/icons/couple1.svg" width="65" /></i>
+                </div>
+                <div class="content">
+                    <h3><a>Free Bride Profiles</a></h3>
+                    <p>
+                        Create <strong>Bride matrimonial profile</strong> at no cost — absolutely free!
+                        Find meaningful connections and explore genuine matches without any fees or hidden charges.
+                        Sign up today and start your journey toward a happy future.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-xl-3 col-md-6" data-aos="flip-left" data-aos-duration="1500"
+             data-aos-offset="50">
+            <div class="feature-item style-three">
                 <div class="icon">
                     <i class="fa "><img src="~/assetsuser/images/icons/verified.svg" width="60" /></i>
                 </div>
@@ -119,10 +135,9 @@
                 </div>
             </div>
         </div>
-
     </div>
 </section>
-<section class="filter-index" >
+<section class="filter-index">
     <div class="text-center">
         <p class="mb-30" style="font-size: x-large;">Find Your Perfect Partner From <span style="color:var(--primary-color);">@ViewData["TotalBiodata"]</span> Profiles</p>
     </div>
@@ -203,6 +218,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title dashboardonother">@user.FirstName @user.LastName</h5>
                                     <p class="card-text">
+                                        <span class="ProfileIdpr"><span class="proid">ID:</span> @user.ProfileId</span><br />
                                         <span class="dob"><i class="fal fa-calendar-alt"></i> @user.DOB.ToString("dd/MM/yyyy")</span><br />
                                         <span class="education"><i class="fal fa-language"></i> @user.MotherTongue</span><br />
                                         <span class="education"><i class="fal fa-ring"></i> @user.MaritalStatus</span>
@@ -237,7 +253,7 @@
             {
                 foreach (var user in ViewBag.LatestFemale)
                 {
-                    <a href="@Url.Action("profile", "user", new {  biodataId = user.BiodataId })">
+                    <a href="@Url.Action("profile", "user", new { biodataId = user.BiodataId })">
                         <div class="style-four" data-aos="flip-left" data-aos-duration="1500" data-aos-offset="50">
                             <div class="card destination-item mb-4" style="background-color: #f9f9f7;">
                                 <div class="image">
@@ -246,6 +262,8 @@
                                 <div class="card-body">
                                     <h5 class="card-title dashboardonother">@user.FirstName @user.LastName</h5>
                                     <p class="card-text">
+                                        <span class="ProfileIdpr"><span class="proid">ID:</span> @user.ProfileId</span><br />
+                                        <span class="education"><i class="fal fa-language"></i> @user.MotherTongue</span><br />
                                         <span class="dob"><i class="fal fa-calendar-alt"></i> @user.DOB.ToString("dd/MM/yyyy")</span><br />
                                         <span class="education"><i class="fal fa-language"></i> @user.MotherTongue</span><br />
                                         <span class="education"><i class="fal fa-ring"></i> @user.MaritalStatus</span>

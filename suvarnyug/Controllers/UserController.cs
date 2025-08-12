@@ -19,10 +19,10 @@ public class UserController : Controller
     public IActionResult Profile(int biodataId)
     {
         var biodata = _context.Biodata.Include(b => b.Images.OrderByDescending(i => i.IsDefault))
-            .Include(b => b.Country).Include(b => b.State).Include(b => b.City).FirstOrDefault(b => b.BiodataId == biodataId);
+            .Include(b => b.Country).Include(b => b.State).Include(b => b.City).Where(b => b.VipBiodata== false).FirstOrDefault(b => b.BiodataId == biodataId);
         if (biodata == null)
         {
-            return NotFound();
+            return RedirectToAction("notfound", "shared");
         }
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         int userIdInt = int.Parse(userId);
@@ -30,13 +30,9 @@ public class UserController : Controller
         var user = _context.Users.FirstOrDefault(u => u.UserId == userIdInt);
         var subscription = _context.Subscriptions.FirstOrDefault(s => s.UserId == userIdInt && s.IsActive && s.EndDate > DateTime.Now);
         bool isSubscribed = subscription != null;
-        if (user.Role == "Admin")
+        if (user.Role != "Admin" && !isSubscribed && biodata.Gender == "Female")
         {
-            ViewData["IsSubscribed"] = true;
-        }
-        else
-        {
-            ViewData["IsSubscribed"] = isSubscribed;
+            return RedirectToAction("subscriptiondetails", "payment");
         }
         var hasViewed = _context.ProfileViewHistory
             .Any(v => v.UserId == userIdInt && v.BiodataId == biodataId);
@@ -68,13 +64,23 @@ public class UserController : Controller
         }
 
         var userId = int.Parse(userIdClaim.Value);
+        var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
 
-        var biodataList = _context.Biodata
-            .Where(b => b.UserId == userId && b.IsDeleted == false)
+        var biodataListQuery = _context.Biodata
+            .Where(b => b.UserId == userId && b.IsDeleted == false);
+
+        if (user.Role != "Admin")
+        {
+            biodataListQuery = biodataListQuery.Where(b => b.IsPremiumActive == false);
+        }
+
+        var biodataList = biodataListQuery
             .Include(b => b.Images.OrderByDescending(i => i.IsDefault))
             .Include(b => b.User)
             .Include(b => b.ProfileViews)
+            .Where(b => b.VipBiodata == false)
             .ToList();
+
         ViewData["OnBehalfOfBiodata"] = biodataList;
 
         return PartialView("_BiodataListPartial", biodataList);

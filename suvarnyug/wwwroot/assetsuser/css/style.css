@@ -7864,8 +7864,8 @@ span {
 .feature-item.style-three {
     border: none;
     border-radius: 10px;
-    margin-bottom: 10px;
-    padding: 50px 50px 30px;
+    margin-bottom: 0px;
+    padding: 20px 20px 20px;
     height: calc(100% - 10px);
     background: var(--heading-color);
 }
@@ -12764,7 +12764,13 @@ span.filter-tag {
     color: #242424;
     font-weight: 500
 }
-
+.ProfileIdpr {
+    color: #242424;
+    font-weight: 500
+}
+.ProfileIdpr .proid {
+   margin-right: 10px;
+}
 .hot-deals-area .hot-deals-active .card {
     border: 1px solid #eaeaea;
     border-radius: 8px;
@@ -14059,4 +14065,19 @@ span.current {
 .instrprofiledetail {
     margin: 10px 0px;
     font-size: 18px;
+}
+.form-check-input:checked {
+    background-color: var(--primary-color);
+}
+.form-check-input[type=checkbox] {
+    border-radius: 10px;
+    margin:0;
+}
+.form-check-label {
+    margin: 0;
+}
+.form-check-input:focus {
+    border-color: #51ac4e;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgb(81 172 78 / 11%);
 }
