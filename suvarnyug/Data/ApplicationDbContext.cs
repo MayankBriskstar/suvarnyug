@@ -32,6 +32,7 @@ namespace Suvarnyug.Data
         public DbSet<UserVerification> UserVerification { get; set; }
         public DbSet<UserLogin> UserLogins { get; set; }
         public DbSet<DirectPayment> DirectPayments { get; set; }
+        public DbSet<DailyVisitor> DailyVisitors { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -100,6 +101,8 @@ namespace Suvarnyug.Data
                       .HasForeignKey(e => e.BiodataId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+            modelBuilder.Entity<DailyVisitor>()
+                .HasKey(v => v.Id);
         }
     }
 }

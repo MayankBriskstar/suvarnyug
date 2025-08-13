@@ -3,6 +3,8 @@
 @inject IConfiguration configuration
 @{
     ViewData["Title"] = "Home";
+    var totalUsers = ViewData["TotalUsers"];
+    var totalVisitors = ViewData["Visitor"];
 }
 <section class="hero-area-three bgs-cover overflow-hidden pt-50 pb-50 br-15 rel z-2"
          style="background-image: url(/assetsuser/images/banner/banner6.jpg);">
@@ -14,7 +16,7 @@
                     <span class="subtitle mb-15">SuvarnYug</span>
                     <h1>Explore and Start your Journey With SuvarnYug</h1>
                     <p>
-                        <span class="count-text plus" data-speed="3000" data-stop="@ViewData["TotalUsers"]">0</span> Happy users!
+                        <span class="count-text plus" data-speed="3000" data-stop="@totalUsers">0</span> Happy users!
                         You’ll be remembered. Register Now.
                     </p>
                 </div>
@@ -373,8 +375,8 @@
                                     <img src="~/assetsuser/images/icons/smily.svg" width="60" />
                                 </i>
                             </div>
-                            <span class="count-text plus" data-speed="3000" data-stop="@ViewData["TotalUsers"]">0</span>
-                            <span class="counter-title">Happy Users</span>
+                            <span class="count-text plus" data-speed="3000" data-stop="@totalVisitors">0</span>
+                            <span class="counter-title">Daily Visitors</span>
                         </div>
                     </div>
                     <div class="col-6 col-small">

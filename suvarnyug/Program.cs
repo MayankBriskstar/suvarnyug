@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using suvarnyug.Middleware;
 using suvarnyug.Services;
 using Suvarnyug.Data;
+using Suvarnyug.Middlewares;
 using Suvarnyug.Models;
+using Suvarnyug.Services;
 //using suvarnyug.Hubs;
 
 
@@ -72,6 +74,8 @@ builder.Services.AddTransient<IEmailService>(provider =>
         int.Parse(builder.Configuration["Email:SmtpPort"])
     ));
 builder.Services.AddScoped<NotificationService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<VisitorService>();
 builder.Services.AddHostedService<SubscriptionStatusUpdater>();
 builder.Services.AddCors(options =>
 {
@@ -96,7 +100,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<SubscriptionMiddleware>();
-
+app.UseMiddleware<VisitorLoggingMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors("AllowAll");

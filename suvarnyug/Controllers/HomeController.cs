@@ -98,6 +98,9 @@ public class HomeController : Controller
             })
             .ToListAsync();
 
+        int totalVisitors = _context.DailyVisitors.Count();
+
+        ViewData["Visitor"] = totalVisitors;
         ViewData["TotalBiodata"] = totalBiodata;
         ViewData["TotalUsers"] = totalUsers;
         ViewData["NriCount"] = nriCount;
